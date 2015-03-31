@@ -123,6 +123,11 @@
 #define __no_sanitize_coverage
 #endif
 
+#if GCC_VERSION >= 50000
+/* Avoid reordering a top level statement */
+#define __noreorder    __attribute__((no_reorder))
+#endif
+
 /*
  * Turn individual warnings and errors on and off locally, depending
  * on version.
