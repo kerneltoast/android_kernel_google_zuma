@@ -5,6 +5,10 @@ SUBLEVEL = 137
 EXTRAVERSION =
 NAME = Trick or Treat
 
+ifeq ($(MAKECMDGOALS),)
+MAKECMDGOALS := Image.lz4 dtbs
+endif
+
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
 # More info can be located in ./README
