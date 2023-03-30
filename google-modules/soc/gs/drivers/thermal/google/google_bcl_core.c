@@ -32,10 +32,8 @@
 #include <soc/google/exynos-pm.h>
 #include <soc/google/exynos-pmu-if.h>
 #include <soc/google/bcl.h>
-#if IS_ENABLED(CONFIG_DEBUG_FS)
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
-#endif
 
 static const struct platform_device_id google_id_table[] = {
 	{.name = "google_mitigation",},
