@@ -941,7 +941,7 @@ static int gpu_cooling_table_init(struct gpufreq_cooling_device *gpufreq_cdev)
 	return 0;
 }
 
-ssize_t
+static ssize_t
 state2power_table_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
@@ -966,7 +966,7 @@ state2power_table_show(struct device *dev, struct device_attribute *attr, char *
 	return count;
 }
 
-ssize_t
+static ssize_t
 user_vote_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
@@ -978,8 +978,9 @@ user_vote_show(struct device *dev, struct device_attribute *attr, char *buf)
 	return sprintf(buf, "%lu\n", gpufreq_cdev->sysfs_req);
 }
 
-ssize_t user_vote_store(struct device *dev, struct device_attribute *attr,
-			const char *buf, size_t count)
+static ssize_t
+user_vote_store(struct device *dev, struct device_attribute *attr,
+		const char *buf, size_t count)
 {
 	struct thermal_cooling_device *cdev = to_cooling_device(dev);
 	struct gpufreq_cooling_device *gpufreq_cdev = cdev->devdata;
