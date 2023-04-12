@@ -35,10 +35,8 @@
 #include "google_dc_pps.h"
 #include "google_psy.h"
 
-#ifdef CONFIG_DEBUG_FS
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
-#endif
 
 /* 200 * 250 = 50 seconds of logging */
 #define CHG_LOG_PSY_RATELIMIT_CNT	200
@@ -3487,8 +3485,6 @@ static int chg_vote_input_suspend(struct chg_drv *chg_drv,
 	return 0;
 }
 
-#ifdef CONFIG_DEBUG_FS
-
 static int chg_get_input_suspend(void *data, u64 *val)
 {
 	struct chg_drv *chg_drv = (struct chg_drv *)data;
@@ -3752,9 +3748,6 @@ static int bd_enabled_set(void *data, u64 val)
 
 DEFINE_SIMPLE_ATTRIBUTE(bd_enabled_fops, bd_enabled_get,
 			bd_enabled_set, "%lld\n");
-
-
-#endif
 
 static int debug_get_pps_cc_tolerance(void *data, u64 *val)
 {
@@ -5058,8 +5051,6 @@ state2power_table_show(struct device *dev, struct device_attribute *attr, char *
 
 static DEVICE_ATTR_RO(state2power_table);
 
-#ifdef CONFIG_DEBUG_FS
-
 static ssize_t tm_store(struct chg_thermal_device *tdev,
 			const char __user *user_buf,
 			size_t count, loff_t *ppos)
@@ -5128,8 +5119,6 @@ static ssize_t dc_tm_store(struct file *filp, const char __user *user_buf,
 }
 
 DEBUG_ATTRIBUTE_WO(dc_tm);
-
-#endif // CONFIG_DEBUG_FS
 
 static int chg_init_mdis_stats_map(struct chg_drv *chg_drv, const char *name) {
 	int rc, byte_len;
