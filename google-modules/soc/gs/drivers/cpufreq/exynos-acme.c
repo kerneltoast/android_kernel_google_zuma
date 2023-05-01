@@ -57,29 +57,16 @@ static struct exynos_cpufreq_domain *find_domain(unsigned int cpu)
 
 static void enable_domain(struct exynos_cpufreq_domain *domain)
 {
-	mutex_lock(&domain->lock);
+	raw_spin_lock(&domain->lock);
 	domain->enabled = true;
-	mutex_unlock(&domain->lock);
+	raw_spin_unlock(&domain->lock);
 }
 
 static void disable_domain(struct exynos_cpufreq_domain *domain)
 {
-	mutex_lock(&domain->lock);
+	raw_spin_lock(&domain->lock);
 	domain->enabled = false;
-	mutex_unlock(&domain->lock);
-}
-
-/*********************************************************************
- *                   PRE/POST HANDLING FOR SCALING                   *
- *********************************************************************/
-static int pre_scale(struct cpufreq_freqs *freqs)
-{
-	return 0;
-}
-
-static int post_scale(struct cpufreq_freqs *freqs)
-{
-	return 0;
+	raw_spin_unlock(&domain->lock);
 }
 
 /*********************************************************************
@@ -154,34 +141,15 @@ static int scale(struct exynos_cpufreq_domain *domain,
 		 unsigned int target_freq)
 {
 	int ret;
-	struct cpufreq_freqs freqs = {
-		.policy		= policy,
-		.old		= domain->old,
-		.new		= target_freq,
-		.flags		= 0,
-	};
 
-	cpufreq_freq_transition_begin(policy, &freqs);
 	dbg_snapshot_freq(domain->id, domain->old, target_freq, DSS_FLAG_IN);
-
-	ret = pre_scale(&freqs);
-	if (ret)
-		goto fail_scale;
 
 	/* Scale frequency by hooked function, set_freq() */
 	ret = set_freq(domain, target_freq);
-	if (ret)
-		goto fail_scale;
 
-	ret = post_scale(&freqs);
-	if (ret)
-		goto fail_scale;
-
-fail_scale:
 	/* In scaling failure case, logs -1 to exynos snapshot */
 	dbg_snapshot_freq(domain->id, domain->old, target_freq,
 			  ret < 0 ? ret : DSS_FLAG_OUT);
-	cpufreq_freq_transition_end(policy, &freqs, ret);
 
 	return ret;
 }
@@ -278,6 +246,7 @@ static int exynos_cpufreq_init(struct cpufreq_policy *policy)
 	policy->cur = get_freq(domain);
 	policy->cpuinfo.transition_latency = TRANSITION_LATENCY;
 	policy->dvfs_possible_from_any_cpu = true;
+	policy->fast_switch_possible = list_empty(&domain->dm_list);
 	cpumask_copy(policy->cpus, &domain->cpus);
 
 	pr_info("CPUFREQ domain%d registered\n", domain->id);
@@ -373,15 +342,18 @@ static int exynos_cpufreq_verify(struct cpufreq_policy_data *new_policy)
 }
 
 static int __exynos_cpufreq_target(struct cpufreq_policy *policy,
-				   unsigned int target_freq)
+				   unsigned int target_freq, bool fast_switch)
 {
 	struct exynos_cpufreq_domain *domain = find_domain(policy->cpu);
+	struct cpufreq_freqs freqs;
+	unsigned int old_freq;
+	bool changed = false;
 	int ret = 0;
 
 	if (!domain)
 		return -EINVAL;
 	ATRACE_BEGIN(__func__);
-	mutex_lock(&domain->lock);
+	raw_spin_lock(&domain->lock);
 
 	if (!domain->enabled) {
 		ret = -EINVAL;
@@ -404,6 +376,8 @@ static int __exynos_cpufreq_target(struct cpufreq_policy *policy,
 	if (domain->old == target_freq)
 		goto out;
 
+	changed = true;
+	old_freq = domain->old;
 	ret = scale(domain, policy, target_freq);
 	if (ret)
 		goto out;
@@ -414,7 +388,16 @@ static int __exynos_cpufreq_target(struct cpufreq_policy *policy,
 	domain->old = target_freq;
 
 out:
-	mutex_unlock(&domain->lock);
+	raw_spin_unlock(&domain->lock);
+	if (!fast_switch && changed) {
+		mutex_lock(&domain->target_lock);
+		freqs = (typeof(freqs)){
+			.policy = policy, .old = old_freq, .new = target_freq
+		};
+		cpufreq_freq_transition_begin(policy, &freqs);
+		cpufreq_freq_transition_end(policy, &freqs, ret);
+		mutex_unlock(&domain->target_lock);
+	}
 	ATRACE_END();
 	return ret;
 }
@@ -440,7 +423,7 @@ static int exynos_cpufreq_target_index(struct cpufreq_policy *policy,
 	}
 
 	if (list_empty(&domain->dm_list)) {
-		ret = __exynos_cpufreq_target(policy, target_freq);
+		ret = __exynos_cpufreq_target(policy, target_freq, false);
 		goto out;
 	}
 
@@ -449,6 +432,14 @@ static int exynos_cpufreq_target_index(struct cpufreq_policy *policy,
 out:
 	ATRACE_END();
 	return ret;
+}
+
+static unsigned int exynos_cpufreq_fast_switch(struct cpufreq_policy *policy,
+					       unsigned int target_freq)
+{
+	int ret = __exynos_cpufreq_target(policy, target_freq, true);
+
+	return ret ? 0 : target_freq;
 }
 
 static unsigned int exynos_cpufreq_get(unsigned int cpu)
@@ -543,6 +534,7 @@ static struct cpufreq_driver exynos_driver = {
 	.init		= exynos_cpufreq_init,
 	.verify		= exynos_cpufreq_verify,
 	.target_index   = exynos_cpufreq_target_index,
+	.fast_switch    = exynos_cpufreq_fast_switch,
 	.get		= exynos_cpufreq_get,
 	.online		= exynos_cpufreq_online,
 	.offline	= exynos_cpufreq_offline,
@@ -924,7 +916,7 @@ static int dm_scaler(int dm_type, void *devdata, unsigned int target_freq,
 
 	target_index = cpufreq_frequency_table_target(policy, target_freq, relation);
 	target_freq = policy->freq_table[target_index].frequency;
-	ret = __exynos_cpufreq_target(policy, target_freq);
+	ret = __exynos_cpufreq_target(policy, target_freq, false);
 
 	cpufreq_cpu_put(policy);
 
@@ -1370,7 +1362,8 @@ static int init_domain(struct exynos_cpufreq_domain *domain,
 	if (domain->need_awake)
 		enable_power_mode(cpumask_any(&domain->cpus), POWERMODE_TYPE_CLUSTER);
 
-	mutex_init(&domain->lock);
+	raw_spin_lock_init(&domain->lock);
+	mutex_init(&domain->target_lock);
 
 	spin_lock_init(&domain->thermal_update_lock);
 	domain->capped_freq[TJ] = domain->max_freq;
@@ -1385,6 +1378,14 @@ static int init_domain(struct exynos_cpufreq_domain *domain,
 	 * DVFS Manager is the optional function, it does not check return value
 	 */
 	init_dm(domain, dn);
+
+	/*
+	 * need-awake isn't needed when fast switching is used because fast
+	 * switches always occur upon the domain which is having its frequency
+	 * changed, thus it is always guaranteed to be awake.
+	 */
+	if (list_empty(&domain->dm_list))
+		domain->need_awake = false;
 
 	cpu_dev = get_cpu_device(cpumask_first(&domain->cpus));
 	dev_pm_opp_of_register_em(cpu_dev, &domain->cpus);
