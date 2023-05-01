@@ -48,7 +48,8 @@ struct exynos_cpufreq_domain {
 	struct list_head		list;
 
 	/* lock */
-	struct mutex			lock;
+	raw_spinlock_t			lock;
+	struct mutex			target_lock;
 
 	/* dt node */
 	struct device_node		*dn;
