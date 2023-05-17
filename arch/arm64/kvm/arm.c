@@ -2080,7 +2080,11 @@ static void kvm_hyp_init_symbols(void)
 	kvm_nvhe_sym(id_aa64mmfr2_el1_sys_val) = read_sanitised_ftr_reg(SYS_ID_AA64MMFR2_EL1);
 	kvm_nvhe_sym(__icache_flags) = __icache_flags;
 	kvm_nvhe_sym(kvm_arm_vmid_bits) = kvm_arm_vmid_bits;
+#ifdef CONFIG_ARCH_RANDOM
 	kvm_nvhe_sym(smccc_trng_available) = smccc_trng_available;
+#else
+	kvm_nvhe_sym(smccc_trng_available) = false;
+#endif
 	kvm_nvhe_sym(kvm_host_sve_max_vl) = kvm_host_sve_max_vl;
 }
 
