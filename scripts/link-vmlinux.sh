@@ -96,7 +96,7 @@ modpost_link()
 		info LD ${1}
 	fi
 
-	${LD} ${KBUILD_LDFLAGS} -r -o ${1} ${lds} ${objects}
+	${LDFINAL} ${KBUILD_LDFLAGS} -r -o ${1} ${lds} ${objects}
 }
 
 objtool_link()
@@ -183,7 +183,7 @@ vmlinux_link()
 		ldlibs="-lutil -lrt -lpthread"
 	else
 		wl=
-		ld="${LD}"
+		ld="${LDFINAL}"
 		ldflags="${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}"
 		ldlibs=
 	fi
