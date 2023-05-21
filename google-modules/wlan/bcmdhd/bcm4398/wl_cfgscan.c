@@ -533,7 +533,6 @@ wl_inform_bss(struct bcm_cfg80211 *cfg)
 #ifdef ESCAN_CHANNEL_CACHE
 	reset_roam_cache(cfg);
 #endif /* ESCAN_CHANNEL_CACHE */
-	preempt_disable();
 	bi = next_bss(bss_list, bi);
 	for_each_bss(bss_list, bi, i) {
 #ifdef ESCAN_CHANNEL_CACHE
@@ -544,7 +543,6 @@ wl_inform_bss(struct bcm_cfg80211 *cfg)
 			WL_ERR(("bss inform failed\n"));
 		}
 	}
-	preempt_enable();
 	WL_MEM(("cfg80211 scan cache updated\n"));
 #if defined(ROAM_CHANNEL_CACHE) && defined(HOST_RCC_UPDATE)
 	/* print_roam_cache(); */
@@ -1278,7 +1276,6 @@ s32 wl_cfgscan_pfn_handler(struct bcm_cfg80211 *cfg, wl_pfn_scanresult_v3_1_t *p
 			"or invalid bss_info length\n"));
 		goto exit;
 	}
-	preempt_disable();
 #ifdef ESCAN_CHANNEL_CACHE
 	add_roam_cache(cfg, bi);
 #endif /* ESCAN_CHANNEL_CACHE */
@@ -1286,7 +1283,6 @@ s32 wl_cfgscan_pfn_handler(struct bcm_cfg80211 *cfg, wl_pfn_scanresult_v3_1_t *p
 	if (unlikely(err)) {
 		WL_ERR(("bss inform failed\n"));
 	}
-	preempt_enable();
 	WL_MEM(("cfg80211 scan cache updated\n"));
 exit:
 	return err;
