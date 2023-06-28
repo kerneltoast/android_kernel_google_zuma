@@ -4797,8 +4797,6 @@ static int goog_pm_probe(struct goog_touch_interface *gti)
 	device_init_wakeup(gti->dev, true);
 	pm_stay_awake(gti->dev);
 
-	/* init pm_qos. */
-	cpu_latency_qos_add_request(&gti->pm_qos_req, PM_QOS_DEFAULT_VALUE);
 	pm->enabled = true;
 
 	return ret;
@@ -5093,6 +5091,13 @@ static irqreturn_t gti_irq_thread_fn(int irq, void *data)
 	return ret;
 }
 
+static void gti_pm_qos_init(struct goog_touch_interface *gti, unsigned int irq)
+{
+	gti->pm_qos_req.type = PM_QOS_REQ_AFFINE_IRQ;
+	gti->pm_qos_req.irq = irq;
+	cpu_latency_qos_add_request(&gti->pm_qos_req, PM_QOS_DEFAULT_VALUE);
+}
+
 int goog_devm_request_threaded_irq(struct goog_touch_interface *gti,
 		struct device *dev, unsigned int irq,
 		irq_handler_t handler, irq_handler_t thread_fn,
@@ -5105,6 +5110,7 @@ int goog_devm_request_threaded_irq(struct goog_touch_interface *gti,
 		gti->vendor_irq_cookie = dev_id;
 		gti->vendor_irq_handler = handler;
 		gti->vendor_irq_thread_fn = thread_fn;
+		gti_pm_qos_init(gti, irq);
 		ret = devm_request_threaded_irq(dev, irq, gti_irq_handler, gti_irq_thread_fn,
 				irqflags, devname, gti);
 	} else {
@@ -5133,6 +5139,7 @@ int goog_request_threaded_irq(struct goog_touch_interface *gti,
 		gti->vendor_irq_cookie = dev_id;
 		gti->vendor_irq_handler = handler;
 		gti->vendor_irq_thread_fn = thread_fn;
+		gti_pm_qos_init(gti, irq);
 		ret = request_threaded_irq(irq, gti_irq_handler, gti_irq_thread_fn,
 				irqflags, devname, gti);
 	} else {
