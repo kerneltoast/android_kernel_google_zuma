@@ -207,17 +207,9 @@ static bool kbase_pm_get_dvfs_utilisation_calc(struct kbase_device *kbdev)
 	 */
 	err = kbase_ipa_control_query(
 		kbdev, kbdev->pm.backend.metrics.ipa_control_client, counters,
-		IPA_NUM_PERF_COUNTERS, &protected_time);
+		IPA_NUM_PERF_COUNTERS, &protected_time, &now);
 	gpu_iter_active_counter = counters[0];
 	mcu_active_counter = counters[1];
-
-	/* Read the timestamp after reading the GPU_ITER_ACTIVE counter value.
-	 * This ensures the time gap between the 2 reads is consistent for
-	 * a meaningful comparison between the increment of GPU_ITER_ACTIVE and
-	 * elapsed time. The lock taken inside kbase_ipa_control_query()
-	 * function can cause lot of variation.
-	 */
-	now = ktime_get_raw();
 
 	if (err) {
 		dev_err(kbdev->dev,
