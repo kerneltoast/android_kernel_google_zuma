@@ -21,6 +21,7 @@
 #include <linux/dma-direction.h>
 #include <scsi/scsi_device.h>
 #include <linux/android_kabi.h>
+#include <linux/pm_qos.h>
 #include <ufs/unipro.h>
 #include <ufs/ufs.h>
 #include <ufs/ufs_quirks.h>
@@ -1118,6 +1119,15 @@ struct ufs_hba {
 	struct ufs_hw_queue *uhq;
 	struct ufs_hw_queue *dev_cmd_queue;
 	struct ufshcd_mcq_opr_info_t mcq_opr[OPR_MAX];
+
+	struct {
+		struct pm_qos_request req;
+		struct work_struct get_work;
+		struct work_struct put_work;
+		struct mutex lock;
+		atomic_t count;
+		bool active;
+	} pm_qos;
 
 	ANDROID_VENDOR_DATA(1);
 	ANDROID_OEM_DATA_ARRAY(1, 2);
