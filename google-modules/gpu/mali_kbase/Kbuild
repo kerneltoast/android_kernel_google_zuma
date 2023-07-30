@@ -155,6 +155,9 @@ ccflags-y += \
 # Add include path for related GPU modules
 ccflags-y += -I$(src)/../common/include
 
+# Add ACK flag for version_compat_defs.h
+ccflags-y += -D__ANDROID_COMMON_KERNEL__
+
 subdir-ccflags-y += $(ccflags-y)
 
 #
