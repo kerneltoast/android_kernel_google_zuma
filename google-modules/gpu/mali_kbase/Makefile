@@ -250,8 +250,8 @@ EXTRA_CFLAGS := $(foreach config,$(CONFIGS), \
                         -D$(value config)=1))
 
 ifeq ($(MALI_KCONFIG_EXT_PREFIX),)
-    EXTRA_CFLAGS += -DCONFIG_MALI_PLATFORM_NAME='\"$(CONFIG_MALI_PLATFORM_NAME)\"'
-    EXTRA_CFLAGS += -DCONFIG_MALI_NO_MALI_DEFAULT_GPU='\"$(CONFIG_MALI_NO_MALI_DEFAULT_GPU)\"'
+    EXTRA_CFLAGS += -DCONFIG_MALI_PLATFORM_NAME=$(CONFIG_MALI_PLATFORM_NAME)
+    EXTRA_CFLAGS += -DCONFIG_MALI_NO_MALI_DEFAULT_GPU=$(CONFIG_MALI_NO_MALI_DEFAULT_GPU)
 endif
 
 include $(KDIR)/../private/google-modules/soc/gs/Makefile.include
@@ -264,10 +264,10 @@ BASE_SYMBOLS = $(OUT_DIR)/../private/google-modules/gpu/mali_pixel/Module.symver
 EXTRA_SYMBOLS += \
     $(BASE_SYMBOLS)
 
-CFLAGS_MODULE += -Wall -Werror
-
 # The following were added to align with W=1 in scripts/Makefile.extrawarn
 # from the Linux source tree (v5.18.14)
+ifdef MALI_ENABLE_EXTRAWARN
+CFLAGS_MODULE += -Wall -Werror
 CFLAGS_MODULE += -Wextra -Wunused -Wno-unused-parameter
 CFLAGS_MODULE += -Wmissing-declarations
 CFLAGS_MODULE += -Wmissing-format-attribute
@@ -285,11 +285,14 @@ CFLAGS_MODULE += -Wno-sign-compare
 CFLAGS_MODULE += -Wno-shift-negative-value
 # This flag is needed to avoid build errors on older kernels
 CFLAGS_MODULE += $(call cc-option, -Wno-cast-function-type)
+endif
 
 KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN1
+KBUILD_OPTIONS += $(MAKE_ARGS)
 
 # The following were added to align with W=2 in scripts/Makefile.extrawarn
 # from the Linux source tree (v5.18.14)
+ifdef MALI_ENABLE_EXTRAWARN
 CFLAGS_MODULE += -Wdisabled-optimization
 # The -Wshadow flag cannot be enabled unless upstream kernels are
 # patched to fix redefinitions of certain built-in functions and
@@ -300,6 +303,7 @@ CFLAGS_MODULE += -Wmissing-field-initializers
 CFLAGS_MODULE += -Wno-type-limits
 CFLAGS_MODULE += $(call cc-option, -Wmaybe-uninitialized)
 CFLAGS_MODULE += $(call cc-option, -Wunused-macros)
+endif
 
 KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN2
 
