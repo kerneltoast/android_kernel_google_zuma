@@ -2,7 +2,7 @@
 #
 # ASoC-based ALSA driver gluing all the audio amplifier drivers
 #
-ccflags-y       += -I$(srctree)/../private/google-modules/soc/gs/drivers/soc/google/cpif
+ccflags-y       += -I$(srctree)/google-modules/soc/gs/drivers/soc/google/cpif
 
 obj-$(CONFIG_AOC_DRIVER)	+= aoc_alsa_dev.o
 obj-$(CONFIG_AOC_DRIVER)	+= aoc_alsa_dev_util.o
