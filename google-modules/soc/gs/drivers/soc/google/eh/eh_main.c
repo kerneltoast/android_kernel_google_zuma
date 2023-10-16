@@ -710,6 +710,7 @@ static int __noreturn eh_comp_thread(void *data)
 
 	sched_set_fifo_low(current);
 	current->flags |= PF_MEMALLOC;
+	set_freezable();
 
 	while (1) {
 		int ret;
@@ -725,8 +726,9 @@ static int __noreturn eh_comp_thread(void *data)
 		 */
 		exynos_update_ip_idle_status(eh_dev->ip_index, 1);
 #endif
-		wait_event(eh_dev->comp_wq, atomic_read(&eh_dev->nr_request) ||
-					    !sw_fifo_empty(&eh_dev->sw_fifo));
+		wait_event_freezable(eh_dev->comp_wq,
+			atomic_read(&eh_dev->nr_request) ||
+			!sw_fifo_empty(&eh_dev->sw_fifo));
 #ifdef CONFIG_SOC_ZUMA
 		exynos_update_ip_idle_status(eh_dev->ip_index, 0);
 #endif
