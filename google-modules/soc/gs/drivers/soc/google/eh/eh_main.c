@@ -657,7 +657,7 @@ static unsigned int eh_wait_next_index(struct eh_device *eh_dev, unsigned int i)
 static int eh_process_compress(struct eh_device *eh_dev)
 {
 	unsigned int i = eh_dev->complete_index, end, index;
-	int nr_handled = 0, ret;
+	int ret;
 
 	/* Flush sw_fifo in case hw_fifo is empty */
 	if (!atomic_read(&eh_dev->nr_request))
@@ -673,7 +673,6 @@ static int eh_process_compress(struct eh_device *eh_dev)
 			ret = eh_process_completed_descriptor(eh_dev, index);
 			if (ret)
 				return ret;
-			nr_handled++;
 			/*
 			 * Since we have available space in hw_fifo, put the
 			 * next compression request immediately from sw_fifo to
@@ -683,7 +682,7 @@ static int eh_process_compress(struct eh_device *eh_dev)
 		} while ((i = (i + 1) & eh_dev->fifo_color_mask) != end);
 	} while (atomic_read(&eh_dev->nr_request));
 
-	return nr_handled;
+	return 0;
 }
 
 static void eh_abort_incomplete_descriptors(struct eh_device *eh_dev)
@@ -705,52 +704,33 @@ static void eh_abort_incomplete_descriptors(struct eh_device *eh_dev)
 	}
 }
 
-static bool ready_to_run(struct eh_device *eh_dev, bool *slept)
-{
-	if (atomic_read(&eh_dev->nr_request) || !sw_fifo_empty(&eh_dev->sw_fifo))
-		return true;
-
-	*slept = true;
-	return false;
-}
-
-static int eh_comp_thread(void *data)
+static int __noreturn eh_comp_thread(void *data)
 {
 	struct eh_device *eh_dev = data;
-	DEFINE_WAIT(wait);
 
 	sched_set_fifo_low(current);
 	current->flags |= PF_MEMALLOC;
-	set_freezable();
 
-	while (!kthread_should_stop()) {
+	while (1) {
 		int ret;
-		bool slept = false;
 
 #ifdef CONFIG_SOC_ZUMA
 		/*
-		 * On the worst case with race with request_to_hw_fifo,
-		 * this call could update IP as idle state but that
-		 * should be okay because the eh_comp_thread will never
-		 * sleep due to wake_up in the request_to_hw_fifo and
-		 * nr_request positive number check and PM let never
-		 * allowing entering SICD mode as long as system has a
-		 * runnable process.
+		 * On the worst case with race with request_to_hw_fifo, this
+		 * call could update IP as idle state but that should be okay
+		 * because the eh_comp_thread will never sleep due to wake_up in
+		 * the request_to_hw_fifo and nr_request positive number check
+		 * and PM let never allowing entering SICD mode as long as
+		 * system has a runnable process.
 		 */
 		exynos_update_ip_idle_status(eh_dev->ip_index, 1);
 #endif
-		wait_event_freezable(eh_dev->comp_wq, ready_to_run(eh_dev, &slept));
-
-		/*
-		 * The condition check above is racy so the schedule
-		 * couldn't schedule out the process but it should be
-		 * rare and the stat doesn't need to be precise.
-		 */
-		if (slept)
-			eh_dev->nr_run++;
+		wait_event(eh_dev->comp_wq, atomic_read(&eh_dev->nr_request) ||
+					    !sw_fifo_empty(&eh_dev->sw_fifo));
 #ifdef CONFIG_SOC_ZUMA
 		exynos_update_ip_idle_status(eh_dev->ip_index, 0);
 #endif
+
 		ret = eh_process_compress(eh_dev);
 		if (unlikely(ret < 0)) {
 			unsigned long error;
@@ -761,7 +741,7 @@ static int eh_comp_thread(void *data)
 				       error);
 				eh_dump_regs(eh_dev);
 				eh_abort_incomplete_descriptors(eh_dev);
-				break;
+				BUG();
 			}
 
 			/*
@@ -770,14 +750,11 @@ static int eh_comp_thread(void *data)
 			 */
 			WARN_ON(1);
 		}
-
-		eh_dev->nr_compressed += ret;
 	}
 
 #ifdef CONFIG_SOC_ZUMA
 	exynos_update_ip_idle_status(eh_dev->ip_index, 1);
 #endif
-	return 0;
 }
 
 /* Initialize SW related stuff */
@@ -1001,19 +978,6 @@ static void eh_hw_deinit(struct eh_device *eh_dev)
 	eh_dev->regs = NULL;
 }
 
-static void eh_sw_deinit(struct eh_device *eh_dev)
-{
-	if (eh_dev->error_irq) {
-		free_irq(eh_dev->error_irq, eh_dev);
-		eh_dev->error_irq = 0;
-	}
-
-	if (eh_dev->comp_thread) {
-		kthread_stop(eh_dev->comp_thread);
-		eh_dev->comp_thread = NULL;
-	}
-}
-
 /* Initialize HW related stuff */
 static int eh_hw_init(struct eh_device *eh_dev, unsigned short fifo_size,
 		      phys_addr_t regs, unsigned short quirks)
@@ -1080,51 +1044,6 @@ iounmap:
 	return ret;
 }
 
-#define EH_ATTR_RO(_name) \
-	static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
-
-static ssize_t nr_run_show(struct kobject *kobj,
-		struct kobj_attribute *attr,
-		char *buf)
-{
-	struct eh_device *eh_dev = container_of(kobj, struct eh_device, kobj);
-
-	return sysfs_emit(buf, "%lu\n", eh_dev->nr_run);
-}
-EH_ATTR_RO(nr_run);
-
-static ssize_t nr_compressed_show(struct kobject *kobj,
-		struct kobj_attribute *attr,
-		char *buf)
-{
-	struct eh_device *eh_dev = container_of(kobj, struct eh_device, kobj);
-
-	return sysfs_emit(buf, "%lu\n", eh_dev->nr_compressed);
-}
-EH_ATTR_RO(nr_compressed);
-
-static struct attribute *eh_attrs[] = {
-	&nr_run_attr.attr,
-	&nr_compressed_attr.attr,
-	NULL,
-};
-ATTRIBUTE_GROUPS(eh);
-
-static void eh_kobj_release(struct kobject *kobj)
-{
-	struct eh_device *eh_dev = container_of(kobj, struct eh_device, kobj);
-
-	eh_sw_deinit(eh_dev);
-	eh_hw_deinit(eh_dev);
-	kfree(eh_dev);
-}
-
-static struct kobj_type eh_ktype = {
-	.release = eh_kobj_release,
-	.sysfs_ops = &kobj_sysfs_ops,
-	.default_groups = eh_groups,
-};
-
 /* EmeraldHill initialization entry */
 static int eh_init(struct device *device, struct eh_device *eh_dev,
 		   unsigned short fifo_size, phys_addr_t regs, const int *irqs,
@@ -1149,12 +1068,7 @@ static int eh_init(struct device *device, struct eh_device *eh_dev,
 		return ret;
 	}
 
-	ret = kobject_init_and_add(&eh_dev->kobj, &eh_ktype,
-				   kernel_kobj, "%s", "eh");
-	if (ret)
-		kobject_put(&eh_dev->kobj);
-
-	return ret;
+	return 0;
 }
 
 static void eh_setup_dcmd(struct eh_device *eh_dev, unsigned int index,
@@ -1440,8 +1354,6 @@ static int eh_of_remove(struct platform_device *pdev)
 	clk_put(eh_dev->clk);
 	pm_runtime_put_sync(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
-
-	kobject_put(&eh_dev->kobj);
 	return 0;
 }
 
