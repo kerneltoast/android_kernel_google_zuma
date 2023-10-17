@@ -2483,7 +2483,7 @@ static int aoc_platform_probe(struct platform_device *pdev)
 		sizeof(struct mbox_slot) * prvdata->aoc_mbox_channels, GFP_KERNEL);
 	if (!prvdata->mbox_channels) {
 		rc = -ENOMEM;
-		goto err_failed_prvdata_alloc;
+		goto err_invalid_dt;
 	}
 
 	prvdata->dev = dev;
@@ -2499,7 +2499,7 @@ static int aoc_platform_probe(struct platform_device *pdev)
 	if (rc) {
 		dev_err(dev, "Failed to initialize gsa device: %d\n", rc);
 		rc = -EINVAL;
-		goto err_failed_prvdata_alloc;
+		goto err_invalid_dt;
 	}
 
 	ret = init_chardev(prvdata);
@@ -2556,8 +2556,8 @@ static int aoc_platform_probe(struct platform_device *pdev)
 	init_waitqueue_head(&prvdata->aoc_reset_wait_queue);
 	INIT_WORK(&prvdata->watchdog_work, aoc_watchdog);
 
-	ret = configure_watchdog_interrupt(pdev, prvdata);
-	if (ret < 0)
+	rc = configure_watchdog_interrupt(pdev, prvdata);
+	if (rc < 0)
 		goto err_watchdog_irq;
 
 	iommu_node = of_parse_phandle(aoc_node, "iommus", 0);
@@ -2566,8 +2566,8 @@ static int aoc_platform_probe(struct platform_device *pdev)
 		rc = -ENODEV;
 		goto err_watchdog_iommu_irq;
 	}
-	ret = configure_iommu_interrupts(dev, iommu_node, prvdata);
-	if (ret < 0)
+	rc = configure_iommu_interrupts(dev, iommu_node, prvdata);
+	if (rc < 0)
 		goto err_watchdog_iommu_irq;
 	of_node_put(iommu_node);
 
@@ -2695,8 +2695,11 @@ err_mem_resources:
 err_memnode:
 	deinit_chardev(prvdata);
 err_chardev:
-err_failed_prvdata_alloc:
+	devm_remove_action(dev, release_gsa_device, prvdata);
 err_invalid_dt:
+	platform_set_drvdata(pdev, NULL);
+	devm_kfree(dev, prvdata);
+err_failed_prvdata_alloc:
 	aoc_platform_device = NULL;
 err_platform_not_null:
 	return rc;
