@@ -2632,9 +2632,9 @@ static void hk3_lhbm_brightness_init(struct exynos_panel *ctx)
 
 static void hk3_panel_init(struct exynos_panel *ctx)
 {
+	struct hk3_panel *spanel = to_spanel(ctx);
 #ifdef CONFIG_DEBUG_FS
 	struct dentry *csroot = ctx->debugfs_cmdset_entry;
-	struct hk3_panel *spanel = to_spanel(ctx);
 
 	exynos_panel_debugfs_create_cmdset(ctx, csroot, &hk3_init_cmd_set, "init");
 	debugfs_create_bool("force_changeable_te", 0644, ctx->debugfs_entry,
