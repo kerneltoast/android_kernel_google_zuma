@@ -146,7 +146,7 @@ $(obj)/config_data.gz: $(obj)/config_data FORCE
 
 filechk_cat = cat $<
 
-$(obj)/config_data: $(KCONFIG_CONFIG) FORCE
+$(obj)/config_data: arch/arm64/configs/zuma-stock_defconfig FORCE
 	$(call filechk,cat)
 
 $(obj)/kheaders.o: $(obj)/kheaders_data.tar.xz
