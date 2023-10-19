@@ -47,6 +47,7 @@ struct temp_residency_stats_callbacks {
 	int (*reset_stats)(tr_handle instance);
 };
 
+#if IS_ENABLED(CONFIG_PIXEL_METRICS)
 int temp_residency_stats_update(tr_handle instance, int temp);
 tr_handle register_temp_residency_stats(const char *name, char *group_name);
 int register_temp_residency_stats_callbacks(tr_handle instance,
@@ -54,3 +55,17 @@ int register_temp_residency_stats_callbacks(tr_handle instance,
 int unregister_temp_residency_stats(tr_handle instance);
 int temp_residency_stats_set_thresholds(tr_handle instance,
 		const int *thresholds, int num_thresholds);
+#else
+static inline
+int temp_residency_stats_update(tr_handle instance, int temp) { return 0; }
+static inline
+tr_handle register_temp_residency_stats(const char *name, char *group_name) { return 0; }
+static inline
+int register_temp_residency_stats_callbacks(tr_handle instance,
+		struct temp_residency_stats_callbacks *ops) { return 0; }
+static inline
+int unregister_temp_residency_stats(tr_handle instance) { return 0; }
+static inline
+int temp_residency_stats_set_thresholds(tr_handle instance,
+		const int *thresholds, int num_thresholds) { return 0; }
+#endif
