@@ -4086,7 +4086,7 @@ static int load_integrated_module(const char *modname, const char __user *uargs)
 		return 0;
 	}
 
-	args = strndup_user(uargs, ~0UL >> 1);
+	args = uargs ? strndup_user(uargs, ~0UL >> 1) : NULL;
 	if (IS_ERR(args))
 		return PTR_ERR(args);
 
@@ -4096,6 +4096,8 @@ static int load_integrated_module(const char *modname, const char __user *uargs)
 
 	/* Initialize the module if it hasn't been initialized already */
 	if (!atomic_cmpxchg(init_done, 0, 1)) {
+		pr_info("%s: Initializing module \"%s\"\n", __func__, modname);
+
 		/*
 		 * Parameter parsing is done in two steps for integrated modules
 		 * because built-in modules have their parameter names set as
@@ -4114,7 +4116,7 @@ static int load_integrated_module(const char *modname, const char __user *uargs)
 		 * passes a different unknown handler,
 		 * unknown_integrated_module_param_cb().
 		 */
-		if (*args)
+		if (args && *args)
 			parse_args(modname, args, NULL, 0, 0, 0, NULL,
 				   integrated_module_param_cb);
 
@@ -5015,3 +5017,83 @@ void module_layout(struct module *mod,
 }
 EXPORT_SYMBOL(module_layout);
 #endif
+
+static const char *const integrated_modules[] = {
+	"exynos_pmu_if",
+	"gs_acpm",
+	"gs_chipid",
+	"ect_parser",
+	"exynos_pm_qos",
+	"cmupmucal",
+	"pinctrl_exynos_gs",
+	"clk_exynos_gs",
+	"exynos_mct_v3",
+	"exynos_cpupm",
+	"exynos_pd",
+	"pkvm_s2mpu_v9",
+	"trusty_core",
+	"spmi_bit_bang",
+	"spidev",
+	"slg51002_regulator",
+	"slg51002_core",
+	"slc_pt",
+	"sg",
+	"sbb_mux",
+	"samsung_secure_iova",
+	"samsung_iommu_group",
+	"s5910",
+	"s2mpg14_key",
+	"pmic_class",
+	"pl330",
+	"open_dice",
+	"keydebug",
+	"keycombo",
+	"i2c_dev",
+	"i2c_acpm",
+	"gvotable",
+	"at24",
+	"arm_cmn",
+	"samsung_iommu_v9",
+	"trusty_ipc",
+	"slc_dummy",
+	"trusty_virtio",
+	"samsung_dma_heap",
+	"s3c2410_wdt",
+	"gsa",
+	"exynos_reboot",
+	"s2mpg15_mfd",
+	"max77729_pmic",
+	"gsa_gsc",
+	"exynos_dm",
+	"acpm_flexpmu_dbg",
+	"slc_acpm",
+	"s2mpg15_spmic_thermal",
+	"s2mpg15_regulator",
+	"s2mpg15_powermeter",
+	"s2mpg14_mfd",
+	"exynos_pm",
+	"bts",
+	"s2mpg14_regulator",
+	"s2mpg14_powermeter",
+	"s2mpg1415_gpio",
+	"rtc_s2mpg14",
+	"odpm",
+	"ufs_exynos_gs",
+	"i2c_exynos5",
+	"exynos_tty",
+	"exynos_pd_dbg",
+	"exynos_devfreq",
+	"exynos_acme",
+	"pinctrl_slg51002",
+};
+
+static int __init load_integrated_modules(void)
+{
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(integrated_modules); i++)
+		load_integrated_module(integrated_modules[i], NULL);
+	async_synchronize_full();
+	return 0;
+}
+late_initcall_sync(load_integrated_modules);
