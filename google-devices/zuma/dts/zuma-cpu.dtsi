@@ -52,8 +52,8 @@
 			reg = <0x0 0x0000>;
 			enable-method = "psci";
 			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
-			capacity-dmips-mhz = <193>;
-			dynamic-power-coefficient = <70>;
+			capacity-dmips-mhz = <453>;
+			dynamic-power-coefficient = <219>;
 		};
 		cpu1: cpu@100 {
 			device_type = "cpu";
@@ -61,8 +61,8 @@
 			reg = <0x0 0x0100>;
 			enable-method = "psci";
 			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
-			capacity-dmips-mhz = <193>;
-			dynamic-power-coefficient = <70>;
+			capacity-dmips-mhz = <453>;
+			dynamic-power-coefficient = <219>;
 		};
 		cpu2: cpu@200 {
 			device_type = "cpu";
@@ -70,8 +70,8 @@
 			reg = <0x0 0x0200>;
 			enable-method = "psci";
 			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
-			capacity-dmips-mhz = <193>;
-			dynamic-power-coefficient = <70>;
+			capacity-dmips-mhz = <453>;
+			dynamic-power-coefficient = <219>;
 		};
 		cpu3: cpu@300 {
 			device_type = "cpu";
@@ -79,8 +79,8 @@
 			reg = <0x0 0x0300>;
 			enable-method = "psci";
 			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
-			capacity-dmips-mhz = <193>;
-			dynamic-power-coefficient = <70>;
+			capacity-dmips-mhz = <453>;
+			dynamic-power-coefficient = <219>;
 		};
 		cpu4: cpu@400 {
 			device_type = "cpu";
@@ -88,8 +88,8 @@
 			reg = <0x0 0x0400>;
 			enable-method = "psci";
 			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
-			capacity-dmips-mhz = <927>;
-			dynamic-power-coefficient = <513>;
+			capacity-dmips-mhz = <826>;
+			dynamic-power-coefficient = <262>;
 		};
 		cpu5: cpu@500 {
 			device_type = "cpu";
@@ -97,8 +97,8 @@
 			reg = <0x0 0x0500>;
 			enable-method = "psci";
 			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
-			capacity-dmips-mhz = <927>;
-			dynamic-power-coefficient = <513>;
+			capacity-dmips-mhz = <826>;
+			dynamic-power-coefficient = <262>;
 		};
 		cpu6: cpu@600 {
 			device_type = "cpu";
@@ -106,8 +106,8 @@
 			reg = <0x0 0x0600>;
 			enable-method = "psci";
 			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
-			capacity-dmips-mhz = <927>;
-			dynamic-power-coefficient = <513>;
+			capacity-dmips-mhz = <826>;
+			dynamic-power-coefficient = <262>;
 		};
 		cpu7: cpu@700 {
 			device_type = "cpu";
@@ -115,8 +115,8 @@
 			reg = <0x0 0x0700>;
 			enable-method = "psci";
 			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
-			capacity-dmips-mhz = <927>;
-			dynamic-power-coefficient = <513>;
+			capacity-dmips-mhz = <826>;
+			dynamic-power-coefficient = <262>;
 		};
 		cpu8: cpu@800 {
 			device_type = "cpu";
@@ -125,7 +125,7 @@
 			enable-method = "psci";
 			cpu-idle-states =  <&MAKALUELP_CPU_SLEEP>;
 			capacity-dmips-mhz = <1024>;
-			dynamic-power-coefficient = <757>;
+			dynamic-power-coefficient = <471>;
 		};
 
 		idle-states {
