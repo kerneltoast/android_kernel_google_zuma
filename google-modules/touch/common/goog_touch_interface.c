@@ -2215,10 +2215,14 @@ int goog_process_vendor_cmd(struct goog_touch_interface *gti, enum gti_cmd_type 
 				&gti->cmd.continuous_report_cmd);
 		break;
 	case GTI_CMD_SET_COORD_FILTER_ENABLED:
+		if (!IS_ENABLED(CONFIG_TOUCHSCREEN_OFFLOAD))
+			gti->cmd.coord_filter_cmd.setting = GTI_COORD_FILTER_ENABLE;
 		ret = gti->options.set_coord_filter_enabled(private_data,
 				&gti->cmd.coord_filter_cmd);
 		break;
 	case GTI_CMD_SET_GRIP_MODE:
+		if (!IS_ENABLED(CONFIG_TOUCHSCREEN_OFFLOAD))
+			gti->cmd.grip_cmd.setting = GTI_GRIP_ENABLE;
 		GOOG_INFO(gti, "Set firmware grip %s",
 				gti->cmd.grip_cmd.setting == GTI_GRIP_ENABLE ?
 				"enabled" : "disabled");
@@ -2231,6 +2235,8 @@ int goog_process_vendor_cmd(struct goog_touch_interface *gti, enum gti_cmd_type 
 		ret = gti->options.set_irq_mode(private_data, &gti->cmd.irq_cmd);
 		break;
 	case GTI_CMD_SET_PALM_MODE:
+		if (!IS_ENABLED(CONFIG_TOUCHSCREEN_OFFLOAD))
+			gti->cmd.palm_cmd.setting = GTI_PALM_ENABLE;
 		GOOG_INFO(gti, "Set firmware palm %s",
 				gti->cmd.palm_cmd.setting == GTI_PALM_ENABLE ?
 				"enabled" : "disabled");
