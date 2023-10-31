@@ -155,7 +155,6 @@ static const struct samsung_pin_ctrl gs101_pin_ctrl[] __initconst = {
 		/* pin banks of gs101 pin-controller (ALIVE) */
 		.pin_banks	= gs101_pin_alive,
 		.nr_banks	= ARRAY_SIZE(gs101_pin_alive),
-		.eint_gpio_init = exynos_eint_gpio_init,
 		.eint_wkup_init = exynos_eint_wkup_init,
 		.suspend	= exynos_pinctrl_suspend,
 		.resume		= exynos_pinctrl_resume,
@@ -163,7 +162,6 @@ static const struct samsung_pin_ctrl gs101_pin_ctrl[] __initconst = {
 		/* pin banks of gs101 pin-controller (FAR_ALIVE) */
 		.pin_banks	= gs101_pin_far_alive,
 		.nr_banks	= ARRAY_SIZE(gs101_pin_far_alive),
-		.eint_gpio_init = exynos_eint_gpio_init,
 		.eint_wkup_init = exynos_eint_wkup_init,
 		.suspend	= exynos_pinctrl_suspend,
 		.resume		= exynos_pinctrl_resume,
@@ -176,7 +174,7 @@ static const struct samsung_pin_ctrl gs101_pin_ctrl[] __initconst = {
 		/* pin banks of gs101 pin-controller (GSACTRL) */
 		.pin_banks	= gs101_pin_gsactrl,
 		.nr_banks	= ARRAY_SIZE(gs101_pin_gsactrl),
-		.eint_gpio_init = exynos_eint_gpio_init,
+		.eint_wkup_init = exynos_eint_wkup_init,
 	}, {
 		/* pin banks of gs101 pin-controller (PERIC0) */
 		.pin_banks	= gs101_pin_peric0,
@@ -327,7 +325,6 @@ static const struct samsung_pin_ctrl zuma_pin_ctrl[] __initconst = {
 		/* pin banks of zuma pin-controller (ALIVE) */
 		.pin_banks	= zuma_pin_alive,
 		.nr_banks	= ARRAY_SIZE(zuma_pin_alive),
-		.eint_gpio_init = exynos_eint_gpio_init,
 		.eint_wkup_init = exynos_eint_wkup_init,
 		.suspend	= exynos_pinctrl_suspend,
 		.resume		= exynos_pinctrl_resume,
@@ -335,7 +332,6 @@ static const struct samsung_pin_ctrl zuma_pin_ctrl[] __initconst = {
 		/* pin banks of zuma pin-controller (CUSTOM_ALIVE) */
 		.pin_banks	= zuma_pin_custom,
 		.nr_banks	= ARRAY_SIZE(zuma_pin_custom),
-		.eint_gpio_init = exynos_eint_gpio_init,
 		.eint_wkup_init = exynos_eint_wkup_init,
 		.suspend	= exynos_pinctrl_suspend,
 		.resume		= exynos_pinctrl_resume,
@@ -343,7 +339,6 @@ static const struct samsung_pin_ctrl zuma_pin_ctrl[] __initconst = {
 		/* pin banks of zuma pin-controller (FAR_ALIVE) */
 		.pin_banks	= zuma_pin_far,
 		.nr_banks	= ARRAY_SIZE(zuma_pin_far),
-		.eint_gpio_init = exynos_eint_gpio_init,
 		.eint_wkup_init = exynos_eint_wkup_init,
 		.suspend	= exynos_pinctrl_suspend,
 		.resume		= exynos_pinctrl_resume,
@@ -372,7 +367,6 @@ static const struct samsung_pin_ctrl zuma_pin_ctrl[] __initconst = {
 		/* pin banks of zuma pin-controller (GSACTRL) */
 		.pin_banks	= zuma_pin_gsactrl,
 		.nr_banks	= ARRAY_SIZE(zuma_pin_gsactrl),
-		.eint_gpio_init = exynos_eint_gpio_init,
 		.eint_wkup_init = exynos_eint_wkup_init,
 	}, {
 		/* pin banks of zuma pin-controller (HSI1) */
