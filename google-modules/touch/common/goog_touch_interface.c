@@ -3123,6 +3123,14 @@ void goog_offload_remove(struct goog_touch_interface *gti)
 }
 #endif
 
+bool goog_input_legacy_report(struct goog_touch_interface *gti)
+{
+	if (!gti->offload.offload_running)
+		return true;
+
+	return false;
+}
+
 #if IS_ENABLED(CONFIG_TOUCHSCREEN_OFFLOAD)
 static void goog_input_flush_offload_fingers(struct goog_touch_interface *gti)
 {
@@ -3295,6 +3303,9 @@ void goog_input_set_timestamp(
 		struct goog_touch_interface *gti,
 		struct input_dev *dev, ktime_t timestamp)
 {
+	if (goog_input_legacy_report(gti))
+		input_set_timestamp(dev, timestamp);
+
 	gti->input_timestamp = timestamp;
 	gti->input_timestamp_changed = true;
 }
@@ -3308,6 +3319,9 @@ void goog_input_mt_slot(
 		GOOG_ERR(gti, "Invalid slot: %d\n", slot);
 		return;
 	}
+
+	if (goog_input_legacy_report(gti))
+		input_mt_slot(dev, slot);
 
 	gti->slot = slot;
 	/*
@@ -3324,6 +3338,9 @@ void goog_input_mt_report_slot_state(
 		struct goog_touch_interface *gti,
 		struct input_dev *dev, unsigned int tool_type, bool active)
 {
+	if (goog_input_legacy_report(gti))
+		input_mt_report_slot_state(dev, tool_type, active);
+
 	switch (tool_type) {
 	case MT_TOOL_FINGER:
 		if (active) {
@@ -3342,8 +3359,10 @@ void goog_input_mt_report_slot_state(
 		break;
 
 	default:
-		GOOG_WARN(gti, "unexcepted input tool_type(%#x) active(%d)!\n",
-			tool_type, active);
+		if (!goog_input_legacy_report(gti)) {
+			GOOG_WARN(gti, "unexcepted input tool_type(%#x) active(%d)!\n",
+				tool_type, active);
+		}
 		break;
 	}
 }
@@ -3353,6 +3372,9 @@ void goog_input_report_abs(
 		struct goog_touch_interface *gti,
 		struct input_dev *dev, unsigned int code, int value)
 {
+	if (goog_input_legacy_report(gti))
+		input_report_abs(dev, code, value);
+
 	switch (code) {
 	case ABS_MT_POSITION_X:
 		gti->offload.coords[gti->slot].x = value;
@@ -3390,13 +3412,15 @@ void goog_input_report_key(
 		struct goog_touch_interface *gti,
 		struct input_dev *dev, unsigned int code, int value)
 {
-
+	if (goog_input_legacy_report(gti))
+		input_report_key(dev, code, value);
 }
 EXPORT_SYMBOL_GPL(goog_input_report_key);
 
 void goog_input_sync(struct goog_touch_interface *gti, struct input_dev *dev)
 {
-
+	if (goog_input_legacy_report(gti))
+		input_sync(dev);
 }
 EXPORT_SYMBOL_GPL(goog_input_sync);
 
