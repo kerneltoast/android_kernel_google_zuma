@@ -607,6 +607,7 @@ static int parse_interrupt_leaf_nodes(struct lwis_interrupt_list *list, int inde
 		i++;
 	}
 
+	kfree(int_reg_bits);
 	return 0;
 leaf_error:
 	lwis_interrupt_free_leaves(&list->irq[index]);
