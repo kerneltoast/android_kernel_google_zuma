@@ -19,10 +19,6 @@
 #include "acpm_dvfs.h"
 #include "cmucal.h"
 
-#if !IS_ENABLED(CONFIG_ARM_EXYNOS_DEVFREQ)
-#define PM_QOS_BUS_THROUGHPUT (11)
-#endif
-
 static struct acpm_dvfs acpm_dvfs;
 static struct acpm_dvfs acpm_noti_mif;
 static struct exynos_pm_qos_request mif_request_from_acpm;
