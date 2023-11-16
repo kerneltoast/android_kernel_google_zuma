@@ -4,8 +4,6 @@ M ?= $(shell pwd)
 O := $(abspath $(KDIR))
 B := $(abspath $O/$M)
 
-$(info *** Building Android in $O/$M )
-
 KBUILD_OPTIONS += CONFIG_QM35_SPI=m
 
 include $(KERNEL_SRC)/../private/google-modules/soc/gs/Makefile.include
