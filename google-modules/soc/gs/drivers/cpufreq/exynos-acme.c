@@ -538,7 +538,11 @@ static struct notifier_block exynos_cpufreq_pm = {
 static struct cpufreq_driver exynos_driver = {
 	.name		= "exynos_cpufreq",
 	.flags		= CPUFREQ_HAVE_GOVERNOR_PER_POLICY | CPUFREQ_ASYNC_NOTIFICATION |
+#if IS_ENABLED(CONFIG_EXYNOS_DVFS_MANAGER)
 				CPUFREQ_NEED_UPDATE_LIMITS, // force update dm->governor_freq
+#else
+				0,
+#endif
 	.init		= exynos_cpufreq_init,
 	.verify		= exynos_cpufreq_verify,
 	.target_index   = exynos_cpufreq_target_index,
