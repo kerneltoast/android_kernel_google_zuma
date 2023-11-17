@@ -828,7 +828,7 @@ static void decon_wait_earliest_process_time(
 			pr_warn("expected present time seems incorrect(now %llu, earliest %llu)\n",
 					now, earliest_process_time);
 		}
-		usleep_range(delay_until_process, delay_until_process + 10);
+		usleep_idle_range(delay_until_process, delay_until_process + 10);
 
 		DPU_ATRACE_END("wait for earliest process time");
 	}
