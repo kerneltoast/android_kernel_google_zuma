@@ -28,7 +28,7 @@
 #define BUS_WIDTH 16
 #define MIF_UTIL 65
 #define INT_UTIL 65
-#define RT_UTIL 40
+#define RT_UTIL 39
 
 #if IS_ENABLED(CONFIG_SOC_ZUMA)
 #define NOCL2A_NUM_CHANNEL 2
