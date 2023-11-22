@@ -7009,7 +7009,7 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
 	 */
 	for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
 		unsigned long util_freq = cpu_util_next(cpu, p, dst_cpu);
-		unsigned long cpu_util, util_running = util_freq;
+		unsigned long cpu_util, util_running = util_freq, min, max;
 		struct task_struct *tsk = NULL;
 
 		/*
@@ -7033,8 +7033,7 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
 		 * is already enough to scale the EM reported power
 		 * consumption at the (eventually clamped) cpu_capacity.
 		 */
-		cpu_util = effective_cpu_util(cpu, util_running, ENERGY_UTIL,
-					      NULL);
+		cpu_util = effective_cpu_util(cpu, util_running, NULL, NULL);
 
 		sum_util += min(cpu_util, cpu_cap);
 
@@ -7045,8 +7044,23 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
 		 * NOTE: in case RT tasks are running, by default the
 		 * FREQUENCY_UTIL's utilization can be max OPP.
 		 */
-		cpu_util = effective_cpu_util(cpu, util_freq, FREQUENCY_UTIL,
-					      tsk);
+		cpu_util = effective_cpu_util(cpu, util_freq, &min, &max);
+
+		/* Task's uclamp can modify min and max value */
+		if (tsk && uclamp_is_used()) {
+			min = max(min, uclamp_eff_value(p, UCLAMP_MIN));
+
+			/*
+			 * If there is no active max uclamp constraint,
+			 * directly use task's one, otherwise keep max.
+			 */
+			if (uclamp_rq_is_idle(cpu_rq(cpu)))
+				max = uclamp_eff_value(p, UCLAMP_MAX);
+			else
+				max = max(max, uclamp_eff_value(p, UCLAMP_MAX));
+		}
+
+		cpu_util = sugov_effective_cpu_perf(cpu, cpu_util, min, max);
 		max_util = max(max_util, min(cpu_util, cpu_cap));
 	}
 
