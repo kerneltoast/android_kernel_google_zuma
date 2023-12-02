@@ -423,11 +423,13 @@ static int cpus_busy(int target_residency, const struct cpumask *cpus)
 	 */
 	for_each_cpu_and(cpu, cpu_online_mask, cpus) {
 		struct exynos_cpupm *pm = per_cpu_ptr(cpupm, cpu);
+		s64 duration;
 
 		if (check_state_busy(pm))
 			return -EBUSY;
 
-		if (get_sleep_length(cpu, now) < target_residency)
+		duration = get_sleep_length(cpu, now);
+		if (duration > 0 && duration < target_residency)
 			return -EBUSY;
 	}
 
