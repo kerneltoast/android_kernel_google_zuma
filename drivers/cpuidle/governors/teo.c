@@ -148,6 +148,7 @@ struct teo_cpu {
 	unsigned int total;
 	int next_recent_idx;
 	int recent_idx[NR_RECENT];
+	s64 wfi_timeout_ns;
 };
 
 static DEFINE_PER_CPU(struct teo_cpu, teo_cpus);
@@ -474,7 +475,32 @@ end:
 			idx = teo_find_shallower_state(drv, dev, idx, delta_tick);
 	}
 
+	/*
+	 * Set a limit to how long the CPU can remain in WFI in case of a
+	 * misprediction that results in too much time spent in WFI. This way,
+	 * the CPU can be kicked out of WFI and enter a deeper idle state if a
+	 * deeper state fits within the residency requirement.
+	 */
+#define WFI_TIMEOUT_NS (1 * NSEC_PER_MSEC)
+	cpu_data->wfi_timeout_ns = 0;
+	if (drv->state_count > 1 && !idx && constraint_idx) {
+		if (*stop_tick)
+			delta_tick = cpu_data->sleep_length_ns;
+
+		if (delta_tick > duration_ns &&
+		    (delta_tick - duration_ns - WFI_TIMEOUT_NS) >
+		    drv->states[1].target_residency_ns)
+			cpu_data->wfi_timeout_ns = duration_ns + WFI_TIMEOUT_NS;
+	}
+
 	return idx;
+}
+
+s64 teo_wfi_timeout_ns(void)
+{
+	struct teo_cpu *cpu_data = this_cpu_ptr(&teo_cpus);
+
+	return cpu_data->wfi_timeout_ns;
 }
 
 /**
