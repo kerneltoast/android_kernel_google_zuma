@@ -1913,7 +1913,7 @@ int exynos_usbdrd_ldo_manual_control(bool on)
 {
 	struct exynos_usbdrd_phy *phy_drd;
 
-	pr_info("%s ldo = %d\n", __func__, on);
+	pr_debug("%s ldo = %d\n", __func__, on);
 
 	phy_drd = exynos_usbdrd_get_struct();
 
