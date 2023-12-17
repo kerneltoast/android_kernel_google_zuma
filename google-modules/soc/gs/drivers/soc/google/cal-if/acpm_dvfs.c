@@ -37,7 +37,11 @@ int exynos_acpm_set_rate(unsigned int id, unsigned long rate)
 	config.cmd = cmd;
 	if (id == GET_IDX(ACPM_DVFS_MIF) || id == GET_IDX(ACPM_DVFS_INT) ||
 		id == GET_IDX(ACPM_DVFS_CPUCL0) || id == GET_IDX(ACPM_DVFS_CPUCL1) ||
-		id == GET_IDX(ACPM_DVFS_CPUCL2))
+		id == GET_IDX(ACPM_DVFS_CPUCL2)
+#ifdef CONFIG_SOC_ZUMA
+		|| id == GET_IDX(ACPM_DVFS_DSU) || id == GET_IDX(ACPM_DVFS_BCI)
+#endif
+		)
 		config.response = false;
 	else
 		config.response = true;
