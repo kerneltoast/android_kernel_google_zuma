@@ -8,7 +8,13 @@
 #include <soc/google/acpm_ipc_ctrl.h>
 #include <soc/google/exynos-devfreq.h>
 #include <linux/module.h>
+#ifdef CONFIG_SOC_GS101
 #include <dt-bindings/clock/gs101.h>
+#elif defined(CONFIG_SOC_GS201)
+#include <dt-bindings/clock/gs201.h>
+#elif defined(CONFIG_SOC_ZUMA)
+#include <dt-bindings/clock/zuma.h>
+#endif
 
 #include "acpm_dvfs.h"
 #include "cmucal.h"
