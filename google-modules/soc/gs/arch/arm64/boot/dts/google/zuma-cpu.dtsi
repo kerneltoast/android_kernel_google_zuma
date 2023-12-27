@@ -258,7 +258,7 @@
 			cal-id = <ACPM_DVFS_CPUCL0>;
 			dm-type = <DM_CPU_CL0>;
 
-			min-freq = <324000>;
+			min-freq = <610000>;
 			max-freq = <1704000>;
 
 			#cooling-cells = <2>; /* min followed by max */
