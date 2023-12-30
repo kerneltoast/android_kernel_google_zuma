@@ -14,7 +14,7 @@ enum stat_type {
 
 struct gcma_heap_stat;
 
-#ifdef CONFIG_SYSFS
+#if defined(CONFIG_SYSFS) && IS_ENABLED(CONFIG_VH_MM)
 int __init gcma_heap_sysfs_init(void);
 int register_heap_sysfs(struct gcma_heap *heap, const char *name);
 
