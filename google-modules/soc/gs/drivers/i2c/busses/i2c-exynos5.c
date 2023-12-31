@@ -872,12 +872,14 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c,
 			HSI2C_INT_TRANSFER_DONE;
 		writel(i2c_int_en, i2c->regs + HSI2C_INT_ENABLE);
 
-		cpumask_set_cpu(cpu, &m);
-		if (IS_ENABLED(CONFIG_SOC_ZUMA) && cpu == 8) {
-			cpumask_setall(&m);
-			cpumask_clear_cpu(cpu, &m);
+		if (!IS_ENABLED(CONFIG_IRQ_SBALANCE)) {
+			cpumask_set_cpu(cpu, &m);
+			if (IS_ENABLED(CONFIG_SOC_ZUMA) && cpu == 8) {
+				cpumask_setall(&m);
+				cpumask_clear_cpu(cpu, &m);
+			}
+			irq_set_affinity_and_hint(i2c->irq, &m);
 		}
-		irq_set_affinity_and_hint(i2c->irq, &m);
 		enable_irq(i2c->irq);
 	} else {
 		writel(HSI2C_INT_TRANSFER_DONE, i2c->regs + HSI2C_INT_ENABLE);
