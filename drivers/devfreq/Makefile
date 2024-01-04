@@ -13,6 +13,11 @@ obj-$(CONFIG_ARM_IMX_BUS_DEVFREQ)	+= imx-bus.o
 obj-$(CONFIG_ARM_IMX8M_DDRC_DEVFREQ)	+= imx8m-ddrc.o
 obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
 obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
+obj-$(CONFIG_ARM_TENSOR_AIO_DEVFREQ)	+= tensor_aio.o
 
 # DEVFREQ Event Drivers
 obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
+
+CFLAGS_tensor_aio.o := -I$(srctree)/google-modules/soc/gs/include \
+		       -I$(srctree)/google-modules/soc/gs/drivers \
+		       -I$(srctree)/kernel/sched
