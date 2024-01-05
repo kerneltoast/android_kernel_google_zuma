@@ -1178,7 +1178,8 @@ static int goodix_touch_handler(struct goodix_ts_core *cd,
 		}
 	}
 
-	goodix_update_heatmap(cd, (u8 *)event_data); /* [GOOG] */
+	if (IS_ENABLED(CONFIG_TOUCHSCREEN_HEATMAP))
+		goodix_update_heatmap(cd, (u8 *)event_data); /* [GOOG] */
 
 	ts_event->fp_flag = event_data->fp_flag;
 	ts_event->event_type |= EVENT_TOUCH;
