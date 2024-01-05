@@ -5,6 +5,9 @@ SUBLEVEL = 137
 EXTRAVERSION =
 NAME = Trick or Treat
 
+export KCONFIG_EXT_PREFIX := google-modules/soc/gs/
+export KCONFIG_EXT_MODULES_PREFIX := ./
+
 ifeq ($(MAKECMDGOALS),)
 MAKECMDGOALS := Image.lz4 dtbs
 endif
