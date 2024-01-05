@@ -735,18 +735,17 @@ static void acpm_irq_cb(unsigned int *cmd, unsigned int size)
 		list_for_each_entry (data, &dtm_dev_list, node) {
 			struct curr_state curr_state = curr_state_all[data->id];
 
-			if (!test_bit(data->id, (unsigned long *)&dfs_status_changed))
+			if (!(dfs_status_changed & BIT(data->id)))
 				continue;
 
-			if (test_bit(data->id, (unsigned long *)&thermal_state.dfs_on))
+			if (thermal_state.dfs_on & BIT(data->id))
 				pr_info_ratelimited(
 					"%s DFS on: temperature = %dC, cdev_state = %d\n",
 					data->tmu_name, curr_state.temperature,
 					curr_state.cdev_state);
 
 			update_thermal_trace(data, DFS,
-					     test_bit(data->id,
-						      (unsigned long *)&thermal_state.dfs_on));
+					     !!(thermal_state.dfs_on & BIT(data->id)));
 		}
 	}
 }
