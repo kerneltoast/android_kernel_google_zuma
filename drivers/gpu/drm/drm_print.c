@@ -160,11 +160,13 @@ void __drm_printfn_info(struct drm_printer *p, struct va_format *vaf)
 }
 EXPORT_SYMBOL(__drm_printfn_info);
 
+#ifdef CONFIG_DRM_DEBUG_PRINT
 void __drm_printfn_debug(struct drm_printer *p, struct va_format *vaf)
 {
 	pr_debug("%s %pV", p->prefix, vaf);
 }
 EXPORT_SYMBOL(__drm_printfn_debug);
+#endif
 
 void __drm_printfn_err(struct drm_printer *p, struct va_format *vaf)
 {
@@ -256,6 +258,7 @@ void drm_dev_printk(const struct device *dev, const char *level,
 }
 EXPORT_SYMBOL(drm_dev_printk);
 
+#ifdef CONFIG_DRM_DEBUG_PRINT
 void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
 		 const char *format, ...)
 {
@@ -298,6 +301,7 @@ void __drm_dbg(enum drm_debug_category category, const char *format, ...)
 	va_end(args);
 }
 EXPORT_SYMBOL(__drm_dbg);
+#endif
 
 void __drm_err(const char *format, ...)
 {
