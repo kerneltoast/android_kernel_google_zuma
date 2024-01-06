@@ -85,7 +85,12 @@ void __drm_puts_coredump(struct drm_printer *p, const char *str);
 void __drm_printfn_seq_file(struct drm_printer *p, struct va_format *vaf);
 void __drm_puts_seq_file(struct drm_printer *p, const char *str);
 void __drm_printfn_info(struct drm_printer *p, struct va_format *vaf);
+#ifdef CONFIG_DRM_DEBUG_PRINT
 void __drm_printfn_debug(struct drm_printer *p, struct va_format *vaf);
+#else
+static inline
+void __drm_printfn_debug(struct drm_printer *p, struct va_format *vaf) { }
+#endif
 void __drm_printfn_err(struct drm_printer *p, struct va_format *vaf);
 
 __printf(2, 3)
@@ -333,9 +338,15 @@ static inline bool drm_debug_enabled(enum drm_debug_category category)
 __printf(3, 4)
 void drm_dev_printk(const struct device *dev, const char *level,
 		    const char *format, ...);
+#ifdef CONFIG_DRM_DEBUG_PRINT
 __printf(3, 4)
 void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
 		 const char *format, ...);
+#else
+static inline __printf(3, 4)
+void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
+		 const char *format, ...) { }
+#endif
 
 /**
  * DRM_DEV_ERROR() - Error output.
@@ -470,8 +481,13 @@ void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
  * Prefer drm_device based logging over device or prink based logging.
  */
 
+#ifdef CONFIG_DRM_DEBUG_PRINT
 __printf(2, 3)
 void __drm_dbg(enum drm_debug_category category, const char *format, ...);
+#else
+static inline __printf(2, 3)
+void __drm_dbg(enum drm_debug_category category, const char *format, ...) { }
+#endif
 __printf(1, 2)
 void __drm_err(const char *format, ...);
 
