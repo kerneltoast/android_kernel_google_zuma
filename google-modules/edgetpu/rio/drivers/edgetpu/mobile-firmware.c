@@ -288,10 +288,12 @@ static int mobile_firmware_update_remapped_data_region(struct edgetpu_dev *etdev
 		goto out_memunmap;
 	}
 
+#if IS_ENABLED(CONFIG_EDGETPU_TELEMETRY_TRACE)
 	edgetpu_mobile_set_telemetry_mem(etmdev);
 	ret = edgetpu_telemetry_init(etdev, etmdev->log_mem, etmdev->trace_mem);
 	if (ret)
 		goto out_iremap_pool_destroy;
+#endif
 
 	ret = edgetpu_kci_init(etdev->mailbox_manager, etdev->etkci);
 	if (ret)
@@ -300,8 +302,10 @@ static int mobile_firmware_update_remapped_data_region(struct edgetpu_dev *etdev
 	return 0;
 
 out_telemetry_exit:
+#if IS_ENABLED(CONFIG_EDGETPU_TELEMETRY_TRACE)
 	edgetpu_telemetry_exit(etdev);
 out_iremap_pool_destroy:
+#endif
 	edgetpu_iremap_pool_destroy(etdev);
 out_memunmap:
 	memunmap(etmdev->shared_mem_vaddr);

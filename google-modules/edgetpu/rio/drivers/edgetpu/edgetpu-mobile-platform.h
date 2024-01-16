@@ -87,10 +87,12 @@ struct edgetpu_mobile_platform_dev {
 	 * May be NULL if the chip does not support firmware authentication
 	 */
 	struct device *gsa_dev;
+#if IS_ENABLED(CONFIG_EDGETPU_TELEMETRY_TRACE)
 	/* Coherent log buffer */
 	struct edgetpu_coherent_mem *log_mem;
 	/* Coherent trace buffer */
 	struct edgetpu_coherent_mem *trace_mem;
+#endif
 	/* subsystem coredump info struct */
 	struct mobile_sscd_info sscd_info;
 	/* Protects TZ Mailbox client pointer */
