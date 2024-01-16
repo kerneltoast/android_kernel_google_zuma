@@ -7,7 +7,7 @@
 # Use the absolute path of this Makefile to get the source directory.
 CURRENT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 # TODO(b/336717718): Remove include path of embedded IIF
-ccflags-y	+= $(EXTRA_CFLAGS) -DCONFIG_EDGETPU_TELEMETRY_TRACE=1 -DCONFIG_GCIP=1 \
+ccflags-y	+= $(EXTRA_CFLAGS) -DCONFIG_GCIP=1 \
 		   -I$(CURRENT_DIR)/include \
 		   -I$(CURRENT_DIR)/gcip-kernel-driver/include \
 		   -I$(CURRENT_DIR)/gcip-kernel-driver/drivers/gcip/iif/include
@@ -28,10 +28,12 @@ edgetpu-objs	:= edgetpu-dmabuf.o \
 		   edgetpu-mailbox.o \
 		   edgetpu-mapping.o \
 		   edgetpu-sw-watchdog.o \
-		   edgetpu-telemetry.o \
 		   edgetpu-thermal.o \
-		   edgetpu-trace.o \
 		   edgetpu-wakelock.o
+
+ifdef CONFIG_EDGETPU_TELEMETRY_TRACE
+edgetpu-objs	+= edgetpu-telemetry.o edgetpu-trace.o
+endif
 
 edgetpu-objs	+= $(GCIP_DIR)/gcip.o
 
