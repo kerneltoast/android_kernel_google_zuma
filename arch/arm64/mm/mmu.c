@@ -1558,6 +1558,9 @@ bool should_flush_tlb_when_young(void)
 {
 	bool skip = false;
 
+	if (IS_ENABLED(CONFIG_SOC_GOOGLE))
+		return false;
+
 	trace_android_vh_ptep_clear_flush_young(&skip);
 	return !skip;
 }
