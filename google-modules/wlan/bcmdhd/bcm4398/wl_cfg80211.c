@@ -2830,7 +2830,7 @@ _wl_cfg80211_add_if(struct bcm_cfg80211 *cfg,
 			/* Intentionally fall through for unsupported interface
 			 * handling when firmware doesn't support p2p
 			 */
-			/* falls through */
+			fallthrough;
 		default:
 			WL_ERR(("Unsupported interface type\n"));
 			err = -ENOTSUPP;
@@ -9290,7 +9290,7 @@ wl_cfg80211_get_station(struct wiphy *wiphy, struct net_device *dev,
 				WL_DBG(("RX Rate %d Mbps\n", (sta->rx_rate / 1000)));
 			}
 			/* go through to get another information */
-			/* falls through */
+			fallthrough;
 		case WL_IF_TYPE_P2P_GC:
 		case WL_IF_TYPE_P2P_DISC:
 			if ((err = wl_cfg80211_get_rssi(dev, cfg, link_idx, &rssi)) != BCME_OK) {
@@ -9319,7 +9319,7 @@ wl_cfg80211_get_station(struct wiphy *wiphy, struct net_device *dev,
 			}
 #endif /* SUPPORT_RSSI_SUM_REPORT && (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)) */
 			/* go through to get another information */
-			/* falls through */
+			fallthrough;
 		case WL_IF_TYPE_P2P_GO:
 #ifdef WL_RATE_INFO
 			/* Get the current tx/rx rate */
@@ -15173,7 +15173,7 @@ wl_handle_assoc_events(struct bcm_cfg80211 *cfg,
 			/* Update latest bssid */
 			wl_update_prof(cfg, as.ndev, NULL,
 				(const void *)&e->addr, WL_PROF_LATEST_BSSID);
-			/* Intentional fall through */
+			fallthrough;
 		case WLC_E_ASSOC:
 			wl_get_auth_assoc_status(cfg, as.ndev, e, data);
 #ifdef AUTH_ASSOC_STATUS_EXT
@@ -15193,7 +15193,7 @@ wl_handle_assoc_events(struct bcm_cfg80211 *cfg,
 		case WLC_E_DEAUTH_IND:
 		case WLC_E_DISASSOC_IND:
 			wl_cfg80211_handle_deauth_ind(cfg, &as);
-			/* intentional fall through */
+			fallthrough;
 		case WLC_E_DEAUTH:
 			as.link_action = wl_set_link_action(assoc_state, false);
 			break;

@@ -3919,12 +3919,12 @@ static ssize_t acpm_temp_state_table_show(struct device *dev,
 
 	ret = gs_tmu_get_temp_state_table(data);
 	if (ret) {
-		len += sysfs_emit_at(buf, len, " n/a\n", data->tmu_name);
+		len += sysfs_emit_at(buf, len, " n/a\n");
 		goto end;
 	}
 
 	if (data->temp_state_lut_len == 0) {
-		len += sysfs_emit_at(buf, len, " null\n", data->tmu_name);
+		len += sysfs_emit_at(buf, len, " null\n");
 		goto end;
 	}
 
@@ -4126,7 +4126,7 @@ static ssize_t acpm_mpmm_throttle_on_show(struct device *dev, struct device_attr
 	struct platform_device *pdev = to_platform_device(dev);
 	struct gs_tmu_data *data = platform_get_drvdata(pdev);
 
-	return sysfs_emit(buf, "%llu\n", data->acpm_gov_params.fields.mpmm_throttle_on);
+	return sysfs_emit(buf, "%d\n", data->acpm_gov_params.fields.mpmm_throttle_on);
 }
 
 static ssize_t acpm_mpmm_throttle_on_store(struct device *dev,

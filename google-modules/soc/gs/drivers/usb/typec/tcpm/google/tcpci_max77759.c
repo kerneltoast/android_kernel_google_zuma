@@ -793,7 +793,7 @@ static void max77759_init_regs(struct regmap *regmap, struct logbuffer *log)
 
 static int post_process_pd_message(struct max77759_plat *chip, struct pd_message msg)
 {
-	enum pd_ctrl_msg_type pd_type = pd_header_type_le(msg.header);
+	enum pd_data_msg_type pd_type = pd_header_type_le(msg.header);
 
 	if (pd_type == PD_DATA_VENDOR_DEF) {
 		u32 payload[2];
@@ -3079,8 +3079,7 @@ static int max77759_probe(struct i2c_client *client,
 
 	chip->charger_mode_votable = gvotable_election_get_handle(GBMS_MODE_VOTABLE);
 	if (IS_ERR_OR_NULL(chip->charger_mode_votable)) {
-		dev_err(&client->dev, "TCPCI: GBMS_MODE_VOTABLE get failed",
-			PTR_ERR(chip->charger_mode_votable));
+		dev_err(&client->dev, "TCPCI: GBMS_MODE_VOTABLE get failed");
 		if (!of_property_read_bool(dn, "gvotable-lazy-probe"))
 			return -EPROBE_DEFER;
 	}
@@ -3183,7 +3182,7 @@ static int max77759_probe(struct i2c_client *client,
 	chip->compliance_warnings = init_compliance_warnings(chip);
 	if (IS_ERR_OR_NULL(chip->compliance_warnings)) {
 		ret = PTR_ERR(chip->compliance_warnings);
-		dev_err(&client->dev, "init_compliance_warnings failed, ptr: %ld", ret);
+		dev_err(&client->dev, "init_compliance_warnings failed, ptr: %d", ret);
 		return ret;
 	}
 

@@ -862,6 +862,7 @@ static enum lane_usage dp_get_and_inform_lanes(struct dp_hw_config *hw_config)
 	switch (hw_config->pin_type) {
 	case PIN_TYPE_C:
 		pin_flag = 1;
+		fallthrough;
 	case PIN_TYPE_E:
 		/* 4 Lanes Mode Configuration */
 		cal_log_debug(0, "PIN_TYPE_%s\n", pin_flag ? "C" : "E");
@@ -870,6 +871,7 @@ static enum lane_usage dp_get_and_inform_lanes(struct dp_hw_config *hw_config)
 
 	case PIN_TYPE_D:
 		pin_flag = 1;
+		fallthrough;
 	case PIN_TYPE_F:
 		/* 2 Lanes Mode Configuration */
 		cal_log_debug(0, "PIN_TYPE_%s\n", pin_flag ? "D" : "F");

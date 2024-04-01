@@ -7158,7 +7158,7 @@ wl_process_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata, uint pktlen
 				event->ifname));
 		}
 #endif /* PCIE_FULL_DONGLE */
-		/* falls through */
+		fallthrough;
 	case WLC_E_DEAUTH:
 	case WLC_E_DEAUTH_IND:
 	case WLC_E_DISASSOC:
@@ -7205,7 +7205,7 @@ wl_process_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata, uint pktlen
 			ifp->post_roam_evt = FALSE;
 		}
 #endif /* DHD_POST_EAPOL_M1_AFTER_ROAM_EVT */
-		/* fall through */
+		fallthrough;
 	default:
 		*ifidx = dhd_ifname2idx(dhd_pub->info, event->ifname);
 		/* push up to external supp/auth */

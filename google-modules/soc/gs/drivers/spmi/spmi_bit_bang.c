@@ -207,7 +207,7 @@ static bool spmi_cmd_seq_extended_register_write(struct spmi_bb_info *info,
 	u8 sid, u8 reg, const u8 *val, u8 bytes)
 {
 	u32 i;
-	u8 command = SPMI_CMD_EXT_WRITE | (bytes - 1 & 0x0f);
+	u8 command = SPMI_CMD_EXT_WRITE | ((bytes - 1) & 0x0f);
 
 	spmi_send_ssc(info);
 	spmi_send_command_frame(info, sid, command);
@@ -223,7 +223,7 @@ static bool spmi_cmd_seq_extended_register_read(struct spmi_bb_info *info,
 {
 	bool ret = true;
 	u32 i;
-	u8 command = SPMI_CMD_EXT_READ | (bytes - 1 & 0x0f);
+	u8 command = SPMI_CMD_EXT_READ | ((bytes - 1) & 0x0f);
 
 	spmi_send_ssc(info);
 	spmi_send_command_frame(info, sid, command);
@@ -522,7 +522,7 @@ static int spmi_bb_probe(struct platform_device *pdev)
 	spmi_bb_info->gpio_clk = devm_gpiod_get(&pdev->dev, "clk", GPIOD_IN);
 	if (IS_ERR(spmi_bb_info->gpio_clk)) {
 		ret = PTR_ERR(spmi_bb_info->gpio_clk);
-		dev_err(&pdev->dev, "spmi_clk ERROR %ld\n", ret);
+		dev_err(&pdev->dev, "spmi_clk ERROR %d\n", ret);
 		goto err_put_controller;
 	}
 
@@ -530,7 +530,7 @@ static int spmi_bb_probe(struct platform_device *pdev)
 	spmi_bb_info->gpio_dat = devm_gpiod_get(&pdev->dev, "dat", GPIOD_IN);
 	if (IS_ERR(spmi_bb_info->gpio_dat)) {
 		ret = PTR_ERR(spmi_bb_info->gpio_dat);
-		dev_err(&pdev->dev, "spmi_dat ERROR %ld\n", ret);
+		dev_err(&pdev->dev, "spmi_dat ERROR %d\n", ret);
 		goto err_put_controller;
 	}
 

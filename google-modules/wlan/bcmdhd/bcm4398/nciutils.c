@@ -2315,8 +2315,7 @@ BCMPOSTTRAPFN(nci_get_axi_addr)(const si_t *sih, uint32 *size, uint32 baidx)
 		}
 	}
 	if (iface_idx < core_info->iface_cnt) {
-		if ((core_info->desc[iface_idx].num_addr_reg > baidx) &&
-			(&core_info->desc[iface_idx].sp[baidx] != NULL)) {
+		if (core_info->desc[iface_idx].num_addr_reg > baidx) {
 			addr = core_info->desc[iface_idx].sp[baidx].addrl;
 			if (size) {
 				uint32 adesc = core_info->desc[iface_idx].sp[baidx].adesc;
@@ -2356,8 +2355,7 @@ BCMPOSTTRAPFN(nci_get_core_baaddr)(const si_t *sih, uint32 *size, int32 baidx)
 		}
 	}
 	if (iface_idx < core_info->iface_cnt) {
-		if ((core_info->desc[iface_idx].num_addr_reg > baidx) &&
-			(&core_info->desc[iface_idx].sp[baidx] != NULL)) {
+		if (core_info->desc[iface_idx].num_addr_reg > baidx) {
 			addr = core_info->desc[iface_idx].sp[baidx].addrl;
 			if (size) {
 				uint32 adesc = core_info->desc[iface_idx].sp[baidx].adesc;

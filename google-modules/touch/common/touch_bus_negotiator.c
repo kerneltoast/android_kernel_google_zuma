@@ -95,7 +95,7 @@ static int aoc_channel_kthread(void *data)
 
 		len = aoc_tbn_service_read(&resp, sizeof(resp));
 		if (len < 0) {
-			dev_err(tbn->dev, "%s: failed to read message, err: %d\n",
+			dev_err(tbn->dev, "%s: failed to read message, err: %ld\n",
 				__func__, len);
 			msleep(1000);
 			continue;
