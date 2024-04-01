@@ -142,7 +142,7 @@ static int s5910_probe(struct spmi_device *sdev)
 	rc = s5910_dt_init(dev, info);
 	if (!rc) {
 		for (step_ndx = 0; step_ndx < info->step_cnt; step_ndx++) {
-			dev_info(dev, "%d %d %#03x %#02x\n", step_ndx,
+			dev_info(dev, "%ld %d %#03x %#02x\n", step_ndx,
 					info->sequence[step_ndx].delay,
 					info->sequence[step_ndx].reg,
 					info->sequence[step_ndx].val);
@@ -223,7 +223,7 @@ int s5910_shutdown_sequence(struct device *dev)
 		reg = info->sequence[ndx].reg;
 		val = info->sequence[ndx].val;
 
-		dev_info(dev, "%d %d %#03x %#02x\n", ndx, delay_ms, reg, val);
+		dev_info(dev, "%ld %d %#03x %#02x\n", ndx, delay_ms, reg, val);
 		if (delay_ms > 0)
 			msleep(delay_ms);
 		s5910_write(dev, reg, val);

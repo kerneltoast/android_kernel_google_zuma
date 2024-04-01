@@ -92,7 +92,7 @@ static int brl_dev_confirm(struct goodix_ts_core *cd)
 		ret = hw_ops->read(cd, BOOTOPTION_ADDR, rx_buf, sizeof(rx_buf));
 		if (ret < 0)
 			return ret;
-		ts_info("device confirm val: %*ph.", sizeof(rx_buf), rx_buf); /* [GOOG] */
+		ts_info("device confirm val: %*ph.", (int)sizeof(rx_buf), rx_buf); /* [GOOG] */
 		if (!memcmp(tx_buf, rx_buf, sizeof(tx_buf)))
 			break;
 		usleep_range(5000, 5100);

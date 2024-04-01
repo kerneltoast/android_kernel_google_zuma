@@ -175,7 +175,7 @@ static int pixel_ufs_derive_sw_secret(struct blk_crypto_profile *profile,
 	int ret;
 
 	dev_info(ufs->dev,
-		 "kdn: deriving %u-byte raw secret from %u-byte wrapped key\n",
+		 "kdn: deriving %u-byte raw secret from %lu-byte wrapped key\n",
 		 BLK_CRYPTO_SW_SECRET_SIZE, eph_key_size);
 
 	ret = gsa_kdn_derive_raw_secret(ufs->gsa_dev, sw_secret,

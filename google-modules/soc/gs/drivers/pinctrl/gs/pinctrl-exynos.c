@@ -429,7 +429,7 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
 
 	bit = bank->eint_num + irqd->hwirq;
 	if (bit >= BITMAP_SIZE) {
-		dev_info(d->dev, "bitmap for set_wake is not supported (%s) hwirq = %d, eint_num = %u\n",
+		dev_info(d->dev, "bitmap for set_wake is not supported (%s) hwirq = %ld, eint_num = %u\n",
 			bank->name, irqd->hwirq, bank->eint_num);
 		return 0;
 	}
@@ -828,7 +828,7 @@ static inline void exynos_pinctrl_show_wkup_reason(struct samsung_pin_bank *bank
 	pmu_mask = exynos_eint_wake_mask_array[bank->eint_num / 32];
 	pend_reg = readl(bank->eint_base + bank->irq_chip->eint_pend + bank->eint_offset);
 	if (pend_reg)
-		pr_info("%s [%s] PEND_REG: 0x%02x", EXYNOS_PM_PREFIX, bank->name, pend_reg);
+		pr_info("%s [%s] PEND_REG: 0x%02lx", EXYNOS_PM_PREFIX, bank->name, pend_reg);
 	for_each_set_bit(pin, &pend_reg, 32) {
 		shift_cnt = (bank->eint_num % 32) + pin;
 		if (pmu_mask & (1 << shift_cnt))
