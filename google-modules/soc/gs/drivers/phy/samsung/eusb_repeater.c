@@ -304,7 +304,7 @@ static int u_tx_adjust_port1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(u_tx_adjust_port1_fops, u_tx_adjust_port1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(u_tx_adjust_port1_fops, u_tx_adjust_port1_get, NULL, "0x%llx\n");
 
 static int u_hs_tx_pre_emphasus_p1_get(void *p, u64 *val)
 {
@@ -322,7 +322,7 @@ static int u_hs_tx_pre_emphasus_p1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(u_hs_tx_pre_emphasus_p1_fops, u_hs_tx_pre_emphasus_p1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(u_hs_tx_pre_emphasus_p1_fops, u_hs_tx_pre_emphasus_p1_get, NULL, "0x%llx\n");
 
 static int u_rx_adjust_port1_get(void *p, u64 *val)
 {
@@ -340,7 +340,7 @@ static int u_rx_adjust_port1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(u_rx_adjust_port1_fops, u_rx_adjust_port1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(u_rx_adjust_port1_fops, u_rx_adjust_port1_get, NULL, "0x%llx\n");
 
 static int u_disconnect_squelch_port1_get(void *p, u64 *val)
 {
@@ -359,7 +359,7 @@ static int u_disconnect_squelch_port1_get(void *p, u64 *val)
 	return 0;
 }
 DEFINE_SIMPLE_ATTRIBUTE(u_disconnect_squelch_port1_fops, u_disconnect_squelch_port1_get, NULL,
-			"0x%x\n");
+			"0x%llx\n");
 
 static int e_hs_tx_pre_emphasus_p1_get(void *p, u64 *val)
 {
@@ -377,7 +377,7 @@ static int e_hs_tx_pre_emphasus_p1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(e_hs_tx_pre_emphasus_p1_fops, e_hs_tx_pre_emphasus_p1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(e_hs_tx_pre_emphasus_p1_fops, e_hs_tx_pre_emphasus_p1_get, NULL, "0x%llx\n");
 
 static int e_tx_adjust_port1_get(void *p, u64 *val)
 {
@@ -395,7 +395,7 @@ static int e_tx_adjust_port1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(e_tx_adjust_port1_fops, e_tx_adjust_port1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(e_tx_adjust_port1_fops, e_tx_adjust_port1_get, NULL, "0x%llx\n");
 
 static int e_rx_adjust_port1_get(void *p, u64 *val)
 {
@@ -413,7 +413,7 @@ static int e_rx_adjust_port1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(e_rx_adjust_port1_fops, e_rx_adjust_port1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(e_rx_adjust_port1_fops, e_rx_adjust_port1_get, NULL, "0x%llx\n");
 
 static int gpio0_config_get(void *p, u64 *val)
 {
@@ -431,7 +431,7 @@ static int gpio0_config_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(gpio0_config_fops, gpio0_config_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(gpio0_config_fops, gpio0_config_get, NULL, "0x%llx\n");
 
 static int gpio1_config_get(void *p, u64 *val)
 {
@@ -449,7 +449,7 @@ static int gpio1_config_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(gpio1_config_fops, gpio1_config_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(gpio1_config_fops, gpio1_config_get, NULL, "0x%llx\n");
 
 static int uart_port1_get(void *p, u64 *val)
 {
@@ -478,7 +478,7 @@ static int uart_port1_set(void *p, u64 val)
 
 	return eusb_repeater_write_reg(tud, UART_PORT1, &data, 1);
 }
-DEFINE_SIMPLE_ATTRIBUTE(uart_port1_fops, uart_port1_get, uart_port1_set, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(uart_port1_fops, uart_port1_get, uart_port1_set, "0x%llx\n");
 
 static int rev_id_get(void *p, u64 *val)
 {
@@ -496,7 +496,7 @@ static int rev_id_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(rev_id_fops, rev_id_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(rev_id_fops, rev_id_get, NULL, "0x%llx\n");
 
 static int global_config_get(void *p, u64 *val)
 {
@@ -525,7 +525,7 @@ static int global_config_set(void *p, u64 val)
 
 	return eusb_repeater_write_reg(tud, I2C_GLOBAL_CONFIG, &data, 1);
 }
-DEFINE_SIMPLE_ATTRIBUTE(global_config_fops, global_config_get, global_config_set, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(global_config_fops, global_config_get, global_config_set, "0x%llx\n");
 
 static int int_enable_1_get(void *p, u64 *val)
 {
@@ -554,7 +554,7 @@ static int int_enable_1_set(void *p, u64 val)
 
 	return eusb_repeater_write_reg(tud, INT_ENABLE_1, &data, 1);
 }
-DEFINE_SIMPLE_ATTRIBUTE(int_enable_1_fops, int_enable_1_get, int_enable_1_set, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(int_enable_1_fops, int_enable_1_get, int_enable_1_set, "0x%llx\n");
 
 static int int_enable_2_get(void *p, u64 *val)
 {
@@ -583,7 +583,7 @@ static int int_enable_2_set(void *p, u64 val)
 
 	return eusb_repeater_write_reg(tud, INT_ENABLE_2, &data, 1);
 }
-DEFINE_SIMPLE_ATTRIBUTE(int_enable_2_fops, int_enable_2_get, int_enable_2_set, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(int_enable_2_fops, int_enable_2_get, int_enable_2_set, "0x%llx\n");
 
 static int bc_control_get(void *p, u64 *val)
 {
@@ -612,7 +612,7 @@ static int bc_control_set(void *p, u64 val)
 
 	return eusb_repeater_write_reg(tud, BC_CONTROL, &data, 1);
 }
-DEFINE_SIMPLE_ATTRIBUTE(bc_control_fops, bc_control_get, bc_control_set, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(bc_control_fops, bc_control_get, bc_control_set, "0x%llx\n");
 
 static int bc_status_1_get(void *p, u64 *val)
 {
@@ -630,7 +630,7 @@ static int bc_status_1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(bc_status_1_fops, bc_status_1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(bc_status_1_fops, bc_status_1_get, NULL, "0x%llx\n");
 
 static int int_status_1_get(void *p, u64 *val)
 {
@@ -659,7 +659,7 @@ static int int_status_1_set(void *p, u64 val)
 
 	return eusb_repeater_write_reg(tud, INT_STATUS_1, &data, 1);
 }
-DEFINE_SIMPLE_ATTRIBUTE(int_status_1_fops, int_status_1_get, int_status_1_set, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(int_status_1_fops, int_status_1_get, int_status_1_set, "0x%llx\n");
 
 static int int_status_2_get(void *p, u64 *val)
 {
@@ -688,7 +688,7 @@ static int int_status_2_set(void *p, u64 val)
 
 	return eusb_repeater_write_reg(tud, INT_STATUS_2, &data, 1);
 }
-DEFINE_SIMPLE_ATTRIBUTE(int_status_2_fops, int_status_2_get, int_status_2_set, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(int_status_2_fops, int_status_2_get, int_status_2_set, "0x%llx\n");
 
 static int config_port1_get(void *p, u64 *val)
 {
@@ -706,7 +706,7 @@ static int config_port1_get(void *p, u64 *val)
 	*val = data;
 	return 0;
 }
-DEFINE_SIMPLE_ATTRIBUTE(config_port1_fops, config_port1_get, NULL, "0x%x\n");
+DEFINE_SIMPLE_ATTRIBUTE(config_port1_fops, config_port1_get, NULL, "0x%llx\n");
 
 static int eusb_repeater_all_registers_show(struct seq_file *s, void *unused)
 {

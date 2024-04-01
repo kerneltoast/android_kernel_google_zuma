@@ -393,7 +393,7 @@ static void parseErrorXP(u64 misc) {
 	int tgt_id = FIELD_GET(GENMASK(58, 48), misc);
 	int tlpmsg = FIELD_GET(GENMASK(63, 63), misc);
 
-	pr_err("transaction %s, port %d, opcode %#04lx\n", xp_transactions[trans_id], port, op_code);
+	pr_err("transaction %s, port %d, opcode %#04x\n", xp_transactions[trans_id], port, op_code);
 	pr_err("source %d, target %d, TLPMSG status %d\n", src_id, tgt_id, tlpmsg);
 }
 
@@ -411,7 +411,7 @@ static void parseErrorHNI(u64 misc) {
 		return;
 	}
 
-	pr_err("error %s, opcode %#04lx\n", hni_errors[err], op_code);
+	pr_err("error %s, opcode %#04x\n", hni_errors[err], op_code);
 	pr_err("source %d, mem_attr %d, size %d, order %d, lpid %d\n",
 		src_id, mem_attr, size, order, lpid);
 }

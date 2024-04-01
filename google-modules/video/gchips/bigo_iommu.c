@@ -207,7 +207,7 @@ int bigo_iommu_fault_handler(struct iommu_fault *fault, void *param)
 	list_for_each_entry(inst, &core->instances, list) {
 		mutex_lock(&inst->lock);
 		list_for_each_entry(binfo, &inst->buffers, list)
-			pr_info("iova: 0x%llx size: %lld", binfo->iova, binfo->size);
+			pr_info("iova: 0x%llx size: %lu", binfo->iova, binfo->size);
 		mutex_unlock(&inst->lock);
 	}
 

@@ -8836,7 +8836,7 @@ static bool gbatt_check_critical_level(const struct batt_drv *batt_drv,
 		if (vbatt == -EAGAIN)
 			return false;
 
-		return (vbatt < 0) ? : vbatt < batt_drv->batt_critical_voltage;
+		return vbatt < 0 || vbatt < batt_drv->batt_critical_voltage;
 	}
 
 	/* here soc == 0, shutdown if not connected or if state is not charging  */
