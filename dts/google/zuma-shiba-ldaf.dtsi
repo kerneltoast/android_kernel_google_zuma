@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shiba ldaf(Laser Detection Auto Focus) device tree source
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+
+&s_ldo12_reg {
+	regulator-min-microvolt = <1850000>;
+	regulator-max-microvolt = <1850000>;
+};
+
+&s_ldo26_reg {
+	regulator-min-microvolt = <3300000>;
+	regulator-max-microvolt = <3300000>;
+};
+
+&hsi2c_1 {
+	status = "ok";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	stmvl53l1: stmvl53l1@29 {
+		compatible = "st,stmvl53l1";
+		reg = <0x29>;
+
+		/* VADD 3.3V */
+		pwren-supply = <&s_ldo26_reg>;
+
+		/* RESET: XAPC_MCLK8: GPP15[0] */
+		xsdn-gpio = <&gpp15 0 GPIO_ACTIVE_HIGH>;
+
+		/* IRQ: XEINT_4: GPA5[4] */
+		intr-gpio = <&gpa5 4 GPIO_ACTIVE_HIGH>;
+
+		/* IOVDD: 1.85V */
+		vio-type = "regulator";
+		vio-supply = <&s_ldo12_reg>;
+		vio-voltage = <1850000>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&ldaf_irq>;
+
+		status = "ok";
+	};
+};

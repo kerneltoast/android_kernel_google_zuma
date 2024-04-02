@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google Zuma Ripcurrent Type-c device tree
+ *
+ * Copyright (c) 2022 Google, LLC
+ *
+*/
+&max77759tcpc {
+	pinctrl-0 = <&usb_pd_irq &gpp12_2 &gpp12_3>;
+	sbu-mux-en-gpio = <&gpp12 2 GPIO_ACTIVE_HIGH>;
+	sbu-mux-sel-gpio = <&gpp12 3 GPIO_ACTIVE_HIGH>;
+	pullup-supply = <&m_ldo7_reg>;
+	connector {
+		sink-pdos = <PDO_FIXED(5000, 3000,
+				       PDO_FIXED_DATA_SWAP |
+				       PDO_FIXED_USB_COMM |
+				       PDO_FIXED_HIGHER_CAP |
+				       PDO_FIXED_DUAL_ROLE)
+			     PDO_FIXED(9000, 2200, 0)
+			     PDO_PPS_APDO(5000, 21000, 3000)>;
+	};
+};
+
+&pinctrl_11 {
+	gpp12_2: gpp12-2 {
+		samsung,pins = "gpp12-2";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+
+	gpp12_3: gpp12-3 {
+		samsung,pins = "gpp12-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+};
