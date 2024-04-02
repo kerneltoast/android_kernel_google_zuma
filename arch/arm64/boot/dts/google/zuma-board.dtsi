@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Board-common device tree source.
+ *
+ * Copyright 2022 Google LLC
+ */
+
+#include "zuma-common.dtsi"
+
+#include "zuma-board-pcie.dtsi"
+#include "zuma-board-wlan.dtsi"
+#include "zuma-board-cp-s5300-sit.dtsi"
+#include "zuma-board-bluetooth.dtsi"
+#include "zuma-board-ese.dtsi"
+#include "zuma-board-nfc.dtsi"
+#include "zuma-board-udfps.dtsi"
+
+

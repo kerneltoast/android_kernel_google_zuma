@@ -1,0 +1,136 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * PCIe device tree source code for zuma SoC
+ *
+ * Copyright (C) 2022 Samsung Electronics Co., Ltd.
+ *              http://www.samsung.com
+ */
+
+#include <dt-bindings/pci/pci.h>
+/ {
+	/* HSI1 GEN3A_0 */
+	pcie_0:	pcie@12100000 {
+		compatible = "samsung,exynos-pcie-rc";
+		gpios = <&gph0 0 0x1 /* PERST */>;
+		reg = <0x0 0x12100000 0x2000	/* elbi base */
+			0x0 0x12110000 0x5000   /* soc base */
+			0x0 0x12130000 0xD000   /* udbg base */
+			0x0 0x12140000 0x3000	/* phy base */
+			0x0 0x12020000 0x2000	/* sysreg base */
+			0x0 0x12400000 0x381000	/* DBI base */
+			0x0 0x12120000 0x5000	/* phy pcs base */
+			0x0 0x40FFE000 0x2000	/* configuration space */
+			0x0 0x12170000 0x1000>;	/* I/A space */
+		reg-names = "elbi", "soc", "udbg", "phy", "sysreg", "dbi", "pcs", "config", "ia";
+		interrupts = <GIC_SPI IRQ_PCIE_GEN3_2L_HSI1 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3_2L_MSI_0_HSI1 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3_2L_MSI_1_HSI1 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3_2L_MSI_2_HSI1 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3_2L_MSI_3_HSI1 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3_2L_MSI_4_HSI1 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names = "msi";
+		#interrupt-cells = <1>;
+		samsung,syscon-phandle = <&pmu_system_controller>;
+		pinctrl-names = "active";
+		pinctrl-0 = <&pcie0_clkreq &pcie0_perst>;
+		#address-cells = <3>;
+		#size-cells = <2>;
+		device_type = "pci";
+		/* non-prefetchable memory */
+		ranges = <0x82000000 0 0x14E00000 0 0x40000000 0 0xFF0000>;
+		ip-ver = <0x986500>;	/* zuma */
+		num-lanes = <2>;
+		ch-num = <0>;
+		pcie-clk-num = <0>;
+		phy-clk-num = <0>;
+		pcie-pm-qos-int = <200000>;
+		separated-msi = <1>;
+		use-cache-coherency = "false";
+		use-pcieon-sleep = "false";
+		use-msi = "false";
+		support-msi64-addressing = "false";
+		use-sicd = "false";
+		use-sysmmu = "false";
+		use-ia = "false";
+		use-l1ss = "false";
+		pmu-offset = <0x3ec4>;
+		max-link-speed = <LINK_SPEED_GEN3>;
+		status = "disabled";
+	};
+	sysmmu_hsi1: sysmmu@12060000 {
+		compatible = "samsung,pcie-sysmmu";
+		reg = <0x0 0x12060000 0x10000>;
+		interrupts = <0 IRQ_SYSMMU_STAGE1_NS_HSI1 IRQ_TYPE_LEVEL_HIGH>;
+		qos = <15>;
+		port-name = "PCIe_CH0";
+		hsi-block-num = <1>;
+		pcie-vid-num = <0>;
+		#iommu-cells = <0>;
+		ignore-tlb-inval = <1>;
+		use-map-once = "false";
+		status = "disabled";
+	};
+
+	/* HSI2 GEN3A_1 */
+	pcie_1:	pcie@13120000 {
+		compatible = "samsung,exynos-pcie-rc";
+		gpios = <&gph3 0 0x1 /* PERST */>;
+		reg = <0x0 0x13120000 0x2000	/* elbi base */
+			0x0 0x13130000 0x5000   /* soc base */
+			0x0 0x13150000 0xD000   /* udbg base */
+			0x0 0x13160000 0x3000	/* phy base */
+			0x0 0x13020000 0x2000	/* sysreg base */
+			0x0 0x13400000 0x381000	/* DBI base */
+			0x0 0x13140000 0x5000	/* phy pcs base */
+			0x0 0x60FFE000 0x2000	/* configuration space */
+			0x0 0x13100000 0x1000>;	/* I/A space */
+		reg-names = "elbi", "soc", "udbg", "phy", "sysreg", "dbi", "pcs", "config", "ia";
+		interrupts = <GIC_SPI IRQ_PCIE_GEN3A_1_HSI2 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3A_1_MSI_0_HSI2 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3A_1_MSI_1_HSI2 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3A_1_MSI_2_HSI2 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3A_1_MSI_3_HSI2 IRQ_TYPE_LEVEL_HIGH>,
+			   <GIC_SPI IRQ_PCIE_GEN3A_1_MSI_4_HSI2 IRQ_TYPE_LEVEL_HIGH>;
+		#interrupt-cells = <1>;
+		interrupt-map-mask = <0 0 0 0>;
+		interrupt-map = <0 0 0 0 &gic 0 IRQ_PCIE_GEN3A_1_HSI2 0x4>;
+		samsung,syscon-phandle = <&pmu_system_controller>;
+		pinctrl-names = "active";
+		pinctrl-0 = <&pcie1_clkreq &pcie1_perst>;
+		#address-cells = <3>;
+		#size-cells = <2>;
+		device_type = "pci";
+		/* non-prefetchable memory */
+		ranges = <0x82000000 0 0x60000000 0 0x60000000 0 0xFF0000>;
+		ip-ver = <0x986500>;	/* zuma */
+		num-lanes = <1>;
+		ch-num = <1>;
+		pcie-clk-num = <0>;
+		phy-clk-num = <0>;
+		pcie-pm-qos-int = <200000>;
+		use-cache-coherency = "false";
+		use-pcieon-sleep = "false";
+		use-msi = "false";
+		support-msi64-addressing = "false";
+		use-sicd = "false";
+		use-sysmmu = "false";
+		use-ia = "false";
+		use-l1ss = "false";
+		pmu-offset = <0x3ec8>;
+		max-link-speed = <LINK_SPEED_GEN3>;
+		status = "disabled";
+	};
+
+	sysmmu_hsi2: sysmmu@131C0000 {
+		compatible = "samsung,pcie-sysmmu";
+		reg = <0x0 0x131C0000 0x10000>;
+		interrupts = <0 IRQ_SYSMMU_STAGE1_NS_HSI2 IRQ_TYPE_LEVEL_HIGH>;
+		qos = <15>;
+		port-name = "PCIe_CH1";
+		hsi-block-num = <2>;
+		pcie-vid-num = <1>;
+		#iommu-cells = <0>;
+		use-map-once = "false";
+		status = "disabled";
+	};
+};

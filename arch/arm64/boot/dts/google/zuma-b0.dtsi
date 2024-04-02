@@ -1,0 +1,209 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2021 Google LLC.
+ *
+ */
+
+#include "zuma.dtsi"
+
+&bts_smc0 {
+	reg = <0x0 0x27C4F534 0x4>;
+};
+
+&bts_smc1 {
+	reg = <0x0 0x27D4F534 0x4>;
+};
+
+&bts_smc2 {
+	reg = <0x0 0x27E4F534 0x4>;
+};
+
+&bts_smc3 {
+	reg = <0x0 0x27F4F534 0x4>;
+};
+
+&cpufreq_domain0 {
+	resume-freq = <1425000>;
+};
+
+&cpufreq_domain1 {
+	resume-freq = <1836000>;
+};
+
+&cpufreq_domain2 {
+	resume-freq = <1164000>;
+};
+
+&bigwave {
+	ip_ver = <0x1>;
+};
+
+&dsu_lat {
+		/* CL0         DSU */
+	core-dev-table-cl0-low-latency-v2 =
+		<  324000        324000
+		   610000        610000
+		   820000        820000
+		   955000        970000
+		  1098000       1098000
+		  1197000       1197000 >;
+
+		/* CL1         DSU */
+	core-dev-table-cl1-low-latency-v2 =
+		<  402000        324000
+		   578000        610000
+		   910000        820000
+		  1065000        970000
+		  1836000       1098000
+		  1945000       1197000
+		  2130000       1444000 >;
+
+		/* CL2         DSU */
+	core-dev-table-cl2-low-latency-v2 =
+		<  500000        324000
+		   880000        610000
+		  1164000        820000
+		  1298000        970000
+		  1885000       1098000
+		  2147000       1197000
+		  2363000       1444000
+		  2850000       1704000 >;
+
+		   /* CL0         DSU */
+	core-dev-table-cl0-base-v2 =
+		<  324000        324000
+		  1098000        610000 >;
+
+		   /* CL1         DSU */
+	core-dev-table-cl1-base-v2 =
+		<  402000       324000
+		  1418000       610000
+		  1836000       970000
+		  2130000      1098000 >;
+
+		   /* CL2         DSU */
+	core-dev-table-cl2-base-v2 =
+		<  500000       324000
+		  1298000       610000
+		  2049000       970000
+		  2363000      1098000
+		  2802000      1444000 >;
+
+	dsu-bci-table-v2 =
+		/* DSU         BCI */
+		< 324000        315000
+		610000        575000
+		820000        840000
+		970000        1050000
+		1197000       1205000
+		1548000       1401000 >;
+};
+
+/* S2MPUs in B0 has sync device which is not discoverable from IP version. */
+&s2mpu_s0_aur {
+	built-in-sync;
+};
+
+&s2mpu_s0_bw {
+	built-in-sync;
+};
+
+&s2mpu_s0_cpucl0 {
+	built-in-sync;
+};
+
+&s2mpu_s0_dpuf0 {
+	built-in-sync;
+};
+
+&s2mpu_s0_dpuf1 {
+	built-in-sync;
+};
+
+&s2mpu_s0_eh {
+	built-in-sync;
+};
+
+&s2mpu_s0_g2d {
+	built-in-sync;
+};
+
+&s2mpu_s0_g3d {
+	built-in-sync;
+};
+
+&s2mpu_s0_gdc {
+	built-in-sync;
+};
+
+&s2mpu_s0_gse {
+	built-in-sync;
+};
+
+&s2mpu_s0_hsi0 {
+	built-in-sync;
+};
+
+&s2mpu_s0_hsi1 {
+	built-in-sync;
+};
+
+&s2mpu_s0_hsi2 {
+	built-in-sync;
+};
+
+&s2mpu_s0_ispfe {
+	built-in-sync;
+};
+
+&s2mpu_s1_ispfe {
+	built-in-sync;
+};
+
+&s2mpu_s2_ispfe {
+	built-in-sync;
+};
+
+&s2mpu_s0_mcsc {
+	built-in-sync;
+};
+
+&s2mpu_s0_mfc {
+	built-in-sync;
+};
+
+&s2mpu_s0_misc {
+	built-in-sync;
+};
+
+&s2mpu_s0_rgbp {
+	built-in-sync;
+};
+
+&s2mpu_s1_rgbp {
+	built-in-sync;
+};
+
+&s2mpu_s0_tnr {
+	built-in-sync;
+};
+
+&s2mpu_s1_tnr {
+	built-in-sync;
+};
+
+&s2mpu_s2_tnr {
+	built-in-sync;
+};
+
+&s2mpu_s0_tpu {
+	built-in-sync;
+};
+
+&s2mpu_s0_yuvp {
+	built-in-sync;
+};
+
+&s2mpu_s0_gsa {
+	built-in-sync;
+};

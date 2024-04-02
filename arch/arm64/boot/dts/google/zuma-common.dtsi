@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Zuma board device tree source
+ *
+ * Copyright 2022 Google LLC
+ */
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/pinctrl/zuma.h>
+#include <dt-bindings/pinctrl/samsung.h>
+
+#include "zuma-pmic.dtsi"
+#include "zuma-typec.dtsi"
+
+&serial_0 {
+	status = "okay";
+};
+
+&pinctrl_0 {
+	key_voldown: key-voldown {
+		samsung,pins = "gpa4-1";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+
+	key_volup: key-volup {
+		samsung,pins = "gpa6-2";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+
+	key_power: key-power {
+		samsung,pins = "gpa4-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+};
+
+&gpio_keys {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&key_voldown &key_volup &key_power>;
+	button@1 {
+		label = "gpio-keys: KEY_VOLUMEDOWN";
+		linux,code = <114>;
+		gpios = <&gpa4 1 EXYNOS_PIN_FUNC_EINT>;
+		wakeup-source;
+	};
+	button@2 {
+		label = "gpio-keys: KEY_VOLUMEUP";
+		linux,code = <115>;
+		gpios = <&gpa6 2 EXYNOS_PIN_FUNC_EINT>;
+		wakeup-source;
+	};
+	button@3 {
+		label = "gpio-keys: KEY_POWER";
+		linux,code = <116>;
+		gpios = <&gpa4 0 EXYNOS_PIN_FUNC_EINT>;
+		wakeup-source;
+	};
+};
+
+&aoc {
+	sensor_1v8-supply = <&s_ldo7_reg>;
+	sensor_3v3-supply = <&s_ldo5_reg>;
+	sensor_power_list = "sensor_1v8", "sensor_3v3";
+};
+
+&usbdrd_phy0 {
+    vdd075-supply = <&m_ldo8_reg>;
+    vdd12-supply = <&m_ldo9_reg>;
+    vdd33-supply = <&m_ldo19_reg>;
+};

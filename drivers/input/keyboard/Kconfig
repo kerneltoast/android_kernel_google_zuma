@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
+if INPUT_KEYBOARD
+config KEYBOARD_S2MPG14
+       tristate "Samsung Electronics S2MPG14 Powerkey Controller"
+
+endif # INPUT_KEYBOARD
