@@ -1,0 +1,96 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Display nodes for slider-related boards.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+
+&dsim_modes {
+	dsim-modes {
+		1008x2244 {
+			mode-name = "1008x2244";
+			pmsk = <
+				0x1 0x6F 0x2 0x5400 /* p m s k */
+				>;
+			hs-clk = <1368>;
+			esc-clk = <20>;
+		};
+		1080x2400 {
+			mode-name = "1080x2400";
+			pmsk = <
+				0x2 0xf6 0x3 0x1800 /* p m s k */
+				>;
+			hs-clk = <756>;
+			esc-clk = <20>;
+		};
+		1344x2992 {
+			mode-name = "1344x2992";
+			pmsk = <
+				0x1 0x6F 0x2 0x5400 /* p m s k */
+				>;
+			hs-clk = <1368>;
+			esc-clk = <20>;
+		};
+	};
+};
+
+&drmdsim0 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	panel@0 {
+		compatible = "samsung,s6e3hc3";
+		label = "samsung-s6e3hc3";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpa6 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&m_ldo14_reg>;
+		vddi-supply = <&s_bucka_reg>;
+		vddd-supply = <&m_ldo22_reg>;
+	};
+	panel@1 {
+		compatible = "samsung,emul";
+		label = "samsung-emul";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpa6 0 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&drmdsim1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	panel@0 {
+		compatible = "samsung,s6e3hc3-c10";
+		label = "sdc-s6e3hc3-c10";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_ldo29_reg>;
+	};
+	panel@1 {
+		compatible = "samsung,emul";
+		label = "samsung-emul";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&m_ldo14_reg {
+	/delete-property/ regulator-always-on;
+};
+
+&m_ldo22_reg {
+	/delete-property/ regulator-always-on;
+};
