@@ -1,0 +1,44 @@
+. ${ROOT_DIR}/${KERNEL_DIR}/build.config.common
+. ${ROOT_DIR}/${KERNEL_DIR}/build.config.aarch64
+
+DEFCONFIG=slider_gki_defconfig
+PRE_DEFCONFIG_CMDS="mkdir -p \${OUT_DIR}/arch/arm64/configs/ && KCONFIG_CONFIG=\${OUT_DIR}/arch/arm64/configs/${DEFCONFIG} ${ROOT_DIR}/${KERNEL_DIR}/scripts/kconfig/merge_config.sh -m -r ${ROOT_DIR}/${KERNEL_DIR}/arch/arm64/configs/gki_defconfig ${ROOT_DIR}/${DEVICE_MODULES_DIR}/arch/arm64/configs/slider_gki.fragment"
+
+MAKE_GOALS=
+KERNEL_BINARY=Image.lz4
+
+BUILD_BOOT_IMG=1
+BUILD_INITRAMFS=1
+INITRAMFS_VENDOR_RAMDISK_FRAGMENT_NAME=dlkm
+LZ4_RAMDISK=1
+BOOT_IMAGE_HEADER_VERSION=4
+VENDOR_DLKM_MODULES_LIST=${DEVICE_MODULES_DIR}/vendor_dlkm_modules.slider
+VENDOR_DLKM_MODULES_BLOCKLIST=${DEVICE_MODULES_DIR}/vendor_dlkm.blocklist.slider
+VENDOR_DLKM_PROPS=${DEVICE_MODULES_DIR}/vendor_dlkm.props.slider
+RAMDISKS_DIR=${ROOT_DIR}/prebuilts/boot-artifacts/ramdisks
+VENDOR_RAMDISK_BINARY=${VENDOR_RAMDISK_BINARY:-${RAMDISKS_DIR}/vendor_ramdisk-oriole.img}
+KERNEL_VENDOR_CMDLINE="earlycon=exynos4210,0x10A00000 console=ttySAC0,115200 androidboot.console=ttySAC0"
+KERNEL_VENDOR_CMDLINE+=" printk.devkmsg=on"
+KERNEL_VENDOR_CMDLINE+=" at24.write_timeout=100 buildvariant=userdebug"
+KERNEL_VENDOR_CMDLINE+=" log_buf_len=1024K"
+KERNEL_VENDOR_CMDLINE+=" kunit.enable=1"
+VENDOR_BOOTCONFIG="androidboot.boot_devices=14700000.ufs"
+
+AVB_SIGN_BOOT_IMG=1
+AVB_BOOT_PARTITION_SIZE=0x04000000
+AVB_BOOT_KEY=${ROOT_DIR}/prebuilts/kernel-build-tools/linux-x86/share/avb/testkey_rsa2048.pem
+AVB_BOOT_ALGORITHM=SHA256_RSA2048
+
+# Prevent GKI kernel build from overwriting our kernel-uapi-headers.tar.gz file
+GKI_SKIP_CP_KERNEL_HDR=1
+
+if [ -n "${GKI_BUILD_CONFIG_FRAGMENT}" ]; then
+source ${GKI_BUILD_CONFIG_FRAGMENT}
+fi
+
+if [ -z "${FAST_BUILD}" ]; then
+COMPRESS_UNSTRIPPED_MODULES=1
+UNSTRIPPED_MODULES="
+*.ko
+"
+fi

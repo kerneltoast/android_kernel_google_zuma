@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google GS101 Debug Policy Manager device tree source
+ *
+ * Copyright 2020 Google Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/ {
+	#address-cells = <2>;
+	#size-cells = <1>;
+	dpm: dpm  {
+	}; /* end of dpm */
+}; /* end of root */
+
+/* default settings built into kernel dt */
+#include "gs101-dpm-user.dtsi"

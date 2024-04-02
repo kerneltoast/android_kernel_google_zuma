@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Board-common PCIe config.
+ *
+ * Copyright 2022 Google LLC
+ */
+#include <dt-bindings/pci/pci.h>
+#include <dt-bindings/soc/samsung_sysmmu_v9.h>
+
+&pcie_0 {       /* pcie ch0 used for the connection with CP */
+	status = "okay";
+	use-cache-coherency = "true";
+	use-msi = "true";
+	use-sicd = "true";
+	use-ia = "false";
+	use-l1ss = "true";
+	phy-power-off = "false";
+	use-pcieon-sleep = "true";
+	use-sysmmu = "true";
+	perst-delay-us = <18000>;
+	ep-device-type = <EP_SAMSUNG_MODEM>;
+};
+
+&sysmmu_hsi1 {
+	use-map-once = "true";
+	status = "okay";
+	num_pmmu = <1>;
+	pmmu0,default_stream = <STR_CFG(STR_SPTLB(0x00, 0x00), S2_EN, BL1, PREF_PRED, STLB_NONE, PTLB_NONE)>;
+};
+
+&pcie_1 {       /* pcie ch1 used for the connection with WiFi */
+	status = "okay";
+	num-lanes = <1>;
+	use-sicd = "true";
+	use-ia = "false";
+	use-l1ss = "true";
+	use-msi = "true";
+	use-sysmmu = "disabled";
+	max-link-speed = <LINK_SPEED_GEN3>;
+	ep-device-type = <EP_BCM_WIFI>;
+	perst-delay-us = <15000>;
+	pcie,wlan-gpio = <&gph3 4 0x1 /* WLAN_EN */ >;  /* WLAN_REG_ON */
+};

@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Display nodes for ripcurrent-related boards.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+&drmdsim0 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	panel@0 {
+		compatible = "samsung,emul";
+		label = "samsung-emul";
+		channel = <0>;
+	};
+};
