@@ -55,10 +55,12 @@ EDGETPU_CHIP := rio
 
 endif
 
+ifdef CONFIG_MODULES
 ifeq ($(CONFIG_$(GXP_CHIP)),m)
 
 gxp-objs += $(GCIP_DIR)/gcip.o
 
+endif
 endif
 
 KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build

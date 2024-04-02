@@ -31,9 +31,11 @@ edgetpu-objs	:= edgetpu-async.o \
 		   edgetpu-thermal.o \
 		   edgetpu-trace.o
 
+ifdef CONFIG_MODULES
 ifndef CONFIG_EDGETPU_TEST
 # Unit testing doesn't need this because GCIP is compiled as a built-in there.
 edgetpu-objs	+= $(GCIP_DIR)/gcip.o
+endif
 endif
 
 rio-objs	:= rio-core.o \
