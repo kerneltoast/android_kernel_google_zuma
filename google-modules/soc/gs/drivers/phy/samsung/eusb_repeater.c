@@ -186,27 +186,15 @@ static int eusb_repeater_fill_tune_param(struct eusb_repeater_data *tud,
 static int eusb_repeater_ctrl(int value)
 {
 	struct eusb_repeater_data *tud = g_tud;
-	int ret = 0;
-	u8 read_data, write_data;
+	u8 write_data = value ? 0 : REG_DISABLE_P1;
+	int ret;
 
-	ret = eusb_repeater_read_reg(tud, I2C_GLOBAL_CONFIG, &read_data, 1);
-	if (ret < 0)
-		goto err;
-
-	write_data = value ? (read_data & ~REG_DISABLE_P1) : (read_data | REG_DISABLE_P1);
 	ret = eusb_repeater_write_reg(tud, I2C_GLOBAL_CONFIG, &write_data, 1);
 	if (ret < 0)
 		goto err;
 
-	ret = eusb_repeater_read_reg(tud, I2C_GLOBAL_CONFIG, &read_data, 1);
-	if (ret < 0)
-		goto err;
-
-	dev_info(tud->dev, "%s Disabled mode, reg = %x\n", value ? "Exit" : "Enter", read_data);
-
-	if (ret >= 0)
-		tud->ctrl_sel_status = value;
-
+	dev_dbg(tud->dev, "%s Disabled mode, reg = %x\n", value ? "Exit" : "Enter", write_data);
+	tud->ctrl_sel_status = value;
 	return ret;
 
 err:
