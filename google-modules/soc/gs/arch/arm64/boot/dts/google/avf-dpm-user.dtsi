@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Android Virtualization Framework Debug Policy device tree source
+ *
+ * Copyright 2023 Google Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/ {
+	fragment@avf {
+		target-path = "/";
+
+		__overlay__ {
+			avf {
+				version = <0>;
+				variant = "user";
+				guest {
+					common {
+						log = <0>;
+						ramdump = <0>;
+					};
+
+					microdroid {
+						adb = <0>;
+					};
+				};
+			};
+		};
+	};
+}; /* end of avf */

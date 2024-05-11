@@ -1,0 +1,53 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (C) 2023 Google LLC
+
+build:pixel_debug_common --notrim
+build:pixel_debug_common --nokmi_symbol_list_strict_mode
+build:pixel_debug_common --nokmi_symbol_list_violations_check
+build:pixel_debug_common --config=no_download_gki
+
+build:blktest --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=blktest \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.blktest
+build:debug_api --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=debug_api \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.debug_api
+build:debug_kmemleak --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=debug_kmemleak \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.debug_kmemleak
+build:debug_locking --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=debug_locking \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.debug_locking
+build:debug_memory --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=debug_memory \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.debug_memory
+build:debug_memory_accounting --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=debug_memory_accounting \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.debug_memory_accounting
+build:function_tracer --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=function_tracer \
+    --defconfig_fragment=//private/google-modules/soc/gs:function_tracer_defconfig
+build:kasan --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=kasan \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.kasan
+build:khwasan --config=pixel_debug_common --//private/google-modules/soc/gs:debug_fragment=khwasan \
+    --gki_build_config_fragment=//private/google-modules/soc/gs:build.config.slider.khwasan
+
+build:aosp_staging --//private/google-modules/soc/gs:gki_kernel_dir=aosp-staging
+
+build:use_source_tree_aosp --//private/google-modules/soc/gs:gki_kernel_dir=aosp
+build:use_source_tree_aosp_staging --//private/google-modules/soc/gs:gki_kernel_dir=aosp-staging
+
+build:download_gki --use_prebuilt_gki
+build:download_gki --use_signed_prebuilts
+build:download_gki --action_env=KLEAF_DOWNLOAD_BUILD_NUMBER_MAP="gki_prebuilts=11209359"
+build:no_download_gki --use_prebuilt_gki=false
+
+# enable Pixel Staging Kernel (go/pixel-staging) by default
+#build --config=use_source_tree_aosp_staging
+
+# disable GKI prebuilts by default
+#build --config=no_download_gki
+
+# enable GKI prebuilts by default
+build --config=download_gki
+
+# Placeholders for device specific bazelrc files. Add as many as you need.
+try-import %workspace%/.d1.bazelrc
+try-import %workspace%/.d2.bazelrc
+try-import %workspace%/.d3.bazelrc
+try-import %workspace%/.d4.bazelrc
+try-import %workspace%/.d5.bazelrc

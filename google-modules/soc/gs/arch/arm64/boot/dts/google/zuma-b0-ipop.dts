@@ -1,0 +1,869 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2023 Google LLC.
+ *
+ */
+
+/dts-v1/;
+/ {
+	/* List of SoCs that this device tree is compatible with */
+	soc_compatible {
+		B0_IPOP {
+			description = "B0,IPOP";
+			product_id = <0x09865>;
+			major = <0x1>;
+			minor = <0x0>;
+			pkg_mode = <0x1>;
+		};
+		B1_IPOP {
+			description = "B1,IPOP";
+			product_id = <0x09865>;
+			major = <0x1>;
+			minor = <0x1>;
+			pkg_mode = <0x1>;
+		};
+	};
+};
+
+#include "zuma-b0.dtsi"
+
+/ {
+
+	tmuctrl_0: BIG@100A0000 {
+		compatible = "samsung,gs-tmu-v3";
+		reg = <0x0 0x100A0000 0x800>;
+		interrupts = <GIC_SPI IRQ_TMU_TOP_INTREQ_MISC IRQ_TYPE_LEVEL_HIGH>;
+		tmu_name = "BIG";
+		id = <0>;
+		ect_nouse;
+		#thermal-sensor-cells = <0>;
+
+		use-pi-thermal;
+		polling_delay_on = <25>;
+		polling_delay_off = <0>;
+		k_po = <68>;
+		k_pu = <68>;
+		k_i = <50>;
+		i_max = <5>;
+		integral_cutoff = <10>;
+		sustainable_power = <2000>;
+		control_temp_step = <1000>; // mC per second
+		junction_offset = <0 (-10000) (-10000) (-10000) 5000 0 0 0>; // mC
+
+		early_throttle_enable;
+		early_throttle_k_p = <50>;
+		early_throttle_offset = <10>; // in Celsius
+
+		use-hardlimit-pid;
+
+		tmu_work_affinity = "0-8";
+
+		use-acpm-gov;
+		irq_stepwise_gain = <2>;
+		timer_stepwise_gain = <1>;
+		thermal_pressure_time_window = <100>;
+
+		mapped_cpus = "8";
+		pressure_index = <0>;
+
+		use-acpm-mpmm-throttle;
+		mpmm_enable = <0x1>;
+		mpmm_throttle_level = <0x4>;
+		mpmm_clr_throttle_level = <0x6>;
+	};
+
+	tmuctrl_1: MID@100A0000 {
+		compatible = "samsung,gs-tmu-v3";
+		reg = <0x0 0x100A0000 0x800>;
+		interrupts = <GIC_SPI IRQ_TMU_TOP_INTREQ_MISC IRQ_TYPE_LEVEL_HIGH>;
+		tmu_name = "MID";
+		id = <1>;
+		ect_nouse;
+		#thermal-sensor-cells = <0>;
+
+		use-pi-thermal;
+		polling_delay_on = <25>;
+		polling_delay_off = <0>;
+		k_po = <36>;
+		k_pu = <36>;
+		k_i = <58>;
+		i_max = <5>;
+		integral_cutoff = <20>;
+		sustainable_power = <1000>;
+		control_temp_step = <1000>; // mC per second
+		junction_offset = <0 (-10000) (-10000) (-10000) 0 0 0 0>; // mC
+
+		tmu_work_affinity = "0-8";
+
+		use-acpm-gov;
+		irq_stepwise_gain = <2>;
+		timer_stepwise_gain = <1>;
+		thermal_pressure_time_window = <100>;
+
+		mapped_cpus = "4-7";
+		pressure_index = <1>;
+
+		use-acpm-mpmm-throttle;
+		mpmm_enable = <0xF>;
+		mpmm_throttle_level = <0x100>;
+		mpmm_clr_throttle_level = <0x1AA>;
+	};
+
+	tmuctrl_2: LITTLE@100A0000 {
+		compatible = "samsung,gs-tmu-v3";
+		reg = <0x0 0x100A0000 0x800>;
+		interrupts = <GIC_SPI IRQ_TMU_TOP_INTREQ_MISC IRQ_TYPE_LEVEL_HIGH>;
+		tmu_name = "LITTLE";
+		id = <2>;
+		ect_nouse;
+		#thermal-sensor-cells = <0>;
+
+		use-pi-thermal;
+		polling_delay_on = <50>;
+		polling_delay_off = <0>;
+		k_po = <60>;
+		k_pu = <60>;
+		k_i = <20>;
+		i_max = <5>;
+		integral_cutoff = <20>;
+		sustainable_power = <200>;
+		control_temp_step = <1000>; // mC per second
+		junction_offset = <0 (-5000) (-10000) (-10000) 0 0 0 0>; // mC
+
+		tmu_work_affinity = "0-8";
+
+		use-acpm-gov;
+		irq_stepwise_gain = <2>;
+		timer_stepwise_gain = <1>;
+		thermal_pressure_time_window = <100>;
+
+		mapped_cpus = "0-3";
+		pressure_index = <2>;
+
+		mpmm_enable = <0x0>;
+		mpmm_throttle_level = <0x1AA>;
+		mpmm_clr_throttle_level = <0x1AA>;
+	};
+
+	tmuctrl_3: G3D@100B0000 {
+		compatible = "samsung,gs-tmu-v3";
+		reg = <0x0 0x100B0000 0x800>;
+		interrupts = <GIC_SPI IRQ_TMU_SUB_INTREQ_MISC IRQ_TYPE_LEVEL_HIGH>;
+		tmu_name = "G3D";
+		id = <3>;
+		ect_nouse;
+		#thermal-sensor-cells = <0>;
+
+		use-pi-thermal;
+		polling_delay_on = <50>;
+		polling_delay_off = <0>;
+		k_po = <60>;
+		k_pu = <60>;
+		k_i = <20>;
+		i_max = <5>;
+		integral_cutoff = <20>;
+		sustainable_power = <200>;
+		control_temp_step = <1000>; // mC per second
+		junction_offset = <0 (-10000) (-10000) (-10000) 0 0 0 0>; // mC
+
+		tmu_work_affinity = "0-8";
+
+		use-acpm-gov;
+		irq_stepwise_gain = <2>;
+		timer_stepwise_gain = <1>;
+	};
+
+	tmuctrl_4: ISP@100B0000 {
+		compatible = "samsung,gs-tmu-v3";
+		reg = <0x0 0x100B0000 0x800>;
+		interrupts = <GIC_SPI IRQ_TMU_SUB_INTREQ_MISC IRQ_TYPE_LEVEL_HIGH>;
+		tmu_name = "ISP";
+		id = <4>;
+		ect_nouse;
+		#thermal-sensor-cells = <0>;
+		junction_offset = <0 (-10000) (-10000) (-10000) 0 0 0 0>; // mC
+
+		tmu_work_affinity = "0-8";
+	};
+
+	tmuctrl_5: TPU@100B0000 {
+		compatible = "samsung,gs-tmu-v3";
+		reg = <0x0 0x100B0000 0x800>;
+		interrupts = <GIC_SPI IRQ_TMU_SUB_INTREQ_MISC IRQ_TYPE_LEVEL_HIGH>;
+		tmu_name = "TPU";
+		id = <5>;
+		ect_nouse;
+		#thermal-sensor-cells = <0>;
+
+		use-pi-thermal;
+		polling_delay_on = <50>;
+		polling_delay_off = <0>;
+		k_po = <1>;
+		k_pu = <1>;
+		k_i = <1>;
+		i_max = <5>;
+		integral_cutoff = <20>;
+		sustainable_power = <200>;
+		control_temp_step = <1000>; // mC per second
+		junction_offset = <0 (-10000) (-10000) (-10000) 0 0 0 0>; // mC
+
+		tmu_work_affinity = "0-8";
+
+		use-acpm-gov;
+		irq_stepwise_gain = <2>;
+		timer_stepwise_gain = <1>;
+	};
+
+	tmuctrl_6: AUR@100B0000 {
+		compatible = "samsung,gs-tmu-v3";
+		reg = <0x0 0x100B0000 0x800>;
+		interrupts = <GIC_SPI IRQ_TMU_SUB_INTREQ_MISC IRQ_TYPE_LEVEL_HIGH>;
+		tmu_name = "AUR";
+		id = <6>;
+		ect_nouse;
+		#thermal-sensor-cells = <0>;
+		tmu_work_affinity = "0-8";
+		polling_delay_on = <50>;
+		junction_offset = <0 (-10000) (-10000) (-10000) 0 0 0 0>; // mC
+
+		use-acpm-gov;
+		irq_stepwise_gain = <2>;
+		timer_stepwise_gain = <1>;
+	};
+
+	thermal_zones: thermal-zones {
+		big_thermal: BIG {
+			zone_name  = "BIG_THERMAL";
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&tmuctrl_0>;
+
+			trips {
+				big_cold: big-cold {
+					temperature = <20000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				big_switch_on: big-switch-on {
+					temperature = <70000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				big_control_temp: big-control-temp {
+					temperature = <90000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				big_alert1: big-alert1 {
+					temperature = <93000>; /* millicelsius */
+					hysteresis = <93000>; /* 93C to avoid falling edge irq */
+					type = "active";
+				};
+				big_early_throttle: big-early_throttle {
+					temperature = <80000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				big_sw_max_effort: big-sw_max_effort {
+					temperature = <97000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "active";
+				};
+				big_dfs: big-dfs {
+					temperature = <100000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				big_hot: big-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <3000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+			cooling-maps {
+				map0 {
+					trip = <&big_control_temp>;
+					cooling-device = <&cpufreq_domain2 0 0>;
+				};
+			};
+		};
+		mid_thermal: MID {
+			zone_name  = "MID_THERMAL";
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&tmuctrl_1>;
+
+			trips {
+				mid_cold: mid-cold {
+					temperature = <20000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_switch_on: mid-switch-on {
+					temperature = <70000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_control_temp: mid-control-temp {
+					temperature = <90000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				mid_alert1: mid-alert1 {
+					temperature = <93000>; /* millicelsius */
+					hysteresis = <93000>; /* 93C to avoid falling edge irq */
+					type = "active";
+				};
+				mid_alert2: mid-alert2 {
+					temperature = <95000>; /* millicelsius */
+					hysteresis = <10000>; /* millicelsius */
+					type = "passive";
+				};
+				mid_sw_max_effort: mid-sw_max_effort {
+					temperature = <97000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "active";
+				};
+				mid_dfs: mid-dfs {
+					temperature = <100000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_hot: mid-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <3000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+			cooling-maps {
+				map0 {
+				     trip = <&mid_control_temp>;
+				     cooling-device = <&cpufreq_domain1 0 0>;
+			       };
+			};
+		};
+		little_thermal: LITTLE {
+			zone_name  = "LITTLE_THERMAL";
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&tmuctrl_2>;
+
+			trips {
+				little_cold: little-cold {
+					temperature = <20000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				little_switch_on: little-switch-on {
+					temperature = <70000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				little_control_temp: little-control-temp {
+					temperature = <95000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				little_alert1: little-alert1 {
+					temperature = <97000>; /* millicelsius */
+					hysteresis = <97000>; /* 97C to avoid falling edge irq */
+					type = "active";
+				};
+				little_alert2: little-alert2 {
+					temperature = <98000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "passive";
+				};
+				little_sw_max_effort: little-sw_max_effort {
+					temperature = <99000>; /* millicelsius */
+					hysteresis = <1000>; /* millicelsius */
+					type = "passive";
+				};
+				little_dfs: little-dfs {
+					temperature = <100000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				little_hot: little-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <3000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+			cooling-maps {
+				map0 {
+				     trip = <&little_control_temp>;
+				     cooling-device = <&cpufreq_domain0 0 0>;
+				};
+			};
+		};
+		gpu_thermal: G3D {
+			zone_name  = "G3D_THERMAL";
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&tmuctrl_3>;
+
+			trips {
+				gpu_cold: gpu-cold {
+					temperature = <20000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				gpu_switch_on: gpu-switch-on {
+					temperature = <70000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				gpu_control_temp: gpu-control-temp {
+					temperature = <90000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				gpu_alert1: gpu-alert1 {
+					temperature = <95000>; /* millicelsius */
+					hysteresis = <4000>; /* millicelsius */
+					type = "passive";
+				};
+				gpu_alert2: gpu-alert2 {
+					temperature = <98000>; /* millicelsius */
+					hysteresis = <98000>; /* 98C to avoid falling edge irq */
+					type = "active";
+				};
+				gpu_sw_max_effort: gpu-sw_max_effort {
+					temperature = <102000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "active";
+				};
+				gpu_dfs: gpu-dfs {
+					temperature = <105000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				gpu_hot: gpu-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <3000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+			cooling-maps {
+				map0 {
+					trip = <&gpu_control_temp>;
+					cooling-device = <&mali
+						THERMAL_NO_LIMIT
+						THERMAL_NO_LIMIT>;
+				};
+			};
+		};
+		isp_thermal: ISP {
+			zone_name  = "ISP_THERMAL";
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&tmuctrl_4>;
+
+			trips {
+				isp_alert0: isp-alert0 {
+					temperature = <20000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				isp_alert1: isp-alert1 {
+					temperature = <70000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				isp_alert2: isp-alert2 {
+					temperature = <90000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				isp_alert3: isp-alert3 {
+					temperature = <95000>; /* millicelsius */
+					hysteresis = <4000>; /* millicelsius */
+					type = "passive";
+				};
+				isp_alert4: isp-alert4 {
+					temperature = <98000>; /* millicelsius */
+					hysteresis = <98000>; /* 98C to avoid falling edge irq */
+					type = "passive";
+				};
+				isp_alert5: isp-alert5 {
+					temperature = <102000>; /* millicelsius */
+					hysteresis = <102000>; /* 102C to avoid falling edge irq */
+					type = "passive";
+				};
+				isp_alert6: isp-alert6 {
+					temperature = <105000>; /* millicelsius */
+					hysteresis = <105000>; /* 105C to avoid falling edge irq */
+					type = "passive";
+				};
+				isp_hot: isp-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <3000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+		};
+		tpu_thermal: TPU {
+			zone_name  = "TPU_THERMAL";
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&tmuctrl_5>;
+
+			trips {
+				tpu_cold: tpu-cold {
+					temperature = <20000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				tpu_switch_on: tpu-switch-on {
+					temperature = <70000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				tpu_control_temp: tpu-control-temp {
+					temperature = <90000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				tpu_alert1: tpu-alert1 {
+					temperature = <95000>; /* millicelsius */
+					hysteresis = <4000>; /* millicelsius */
+					type = "passive";
+				};
+				tpu_alert2: tpu-alert2 {
+					temperature = <98000>; /* millicelsius */
+					hysteresis = <98000>; /* 98C to avoid falling edge irq */
+					type = "active";
+				};
+				tpu_sw_max_effort: tpu-sw-max-effort {
+					temperature = <102000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "active";
+				};
+				tpu_dfs: tpu-dfs {
+					temperature = <105000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				tpu_hot: tpu-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <3000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+			cooling-maps {
+				map0 {
+					trip = <&tpu_control_temp>;
+					cooling-device = <&tpu_cooling 0 0>;
+				};
+			};
+		};
+		aur_thermal: AUR {
+			zone_name  = "AUR_THERMAL";
+			polling-delay-passive = <0>;
+			polling-delay = <0>;
+			thermal-sensors = <&tmuctrl_6>;
+
+			trips {
+				aur_cold: aur-cold {
+					temperature = <20000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				aur_switch_on: aur-switch-on {
+					temperature = <70000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				aur_control_temp: aur-control-temp {
+					temperature = <90000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				aur_alert1: aur-alert1 {
+					temperature = <95000>; /* millicelsius */
+					hysteresis = <4000>; /* millicelsius */
+					type = "passive";
+				};
+				aur_alert2: aur-alert2 {
+					temperature = <98000>; /* millicelsius */
+					hysteresis = <98000>; /* 98C to avoid falling edge irq */
+					type = "active";
+				};
+				aur_sw_max_effort: aur-sw_max_effort {
+					temperature = <102000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "active";
+				};
+				aur_dfs: aur-dfs {
+					temperature = <105000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				aur_hot: aur-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <3000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+			cooling-maps {
+				map0 {
+					trip = <&aur_control_temp>;
+					cooling-device = <&gxp_cooling 0 0>;
+				};
+			};
+		};
+	};
+
+	acpm_gov {
+		thermal_pressure_polling_delay_on = <100>;
+		thermal_pressure_polling_delay_off = <0>;
+
+		work_affinity = "0-8";
+	};
+};
+
+&pixel_em {
+	profiles =
+		"default
+			cpu0 {
+			324000 35 11
+			610000 65 12
+			820000 88 19
+			955000 102 25
+			1098000 118 31
+			1197000 128 37
+			1328000 142 45
+			1425000 153 57
+			1548000 166 155
+			1704000 182 195
+			}
+			cpu4 {
+			402000 123 59
+			578000 177 85
+			697000 213 106
+			712000 218 114
+			910000 279 156
+			1065000 326 208
+			1221000 374 266
+			1328000 406 320
+			1418000 434 368
+			1572000 481 449
+			1836000 562 638
+			1945000 595 804
+			2130000 652 1042
+			2245000 687 1272
+			2367000 725 1514
+			}
+			cpu8 {
+			500000 176 116
+			880000 309 213
+			1164000 409 321
+			1298000 456 391
+			1557000 547 535
+			1745000 613 675
+			1885000 662 784
+			2049000 720 1034
+			2147000 754 1145
+			2294000 806 1363
+			2363000 830 1533
+			2556000 898 1911
+			2687000 944 2415
+			2850000 1002 3175
+			2914000 1024 3714
+			}
+		",
+		"cam1
+			cpu0 {
+			324000 40 5
+			610000 80 17
+			820000 110 26
+			955000 129 32
+			1098000 150 38
+			1197000 164 43
+			1328000 183 56
+			1425000 197 66
+			1548000 214 79
+			1704000 236 96
+			}
+			cpu4 {
+			402000 100 33
+			578000 168 42
+			697000 215 47
+			712000 221 48
+			910000 298 59
+			1065000 358 67
+			1221000 419 69
+			1328000 461 84
+			1418000 496 93
+			1572000 557 102
+			1836000 660 127
+			1945000 702 142
+			2130000 775 178
+			2245000 819 203
+			2367000 867 237
+			}
+			cpu8 {
+			500000 340 90
+			880000 587 144
+			1164000 662 194
+			1298000 696 226
+			1557000 760 288
+			1745000 806 348
+			1885000 838 393
+			2049000 865 446
+			2147000 881 521
+			2294000 905 635
+			2363000 916 688
+			2556000 948 837
+			2687000 970 939
+			2850000 989 1000
+			2914000 1007 1060
+			}
+		",
+		"cam2
+			cpu0 {
+			324000 21 6
+			610000 40 12
+			820000 54 19
+			955000 63 25
+			1098000 72 31
+			1197000 78 37
+			1328000 87 45
+			1425000 93 57
+			1548000 102 66
+			1704000 112 82
+			}
+			cpu4 {
+			402000 127 54
+			578000 182 83
+			697000 220 105
+			712000 224 112
+			910000 287 157
+			1065000 335 213
+			1221000 385 269
+			1328000 418 321
+			1418000 447 375
+			1572000 495 453
+			1836000 578 641
+			1945000 613 795
+			2130000 671 986
+			2245000 707 1165
+			2367000 746 1385
+			}
+			cpu8 {
+			500000 174 96
+			880000 306 196
+			1164000 405 297
+			1298000 452 368
+			1557000 542 516
+			1745000 607 647
+			1885000 656 762
+			2049000 713 946
+			2147000 747 1055
+			2294000 798 1254
+			2363000 822 1407
+			2556000 889 1698
+			2687000 935 2034
+			2850000 992 2521
+			2914000 1014 2851
+			}
+		",
+		"cam3
+			cpu0 {
+			324000 33 24
+			610000 63 39
+			820000 84 56
+			955000 100 73
+			1098000 113 86
+			1197000 123 98
+			1328000 136 116
+			1425000 152 141
+			1548000 159 158
+			1704000 175 198
+			}
+			cpu4 {
+			402000 118 56
+			578000 170 84
+			697000 205 105
+			712000 212 107
+			910000 268 148
+			1065000 318 201
+			1221000 359 251
+			1328000 405 304
+			1418000 439 356
+			1572000 456 405
+			1836000 540 596
+			1945000 588 743
+			2130000 629 930
+			2245000 661 1122
+			2367000 692 1314
+			}
+			cpu8 {
+			500000 171 121
+			880000 288 225
+			1164000 399 342
+			1298000 443 415
+			1557000 507 544
+			1745000 571 682
+			1885000 609 765
+			2049000 680 983
+			2147000 714 1134
+			2294000 748 1322
+			2363000 794 1481
+			2556000 850 1883
+			2687000 923 2377
+			2850000 972 2882
+			2914000 989 3465
+			}
+		";
+		idle_power =
+			"
+			cpu0 {
+			324000 1
+			610000 1
+			820000 1
+			955000 1
+			1098000 2
+			1197000 2
+			1328000 2
+			1425000 2
+			1548000 2
+			1704000 2
+			}
+			cpu4 {
+			402000 5
+			578000 5
+			697000 5
+			712000 6
+			910000 7
+			1065000 8
+			1221000 8
+			1328000 9
+			1418000 10
+			1572000 11
+			1836000 14
+			1945000 16
+			2130000 21
+			2245000 25
+			2367000 29
+			}
+			cpu8 {
+			500000 15
+			880000 18
+			1164000 21
+			1298000 23
+			1557000 27
+			1745000 30
+			1885000 33
+			2049000 40
+			2147000 45
+			2294000 52
+			2363000 56
+			2556000 85
+			2687000 105
+			2850000 123
+			2914000 140
+			}
+			";
+};

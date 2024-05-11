@@ -1,0 +1,56 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * zuma NFC device tree for ripcurrent
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+#include <dt-bindings/pinctrl/samsung.h>
+
+&pinctrl_8 {
+	nfc_rst: nfc-rst {
+		samsung,pins = "gph1-6";
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+	};
+
+	nfc_pidle: nfc-pidle {
+		samsung,pins = "gph1-3";
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+	};
+};
+
+&hsi2c0_bus {
+	samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+	samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+};
+
+&hsi2c_0 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	clock-frequency = <400000>;
+	st21nfc@8 {
+		compatible = "st,st21nfc";
+		reg = <0x08>;
+		dev-name = "st21nfc";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&nfc_rst &nfc_pidle>;
+
+		interrupt-parent = <&gpa7>;
+		interrupts = <6 0 0>;
+		reset-gpios = <&gph1 6 GPIO_ACTIVE_HIGH>;
+		irq-gpios = <&gpa7 6 GPIO_ACTIVE_HIGH>;
+		pidle-gpios = <&gph1 3 GPIO_ACTIVE_HIGH>;
+
+		pmu_clk_pad = <0x3e84>;
+		st,extpad_control_en;
+
+		status = "ok";
+	};
+};

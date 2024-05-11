@@ -1,0 +1,22 @@
+TRIM_NONLISTED_KMI=0
+KMI_SYMBOL_LIST_STRICT_MODE=0
+
+# TODO(b/239987494): Remove this when the core GKI fragment is removed.
+if [ -n "${CORE_GKI_FRAGMENT}" ]; then
+source ${ROOT_DIR}/${CORE_GKI_FRAGMENT}
+fi
+
+append_cmd POST_DEFCONFIG_CMDS update_khwasan_config
+
+function update_khwasan_config() {
+  ${KERNEL_DIR}/scripts/config --file ${OUT_DIR}/.config \
+    -e CONFIG_KASAN \
+    -d CONFIG_KASAN_SW_TAGS \
+    -e CONFIG_KASAN_HW_TAGS \
+    -e CONFIG_KCOV \
+    -e CONFIG_DEBUG_INFO \
+    -d CONFIG_RANDOMIZE_BASE \
+    --set-val CONFIG_FRAME_WARN 0
+  (cd ${OUT_DIR} && \
+   make O=${OUT_DIR} "${TOOL_ARGS[@]}" ${MAKE_ARGS} olddefconfig)
+}

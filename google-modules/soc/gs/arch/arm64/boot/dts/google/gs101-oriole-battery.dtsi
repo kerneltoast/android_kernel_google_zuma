@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to oriole
+ *
+ * Copyright 2021 Google,LLC
+ *
+ */
+
+&google_battery {
+	google,chg-battery-capacity = <4520>;
+};
+
+&max77759_fg {
+	maxim,fg-data {
+		#include "gs101-oriole-battery-data.dtsi"
+	};
+};
+
+/ {
+	fragment@battery {
+		target-path = "/";
+		__overlay__ {
+			google_battery: google,battery {
+				google,ttf-temp-idx= <2>;
+				google,ttf-adapter = <3000>;
+				google,ttf-soc-table =  <50 58 76 83 87 91  93  100>;
+				google,ttf-elap-table = <38 44 58 76 89 121 165 178>;
+				google,ttf-tier-table = <0 59 77>;
+			};
+
+			google_bms {
+				nvmem-names = "4-00500";
+				/* pack eeprom is available only with P20+ batteries */
+				google,bee-name = "4-00500";
+			};
+		};
+	};
+};

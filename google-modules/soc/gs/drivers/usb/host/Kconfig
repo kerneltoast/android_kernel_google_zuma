@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# USB Host Controller Drivers
+#
+
+if USB_XHCI_HCD
+
+config USB_XHCI_EXYNOS
+	tristate "xHCI support for EXYNOS SoCs"
+	help
+	  Say 'Y' to enable the support for the xHCI host controller
+	  found in Exynos SoCs.
+
+endif # USB_XHCI_HCD
