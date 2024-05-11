@@ -1,0 +1,37 @@
+#
+# HDCP driver configuration
+#
+
+config EXYNOS_HDCP2
+	tristate "HDCP2 driver support"
+	default m
+	help
+	  Enable HDCP2 support
+
+if EXYNOS_HDCP2
+
+config HDCP2_EMULATION_MODE
+	bool "HDCP2 emulation mode support"
+	default n
+	help
+	  Enable HDCP2 emulation mode support
+
+config HDCP2_DP_ENABLE
+         bool "HDCP2 DP protocol support"
+         default y
+         help
+           Enable HDCP2 DP protocol support
+
+config HDCP2_FUNC_TEST_MODE
+         bool "HDCP2 DP Default Enabled"
+         default n
+         help
+           Enable HDCP2 DP Function test mode.
+
+config HDCP2_2_ERRATA_SUPPORT
+         bool "HDCP2.2 ERRATA"
+         default y
+         help
+           Enable HDCP2_2 errata support
+
+endif
