@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: GPL-2.0
+
+load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
+
+kernel_module(
+    name = "cs35l45",
+    outs = [
+        "snd-soc-cs35l45.ko",
+        "snd-soc-cs35l45-i2c.ko",
+        "snd-soc-cs35l45-spi.ko",
+        "snd-soc-wm-adsp.ko",
+    ],
+    kernel_build = "//private/google-modules/soc/gs:gs_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/gs:__pkg__",
+    ],
+)
