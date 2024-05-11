@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: GPL-2.0
+
+subdir-ccflags-y += \
+		-I$(KERNEL_SRC)/../private/google-modules/bms \
+
+exynos-reboot-$(CONFIG_SOC_GS101) += exynos-gs101-reboot.o
+exynos-reboot-$(CONFIG_SOC_GS201) += exynos-gs201-reboot.o
+exynos-reboot-$(CONFIG_SOC_ZUMA) += exynos-zuma-reboot.o
+
+obj-$(CONFIG_POWER_RESET_EXYNOS) += exynos-reboot.o
