@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Wireless Charger device tree entries.
+ *
+ * Copyright 2022 Google LLC
+ */
+
+&hsi2c_9 {
+	p9412@3c {
+		fod = [B7 26 89 3D 89 26 A4 E6 97 F9 9B EA 00 00 00 46];
+		fod_epp = [AC 51 86 6A 90 25 88 3A 88 38 8B 22 00 00 00 46];
+		google,hpp_fod_vol = /bits/ 32 <16500000 17500000 18500000 19500000>;
+		fod_hpp_0 = [AC 58 8A 7D 8B 43 87 50 87 3E 8D EA 00 00 01 48];
+		fod_hpp_1 = [AB 4F 8A 7D 8B 43 87 50 87 3E 8D EA 00 00 01 48];
+		fod_hpp_2 = [B1 6E 90 7D 8F 52 85 7E 83 7E 8B 14 00 00 01 48];
+		fod_hpp_3 = [B3 7F 95 7E 88 7D 86 7A 85 75 8A 30 00 00 01 48];
+		google,q_value = <52>;
+
+		google,alignment_scalar_low_current = <400>;
+		google,alignment_scalar_high_current = <100>;
+		google,alignment_offset_low_current = <128000>;
+		google,alignment_offset_high_current = <148000>;
+		google,alignment_current_threshold = <500>;
+	};
+};

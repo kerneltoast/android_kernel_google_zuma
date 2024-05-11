@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shiba board device tree source
+ *
+ * Copyright 2022 Google LLC
+ */
+
+#include "zuma-shusky-board.dtsi"
+
+#include "zuma-shiba-audio.dtsi"
+#include "zuma-shiba-battery.dtsi"
+#include "zuma-shiba-camera.dtsi"
+#include "zuma-shiba-charging.dtsi"
+#include "zuma-shiba-display.dtsi"
+#include "zuma-shusky-haptics.dtsi"
+#include "zuma-shiba-touch.dtsi"
+#include "zuma-shusky-thermal.dtsi"
+#include "zuma-shiba-ldaf.dtsi"
+#include "zuma-ripcurrent-bluetooth.dtsi"
+#include "zuma-shusky-pmic.dtsi"
+#include "zuma-shiba-pmic.dtsi"
+#include "zuma-shusky-bcl.dtsi"
+#include "zuma-shiba-wcharger.dtsi"

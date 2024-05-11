@@ -1,0 +1,584 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
+load("//aosp:modules.bzl", "COMMON_GKI_MODULES_LIST")
+load("//build/bazel_common_rules/dist:dist.bzl", "copy_to_dist_dir")
+load("//build/kernel/kleaf:constants.bzl", "aarch64_outs")
+load(
+    "//build/kernel/kleaf:kernel.bzl",
+    "kernel_abi",
+    "kernel_build",
+    "kernel_images",
+    "kernel_module_group",
+    "kernel_modules_install",
+    "kernel_unstripped_modules_archive",
+    "merged_kernel_uapi_headers",
+)
+load("//build/kernel/kleaf/impl:gki_artifacts.bzl", "gki_artifacts")
+load(
+    "//private/google-modules/soc/gs:device_build_configs.bzl",
+    "device_build_configs",
+    "extracted_system_dlkm",
+    "lto_dependant_kernel_module",
+)
+
+_GKI_AARCH64_MAKE_GOALS = [
+    "Image",
+    "Image.lz4",
+    "Image.gz",
+    "modules",
+]
+
+device_build_configs(
+    name = "build.config.shusky",
+    base_build_config = ":build.config.shusky",
+    device_name = "shusky",
+)
+
+kernel_build(
+    name = "shusky_gki",
+    srcs = glob([
+        "build.config.*",
+        "shusky*.fragment",
+    ]) + [
+        "//aosp-staging:kernel_aarch64_sources",
+        "//private/google-modules/soc/gs:build.config.slider.blktest",
+        "//private/google-modules/soc/gs:build.config.slider.debug_api",
+        "//private/google-modules/soc/gs:build.config.slider.debug_kmemleak",
+        "//private/google-modules/soc/gs:build.config.slider.debug_locking",
+        "//private/google-modules/soc/gs:build.config.slider.debug_memory",
+        "//private/google-modules/soc/gs:build.config.slider.debug_memory_accounting",
+        "//private/google-modules/soc/gs:build.config.slider.kasan",
+        "//private/google-modules/soc/gs:build.config.slider.khwasan",
+    ],
+    outs = aarch64_outs,
+    additional_kmi_symbol_lists = ["//aosp-staging:android/abi_gki_aarch64_pixel"],
+    build_config = ":gki_build_config",
+    collect_unstripped_modules = True,
+    # For building system_dlkm (b/241855743)
+    # Device fragments need to add: '# CONFIG_MODULE_SIG_ALL is not set'
+    implicit_outs = [
+        "scripts/sign-file",
+        "certs/signing_key.pem",
+        "certs/signing_key.x509",
+    ],
+    kmi_symbol_list = "//aosp-staging:android/abi_gki_aarch64",
+    kmi_symbol_list_strict_mode = False,
+    make_goals = _GKI_AARCH64_MAKE_GOALS,
+    module_implicit_outs = COMMON_GKI_MODULES_LIST,
+    strip_modules = True,
+    trim_nonlisted_kmi = True,
+)
+
+kernel_modules_install(
+    name = "shusky_gki_modules_install",
+    kernel_build = "shusky_gki",
+    kernel_modules = [],
+)
+
+kernel_images(
+    name = "shusky_gki_images",
+    build_system_dlkm = True,
+    kernel_build = "shusky_gki",
+    kernel_modules_install = "shusky_gki_modules_install",
+)
+
+gki_artifacts(
+    name = "shusky_gki_artifacts",
+    arch = "arm64",
+    boot_img_sizes = {
+        # Assume BUILD_GKI_BOOT_IMG_SIZE is the following
+        "": "67108864",
+        # Assume BUILD_GKI_BOOT_IMG_LZ4_SIZE is the following
+        "lz4": "53477376",
+        # Assume BUILD_GKI_BOOT_IMG_GZ_SIZE is the following
+        "gz": "47185920",
+    },
+    kernel_build = "shusky_gki",
+)
+
+filegroup(
+    name = "gki_aarch64_boot_lz4",
+    srcs = select({
+        "//private/google-modules/soc/gs:gki_aosp": ["//aosp:kernel_aarch64_gki_artifacts_download_or_build"],
+        "//private/google-modules/soc/gs:gki_aosp_staging": [":shusky_gki_artifacts"],
+    }),
+)
+
+# TODO(b/285605996): Use hermetic_genrule
+genrule(
+    name = "gki_aarch64_boot",
+    srcs = [":gki_aarch64_boot_lz4"],
+    outs = ["boot.img"],
+    cmd = """
+        for f in $(locations :gki_aarch64_boot_lz4); do
+            if [[ "$${f##*/}" == "boot-lz4.img" ]]; then
+                $(location //build/kernel:hermetic-tools/mv) $$f $(location boot.img)
+                break
+            fi
+        done
+    """,
+    tools = ["//build/kernel:hermetic-tools/mv"],
+)
+
+_PIXEL_MAKE_GOALS = [
+    "modules",
+    "dtbs",
+]
+
+_SOC_REVS = [
+    "a0-foplp",
+    "a0-ipop",
+    "b0-foplp",
+    "b0-ipop",
+]
+
+_SHUSKY_DTBOS = [
+    # Sync with build.config.shusky
+    "google/zuma-ripcurrent.dtbo",
+    "google/zuma-husky-proto1.dtbo",
+    "google/zuma-husky-proto1-wingboard.dtbo",
+    "google/zuma-husky-proto1_1.dtbo",
+    "google/zuma-husky-evt1.dtbo",
+    "google/zuma-husky-evt1_1.dtbo",
+    "google/zuma-husky-dvt1.dtbo",
+    "google/zuma-husky-pvt1.dtbo",
+    "google/zuma-husky-mp.dtbo",
+    "google/zuma-shiba-proto1.dtbo",
+    "google/zuma-shiba-proto1-wingboard.dtbo",
+    "google/zuma-shiba-proto1_1.dtbo",
+    "google/zuma-shiba-evt1.dtbo",
+    "google/zuma-shiba-evt1_b0.dtbo",
+    "google/zuma-shiba-evt1_1.dtbo",
+    "google/zuma-shiba-evt1_1-wingboard.dtbo",
+    "google/zuma-shiba-dvt1.dtbo",
+    "google/zuma-shiba-pvt1.dtbo",
+    "google/zuma-shiba-mp.dtbo",
+    "google-dts-base/zuma-dpm-eng.dtbo",
+    "google-dts-base/zuma-dpm-user.dtbo",
+    "google-dts-base/zuma-dpm-userdebug.dtbo",
+]
+
+kernel_module_group(
+    name = "shusky_ext_modules",
+    srcs = [
+        # keep sorted
+        "//private/devices/google/shusky:zuma_soc.shusky",
+        "//private/devices/google/shusky/display:drm_panel.google",
+        "//private/google-modules/amplifiers/audiometrics",
+        "//private/google-modules/amplifiers/cs35l41",
+        "//private/google-modules/amplifiers/cs40l26",
+        "//private/google-modules/aoc",
+        "//private/google-modules/aoc/alsa",
+        "//private/google-modules/aoc/usb:aoc.usb",
+        "//private/google-modules/bluetooth/broadcom:bluetooth.broadcom",
+        "//private/google-modules/bms",
+        "//private/google-modules/bms/misc:bms-misc",
+        "//private/google-modules/display/samsung:display.samsung",
+        "//private/google-modules/edgetpu/rio/drivers/edgetpu:edgetpu.rio",
+        "//private/google-modules/gps/broadcom/bcm47765",
+        "//private/google-modules/gpu/mali_kbase",
+        "//private/google-modules/gpu/mali_pixel",
+        "//private/google-modules/gxp/zuma:gxp",
+        "//private/google-modules/hdcp/samsung:hdcp.samsung",
+        "//private/google-modules/lwis",
+        "//private/google-modules/nfc",
+        "//private/google-modules/power/reset",
+        "//private/google-modules/touch/common:touch.common",
+        "//private/google-modules/touch/fts/ftm5",
+        "//private/google-modules/touch/goodix",
+        "//private/google-modules/touch/sec",
+        "//private/google-modules/trusty",
+        "//private/google-modules/uwb:uwb.qm35",
+        "//private/google-modules/video/gchips:video.gchips",
+        "//private/google-modules/wlan/bcm4398:bcmdhd4398",
+        "//private/google-modules/wlan/wlan_ptracker",
+    ],
+)
+
+kernel_build(
+    name = "zuma_shusky",
+    srcs = glob([
+        "build.config.*",
+        "dts/**",
+        "shusky*.fragment",
+    ]) + [
+        # keep sorted
+        "//private/google-modules/bms/misc:bms-misc.kconfig",
+        "//private/google-modules/power/reset:reset.kconfig",
+        "//private/google-modules/soc/gs:build.config.slider.blktest",
+        "//private/google-modules/soc/gs:build.config.slider.debug_api",
+        "//private/google-modules/soc/gs:build.config.slider.debug_kmemleak",
+        "//private/google-modules/soc/gs:build.config.slider.debug_locking",
+        "//private/google-modules/soc/gs:build.config.slider.debug_memory",
+        "//private/google-modules/soc/gs:build.config.slider.debug_memory_accounting",
+        "//private/google-modules/soc/gs:build.config.slider.kasan",
+        "//private/google-modules/soc/gs:build.config.slider.khwasan",
+        "//private/google-modules/soc/gs:build.config.zuma",
+        "//private/google-modules/soc/gs:gs_soc.kconfig",
+        "//private/google-modules/touch/common:touch.common.kconfig",
+        "//private/google-modules/touch/fts/ftm5:ftm5.kconfig",
+        "//private/google-modules/touch/sec:sec.kconfig",
+        "//private/google-modules/trusty:trusty.kconfig",
+        "//private/google-modules/wlan/wlan_ptracker:wlan_ptracker.kconfig",
+    ] + select({
+        "//private/google-modules/soc/gs:gki_aosp": ["//aosp:kernel_aarch64_sources"],
+        "//private/google-modules/soc/gs:gki_aosp_staging": ["//aosp-staging:kernel_aarch64_sources"],
+    }),
+    outs = [
+        "google-dts-base/zuma-{}.dtb".format(soc_rev)
+        for soc_rev in _SOC_REVS
+    ] + _SHUSKY_DTBOS,
+    base_kernel = select({
+        "//private/google-modules/soc/gs:gki_aosp": "//aosp:kernel_aarch64_download_or_build",
+        "//private/google-modules/soc/gs:gki_aosp_staging": ":shusky_gki",
+    }),
+    build_config = ":device_build_config",
+    collect_unstripped_modules = True,
+    dtstree = "//private/devices/google/shusky/dts:shusky.dt",
+    kconfig_ext = "//private/google-modules/soc/gs:Kconfig.ext",
+    kmi_symbol_list = select({
+        "//private/google-modules/soc/gs:gki_aosp": "//aosp:android/abi_gki_aarch64_pixel",
+        "//private/google-modules/soc/gs:gki_aosp_staging": "//aosp-staging:android/abi_gki_aarch64_pixel",
+    }),
+    make_goals = _PIXEL_MAKE_GOALS,
+    module_outs = [
+        # keep sorted
+        "drivers/i2c/i2c-dev.ko",
+        "drivers/misc/eeprom/at24.ko",
+        "drivers/misc/open-dice.ko",
+        "drivers/perf/arm-cmn.ko",
+        "drivers/perf/arm_dsu_pmu.ko",
+        "drivers/scsi/sg.ko",
+        "drivers/spi/spidev.ko",
+        "drivers/watchdog/softdog.ko",
+        "net/mac80211/mac80211.ko",
+        "net/wireless/cfg80211.ko",
+    ],
+    strip_modules = True,
+)
+
+kernel_abi(
+    name = "zuma_shusky_abi",
+    kernel_build = ":zuma_shusky",
+    kernel_modules = [":shusky_ext_modules"],
+    kmi_symbol_list_add_only = True,
+    module_grouping = False,
+)
+
+lto_dependant_kernel_module(
+    name = "zuma_soc.shusky",
+    srcs = [
+        "//private/google-modules/soc/gs:gs_soc_sources",
+    ],
+    outs = [
+        # keep sorted
+        "drivers/block/zram/zcomp_cpu.ko",
+        "drivers/block/zram/zcomp_eh.ko",
+        "drivers/block/zram/zram_gs.ko",
+        "drivers/bts/bts.ko",
+        "drivers/clk/gs/clk_exynos_gs.ko",
+        "drivers/clocksource/exynos_mct_v3.ko",
+        "drivers/cpufreq/exynos-acme.ko",
+        "drivers/devfreq/google/arm-memlat-mon.ko",
+        "drivers/devfreq/google/dsulat-devfreq.ko",
+        "drivers/devfreq/google/exynos_devfreq.ko",
+        "drivers/devfreq/google/governor_dsulat.ko",
+        "drivers/devfreq/google/governor_memlat.ko",
+        "drivers/devfreq/google/memlat-devfreq.ko",
+        "drivers/dma-buf/heaps/samsung/samsung_dma_heap.ko",
+        "drivers/dma/pl330.ko",
+        "drivers/dma/samsung-dma.ko",
+        "drivers/gpu/exynos/g2d/g2d.ko",
+        "drivers/i2c/busses/i2c-acpm.ko",
+        "drivers/i2c/busses/i2c-exynos5.ko",
+        "drivers/iio/power/odpm.ko",
+        "drivers/input/fingerprint/goodixfp.ko",
+        "drivers/input/keyboard/s2mpg14-key.ko",
+        "drivers/input/keycombo.ko",
+        "drivers/input/keydebug.ko",
+        "drivers/input/misc/vl53l1/stmvl53l1.ko",
+        "drivers/iommu/exynos-pcie-iommu.ko",
+        "drivers/iommu/samsung-iommu-group.ko",
+        "drivers/iommu/samsung-secure-iova.ko",
+        "drivers/iommu/samsung_iommu_v9.ko",
+        "drivers/media/platform/exynos/mfc/exynos_mfc.ko",
+        "drivers/media/platform/exynos/smfc/smfc.ko",
+        "drivers/mfd/s2mpg14-mfd.ko",
+        "drivers/mfd/s2mpg1415-gpio.ko",
+        "drivers/mfd/s2mpg15-mfd.ko",
+        "drivers/mfd/slg51002-core.ko",
+        "drivers/misc/s5910/s5910.ko",
+        "drivers/misc/sbb-mux/sbb-mux.ko",
+        "drivers/misc/sscoredump/sscoredump.ko",
+        "drivers/pci/controller/dwc/pcie-exynos-gs.ko",
+        "drivers/pci/controller/dwc/pcie-exynos-zuma-rc-cal.ko",
+        "drivers/phy/samsung/eusb_repeater.ko",
+        "drivers/phy/samsung/phy-exynos-mipi.ko",
+        "drivers/phy/samsung/phy-exynos-mipi-dsim.ko",
+        "drivers/phy/samsung/phy-exynos-usbdrd-eusb-super.ko",
+        "drivers/pinctrl/gs/pinctrl-exynos-gs.ko",
+        "drivers/pinctrl/pinctrl-slg51002.ko",
+        "drivers/power/reset/debug-reboot.ko",
+        "drivers/regulator/pmic_class.ko",
+        "drivers/regulator/s2mpg14-powermeter.ko",
+        "drivers/regulator/s2mpg14-regulator.ko",
+        "drivers/regulator/s2mpg15-powermeter.ko",
+        "drivers/regulator/s2mpg15-regulator.ko",
+        "drivers/regulator/slg51002-regulator.ko",
+        "drivers/rtc/rtc-s2mpg14.ko",
+        "drivers/soc/google/acpm/acpm_flexpmu_dbg.ko",
+        "drivers/soc/google/acpm/acpm_mbox_test.ko",
+        "drivers/soc/google/acpm/gs_acpm.ko",
+        "drivers/soc/google/acpm/power_stats.ko",
+        "drivers/soc/google/bcm_dbg.ko",
+        "drivers/soc/google/cal-if/cmupmucal.ko",
+        "drivers/soc/google/cpif/cp_thermal_zone.ko",
+        "drivers/soc/google/cpif/cpif.ko",
+        "drivers/soc/google/cpif/cpif_page.ko",
+        "drivers/soc/google/cpif/shm_ipc.ko",
+        "drivers/soc/google/dbgcore-dump.ko",
+        "drivers/soc/google/debug/bookerci.ko",
+        "drivers/soc/google/debug/debug-snapshot-debug-kinfo.ko",
+        "drivers/soc/google/debug/dss.ko",
+        "drivers/soc/google/debug/ehld.ko",
+        "drivers/soc/google/debug/etm2dram.ko",
+        "drivers/soc/google/debug/exynos-adv-tracer.ko",
+        "drivers/soc/google/debug/exynos-adv-tracer-s2d.ko",
+        "drivers/soc/google/debug/exynos-coresight.ko",
+        "drivers/soc/google/debug/exynos-coresight-etm.ko",
+        "drivers/soc/google/debug/exynos-debug-test.ko",
+        "drivers/soc/google/debug/exynos-ecc-handler.ko",
+        "drivers/soc/google/debug/itmon.ko",
+        "drivers/soc/google/debug/pixel-boot-metrics.ko",
+        "drivers/soc/google/debug/pixel-debug-test.ko",
+        "drivers/soc/google/debug/pixel-suspend-diag.ko",
+        "drivers/soc/google/debug/sjtag-driver.ko",
+        "drivers/soc/google/ect_parser.ko",
+        "drivers/soc/google/eh/eh.ko",
+        "drivers/soc/google/exynos-bcm_dbg-dump.ko",
+        "drivers/soc/google/exynos-cpuhp.ko",
+        "drivers/soc/google/exynos-cpupm.ko",
+        "drivers/soc/google/exynos-dm.ko",
+        "drivers/soc/google/exynos-pd.ko",
+        "drivers/soc/google/exynos-pd-dbg.ko",
+        "drivers/soc/google/exynos-pd_el3.ko",
+        "drivers/soc/google/exynos-pm.ko",
+        "drivers/soc/google/exynos-pmu-if.ko",
+        "drivers/soc/google/exynos-seclog.ko",
+        "drivers/soc/google/exynos_pm_qos.ko",
+        "drivers/soc/google/gcma/gcma.ko",
+        "drivers/soc/google/gs-chipid.ko",
+        "drivers/soc/google/gsa/gsa.ko",
+        "drivers/soc/google/gsa/gsa_gsc.ko",
+        "drivers/soc/google/hardlockup-debug.ko",
+        "drivers/soc/google/hardlockup-watchdog.ko",
+        "drivers/soc/google/perf_trace_counters.ko",
+        "drivers/soc/google/pixel_stat/mm/pixel_stat_mm.ko",
+        "drivers/soc/google/pixel_stat/pixel_stat_sysfs.ko",
+        "drivers/soc/google/pkvm-s2mpu/pkvm-s2mpu-v9/pkvm-s2mpu-v9.ko",
+        "drivers/soc/google/pt/slc_acpm.ko",
+        "drivers/soc/google/pt/slc_dummy.ko",
+        "drivers/soc/google/pt/slc_pmon.ko",
+        "drivers/soc/google/pt/slc_pt.ko",
+        "drivers/soc/google/vh/kernel/cgroup/vh_cgroup.ko",
+        "drivers/soc/google/vh/kernel/fs/vh_fs.ko",
+        "drivers/soc/google/vh/kernel/metrics/pixel_metrics.ko",
+        "drivers/soc/google/vh/kernel/mm/vh_mm.ko",
+        "drivers/soc/google/vh/kernel/pixel_em/pixel_em.ko",
+        "drivers/soc/google/vh/kernel/sched/sched_tp.ko",
+        "drivers/soc/google/vh/kernel/sched/vh_preemptirq_long.ko",
+        "drivers/soc/google/vh/kernel/sched/vh_sched.ko",
+        "drivers/soc/google/vh/kernel/systrace.ko",
+        "drivers/soc/google/vh/kernel/thermal/vh_thermal.ko",
+        "drivers/spi/spi-s3c64xx.ko",
+        "drivers/spmi/spmi_bit_bang.ko",
+        "drivers/thermal/google/google_bcl.ko",
+        "drivers/thermal/google/s2mpg15_spmic_thermal.ko",
+        "drivers/thermal/samsung/gpu_cooling.ko",
+        "drivers/thermal/samsung/gs_thermal.ko",
+        "drivers/tty/serial/exynos_tty.ko",
+        "drivers/ufs/ufs-exynos-gs.ko",
+        "drivers/usb/dwc3/dwc3-exynos-usb.ko",
+        "drivers/usb/gadget/function/usb_f_dm.ko",
+        "drivers/usb/gadget/function/usb_f_dm1.ko",
+        "drivers/usb/gadget/function/usb_f_etr_miu.ko",
+        "drivers/usb/gadget/function/usb_f_rndis.ko",
+        "drivers/usb/host/xhci-exynos.ko",
+        "drivers/usb/typec/tcpm/google/bc_max77759.ko",
+        "drivers/usb/typec/tcpm/google/max77759_contaminant.ko",
+        "drivers/usb/typec/tcpm/google/max77759_helper.ko",
+        "drivers/usb/typec/tcpm/google/tcpci_max77759.ko",
+        "drivers/usb/typec/tcpm/google/usb_psy.ko",
+        "drivers/usb/typec/tcpm/google/usbc_cooling_dev.ko",
+        "drivers/watchdog/s3c2410_wdt.ko",
+    ],
+    kernel_build = "//private/google-modules/soc/gs:gs_kernel_build",
+    lto_outs = [
+        "drivers/ufs/ufs-pixel-fips140.ko",
+    ],
+    makefile = ["//private/google-modules/soc/gs:Makefile"],
+    visibility = [
+        # keep sorted
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+    deps = [
+        "//private/google-modules/bms/misc:bms-misc",
+        "//private/google-modules/trusty",
+    ],
+)
+
+kernel_modules_install(
+    name = "zuma_shusky_modules_install",
+    kernel_build = ":zuma_shusky",
+    kernel_modules = [":shusky_ext_modules"],
+)
+
+merged_kernel_uapi_headers(
+    name = "zuma_shusky_merged_uapi_headers",
+    kernel_build = ":zuma_shusky",
+    kernel_modules = [":shusky_ext_modules"],
+)
+
+kernel_unstripped_modules_archive(
+    name = "zuma_shusky_unstripped_modules_archive",
+    kernel_build = ":zuma_shusky",
+    kernel_modules = [":shusky_ext_modules"],
+)
+
+# TODO(b/285605996): Use hermetic_genrule
+genrule(
+    name = "vendor_kernel_boot_modules.shusky-cat",
+    srcs = [
+        "vendor_kernel_boot_modules.shusky",
+        "//build/kernel:hermetic-tools/cat",
+        "//private/google-modules/soc/gs:vendor_kernel_boot_modules.zuma",
+    ],
+    outs = [
+        "vendor_kernel_boot_modules.concat",
+    ],
+    cmd = """
+        cat $(location vendor_kernel_boot_modules.shusky) \\
+            $(location //private/google-modules/soc/gs:vendor_kernel_boot_modules.zuma) \\
+            > $@
+    """,
+    tools = ["//build/kernel:hermetic-tools/cat"],
+)
+
+# Don't load the zram GKI module
+_GKI_MODULES = [m for m in COMMON_GKI_MODULES_LIST if not m.endswith("zram.ko")]
+
+write_file(
+    name = "system_dlkm_modules_list",
+    out = "system_dlkm_modules_list.shusky",
+    content = _GKI_MODULES,
+)
+
+kernel_images(
+    name = "zuma_shusky_images",
+    base_kernel_images = select({
+        "//private/google-modules/soc/gs:gki_aosp": "//aosp:kernel_aarch64_images_download_or_build",
+        "//private/google-modules/soc/gs:gki_aosp_staging": ":shusky_gki_images",
+    }),
+    boot_image_outs = ["dtb.img"],
+    build_boot = False,
+    build_dtbo = True,
+    build_initramfs = True,
+    build_system_dlkm = True,
+    build_vendor_dlkm = True,
+    build_vendor_kernel_boot = True,
+    dedup_dlkm_modules = True,
+    dtbo_srcs = [":zuma_shusky/" + file for file in _SHUSKY_DTBOS],
+    kernel_build = ":zuma_shusky",
+    kernel_modules_install = ":zuma_shusky_modules_install",
+    # Keep the following in sync with build.config.shusky:
+    modules_list = ":vendor_kernel_boot_modules.shusky-cat",
+    system_dlkm_modules_list = ":system_dlkm_modules_list",
+    system_dlkm_props = "//private/google-modules/soc/gs:system_dlkm.props.zuma",
+    vendor_dlkm_etc_files = ["//private/devices/google/shusky:insmod_cfgs"],
+    vendor_dlkm_modules_blocklist = "//private/google-modules/soc/gs:vendor_dlkm.blocklist.zuma",
+    # No MODULES_BLOCKLIST
+    vendor_dlkm_modules_list = "//private/google-modules/soc/gs:vendor_dlkm_modules.zuma",
+    vendor_dlkm_props = "//private/google-modules/soc/gs:vendor_dlkm.props.zuma",
+    deps = [
+        # Keep the following in sync with (vendor|system)_dlkm.props.zuma:
+        # selinux_fc
+        "//prebuilts/boot-artifacts/selinux:file_contexts",
+        "//prebuilts/boot-artifacts/selinux:system_file_contexts",
+    ],
+)
+
+filegroup(
+    name = "insmod_cfgs",
+    srcs = glob([
+        "insmod_cfg/*.cfg",
+    ]),
+)
+
+# TODO: support running ufdt_apply_overlay in a loop on each DTBO
+#genrule(
+#    name = "zuma_shusky_ufdt_overlay",
+#    srcs = [
+#        ":zuma_shusky/google/zuma-a0.dtb",
+#        "//build/kernel:hermetic-tools/ufdt_apply_overlay",
+#    ] + [":zuma_shusky/" + file for file in _SHUSKY_DTBOS],
+#    outs = [
+#        "zuma_shusky-out.dtb",
+#    ],
+#    cmd = """set -e
+#	for m in {shusky_dtbos}; \\
+#	do \\
+#		$(location //build/kernel:hermetic-tools/ufdt_apply_overlay) \\
+#		    $(location :zuma_shusky/google/zuma-a0.dtb)              \\
+#		    $(location :zuma_shusky/$$m)         \\
+#		    $(location zuma_shusky-$(basename $$m).dtb) \\
+#	done
+#    """.format(
+#        shusky_dtbos = " ".join(_SHUSKY_DTBOS),
+#    ),
+#)
+
+_zuma_shusky_dist_targets = [
+    # Device-specific artifacts
+    ":zuma_shusky",
+    ":zuma_shusky_modules_install",
+    ":zuma_shusky_merged_uapi_headers",
+    ":zuma_shusky_images",
+    ":gki_aarch64_boot",
+    # TODO: support running ufdt_apply_overlay in a loop on each DTBO
+    #":zuma_shusky_ufdt_overlay",
+    ":zuma_shusky_unstripped_modules_archive",
+    ":insmod_cfgs",
+    ":zuma_shusky_extracted_system_dlkm",
+] + select({
+    "//private/google-modules/soc/gs:gki_aosp": [
+        "//aosp:android/abi_gki_aarch64_pixel",
+        "//aosp:kernel_aarch64_download_or_build",
+        "//aosp:kernel_aarch64_headers_download_or_build",
+    ],
+    "//private/google-modules/soc/gs:gki_aosp_staging": [
+        "shusky_gki",
+        "shusky_gki_headers",
+        "//aosp-staging:android/abi_gki_aarch64_pixel",
+        "//build/kernel:gki_certification_tools",
+    ],
+})
+
+extracted_system_dlkm(
+    name = "zuma_shusky_extracted_system_dlkm",
+    gki_modules = [paths.basename(m) for m in _GKI_MODULES],
+    images = select({
+        "//private/google-modules/soc/gs:gki_aosp": "//aosp:kernel_aarch64_images_download_or_build",
+        "//private/google-modules/soc/gs:gki_aosp_staging": ":shusky_gki_images",
+    }),
+)
+
+copy_to_dist_dir(
+    name = "zuma_shusky_dist",
+    data = _zuma_shusky_dist_targets,
+    dist_dir = "out/shusky/dist",
+    flat = True,
+    log = "info",
+)
