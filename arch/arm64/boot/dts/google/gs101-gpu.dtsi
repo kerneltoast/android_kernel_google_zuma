@@ -1,0 +1,131 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * GS101 Mali GPU  device tree source
+ *
+ * Copyright 2020 Google LLC
+ *
+ */
+
+/ {
+	mali_mgm: physical-memory-group-manager {
+		compatible = "arm,physical-memory-group-manager";
+
+		/* Memory groups */
+		groups =
+			"gpu_g0",
+			"gpu_g1";
+
+		/* Base partition index for each group */
+		group_base_pt = <0 10>;
+
+		/* Number of partitions for each group */
+		group_pt_num = <10 1>;
+
+		/* SLC partitions */
+		pt_id =
+			"gpu_g0_p0",
+			"gpu_g0_p1",
+			"gpu_g0_p2",
+			"gpu_g0_p3",
+			"gpu_g0_p4",
+			"gpu_g0_p5",
+			"gpu_g0_p6",
+			"gpu_g0_p7",
+			"gpu_g0_p8",
+			"gpu_g0_p9",
+			"gpu_g1_p0";
+
+		/* SLC partition sizes KB */
+		pt_size = <256 512 768 1024 1536 2048 3072 4096 6144 8192 8192>;
+	};
+
+	mali_pcm: priority-control-manager {
+		compatible = "arm,priority-control-manager";
+	};
+
+	mali: mali@1C500000 {
+		compatible = "arm,malit6xx";
+		reg = <0x0 0x1C500000 0x5000>;
+		interrupts =
+			<GIC_SPI IRQ_G3D_IRQJOB_G3D IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_G3D_IRQMMU_G3D IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_G3D_IRQGPU_G3D IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names = "JOB", "MMU", "GPU";
+
+		/* Power */
+		power-domains = <&pd_g3d>, <&pd_embedded_g3d>;
+		power-domain-names = "top", "cores";
+		g3d_genpd_name = "pd-embedded_g3d";
+		gpu_pmu_status_reg_offset = <0x2004>;
+		gpu_pmu_status_local_pwr_mask = <0x1>; /*0x1 << 0*/
+		gpu_pm_autosuspend_delay = <500>;
+		power_policy = "adaptive";
+
+		/* Memory */
+		physical-memory-group-manager = <&mali_mgm>;
+
+		/* Priority control */
+		priority-control-manager = <&mali_pcm>;
+
+		/* Clocks */
+		gpu0_cmu_cal_id = <ACPM_DVFS_G3DL2>;
+		gpu1_cmu_cal_id = <ACPM_DVFS_G3D>;
+
+		/* DVFS */
+		gpu_dvfs_governor = "quickstep";
+		gpu_dvfs_clockdown_hysteresis = <50>;
+
+		/* DVFS v1 operating points */
+		gpu_dvfs_table_size_v1 = <5 10>; /*<row col>*/
+		gpu_dvfs_table_v1 = <
+			/*
+			 *gpu0    gpu1   down     up    hys      int      mif   little  middle   big
+			 * clk     clk   util   util  ticks      min      min      min     min   max
+			 *--------------------------------------------------------------------------
+			 */
+			996000  670000     78    100      1        0        0        0       0     0
+			750000  572000     78     95      3        0        0        0       0     0
+			603000  455000     78     90      6        0        0        0       0     0
+			434000  302000     50     85      2        0        0        0       0     0
+			302000  151000      0     70      1        0        0        0       0     0
+		>;
+
+		/* DVFS v2 operating points */
+		gpu_dvfs_table_size_v2 = <12 10>; /*<row col>*/
+		gpu_dvfs_table_v2 = <
+			/*
+			 *gpu0    gpu1   down     up    hys      int      mif   little  middle   big
+			 * clk     clk   util   util  ticks      min      min      min     min   max
+			 *--------------------------------------------------------------------------
+			 */
+			996000  848000     78    100      1        0   845000        0       0     0
+			996000  762000     78     99      1        0   845000        0       0     0
+			885000  701000     73     98      1        0   845000        0       0     0
+			750000  572000     78     96      2        0        0        0       0     0
+			750000  510000     78     95      3        0        0        0       0     0
+			603000  471000     75     95      5        0        0        0       0     0
+			603000  400000     72     92      4        0        0        0       0     0
+			603000  351000     70     90      4        0        0        0       0     0
+			434000  302000     60     90      3        0        0        0       0     0
+			434000  251000     50     80      2        0        0        0       0     0
+			302000  202000     45     67      1        0        0        0       0     0
+			302000  151000      0     70      1        0        0        0       0     0
+		>;
+
+		/* DVFS Level locks */
+		gpu_dvfs_max_freq = <800000>;
+		gpu_dvfs_min_freq = <250000>;
+		gpu_dvfs_min_freq_compute = <450000>; /* When compute work detected */
+
+		/* QOS */
+		gpu_dvfs_qos_bts_scenario = "g3d_performance";
+		gpu_dvfs_qos_bts_threshold = <400000>;
+
+		/* Thermal */
+		#cooling-cells = <2>;
+		gpu_power_coeff = <625>;
+		ect-coeff-index = <3>;
+
+	};
+
+};

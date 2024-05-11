@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Zuma on emulator device tree source
+ *
+ * Copyright 2020-2021 Google LLC
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "zuma-emul-display.dtsi"
+
+/ {
+	board_id = <0x58000>;
+	board_rev = <0x1>;
+	fragment@boardbase {
+		target-path="/";
+		__overlay__ {
+			model = "ZUMA Emulator based";
+			compatible = "google,ZUMA Emulator", "google,ZUMA";
+		};
+	};
+};
+
+&serial_0 {
+	status = "okay";
+};

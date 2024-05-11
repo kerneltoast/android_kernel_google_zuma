@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google GS101 Whitefin-specific display device tree source
+ *
+ * Copyright (c) 2020 Google, LLC
+ *		https://www.google.com
+ *
+ */
+
+&m_ldo31_reg {
+	schematic-name = "L31M_DISP_VDDI";
+};

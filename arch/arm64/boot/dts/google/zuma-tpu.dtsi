@@ -1,0 +1,64 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+/ {
+	edgetpu: rio@1A000000 {
+		compatible = "google,edgetpu-zuma";
+		#dma-address-cells = <1>;
+		#dma-size-cells = <2>;
+		/* TPU uses regions under 0x18000000 for special purpose */
+		/* use 32-bit DMA window for standard path, 36-bit DMA window for GCIP */
+		dma-window = <0x18000000 0x0 0xE7FFF000>;
+		gcip-dma-window = <0x18000000 0xF 0xE7FFF000>;
+		reg = <0x0 0x1A000000 0x300000
+		       0x0 0x1A300000 0x10000
+		       0x0 0x1A3E0000 0x10000
+		       0x0 0x1A3F0000 0x10000>;
+		reg-names = "tpu", "cmu", "ssmt_d0", "ssmt_d1";
+		interrupts = <0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_0_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_1_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_2_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_3_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_4_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_5_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_6_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_7_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_8_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_9_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_10_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_11_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_12_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_13_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_14_TPU IRQ_TYPE_LEVEL_HIGH>,
+			<0x00 IRQ_MAILBOX_TPU2AP_NS_TPU_15_TPU IRQ_TYPE_LEVEL_HIGH>;
+		iommus = <&sysmmu_tpu>;
+		samsung,iommu-group = <&iommu_group_tpu>;
+		status = "okay";
+		memory-region = <&tpu_fw_reserved>;
+		edgetpu,shareability = <0x1A320000>; /* SYSREG_TPU */
+		pmu-status-base = <0x15462504>; /* PMU TPU_STATUS */
+		gsa-device=<&gsa>;
+		gcip-dvfs-table-size = <8 2>; /*<row col>*/
+		gcip-dvfs-table = <
+		/* when updating gcip-dvfs-table, update gcip-dvfs-table-size as well
+		 *        freq  power(mW)
+		 *----------------------------------
+		 */
+			1119000 128
+			1119000 128
+			 967000 127
+			 845000  95
+			 712000  91
+			 627000  73
+			 455000  73
+			 226000  59
+		>;
+	};
+
+        tpu_cooling: tpu-cooling {
+                #cooling-cells = <2>;
+        };
+};

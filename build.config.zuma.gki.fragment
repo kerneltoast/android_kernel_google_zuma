@@ -1,0 +1,22 @@
+TRIM_NONLISTED_KMI=0
+KMI_SYMBOL_LIST_STRICT_MODE=0
+
+# replace check_defconfig with a no-op
+POST_DEFCONFIG_CMDS="${POST_DEFCONFIG_CMDS//check_defconfig/true}"
+append_cmd POST_DEFCONFIG_CMDS update_zuma_gki_config
+
+function update_zuma_gki_config() {
+  ${KERNEL_DIR}/scripts/config --file ${OUT_DIR}/.config \
+    -d ARM64_BTI \
+    -d ARM64_BTI_KERNEL \
+    -d ARM64_MPAM \
+    -d ARM64_MTE \
+    -d ARM64_PTR_AUTH \
+    -d ARM64_PTR_AUTH_KERNEL \
+    -d ARM64_SVE \
+    -d CPU_IDLE \
+    -d KVM \
+    -d KASAN
+  (cd ${OUT_DIR} && \
+   make O=${OUT_DIR} "${TOOL_ARGS[@]}" ${MAKE_ARGS} olddefconfig)
+}
