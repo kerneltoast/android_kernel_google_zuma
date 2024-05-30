@@ -405,11 +405,6 @@ DECLARE_HOOK(android_vh_set_wake_flags,
 	TP_PROTO(int *wake_flags, unsigned int *mode),
 	TP_ARGS(wake_flags, mode));
 
-DECLARE_RESTRICTED_HOOK(android_rvh_effective_cpu_util,
-	TP_PROTO(int cpu, unsigned long util_cfs, unsigned long max, int type,
-		 struct task_struct *p, unsigned long *new_util),
-	TP_ARGS(cpu, util_cfs, max, type, p, new_util), 1);
-
 DECLARE_HOOK(android_vh_force_compatible_pre,
 	TP_PROTO(void *unused),
 	TP_ARGS(unused));
