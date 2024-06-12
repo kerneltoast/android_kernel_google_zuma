@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shusky board-common device tree source.
+ *
+ * Copyright 2022 Google LLC
+ */
+
+#include "../google-dts-base/zuma-board.dtsi"
+#include "../google-dts-base/zuma-board-gps.dtsi"
+
+#include "zuma-ripcurrent-camera-pmic.dtsi"
+#include "zuma-shusky-usb.dtsi"
+#include "zuma-shusky-battery.dtsi"
+#include "zuma-shusky-charging.dtsi"
+#include "zuma-shusky-usecases.dtsi"
+#include "zuma-shusky-gsa-gsc.dtsi"
+#include "zuma-shusky-sbbm.dtsi"
+#include "zuma-shusky-pcie.dtsi"
+#include "zuma-shusky-dma-heap.dtsi"
+#include "../google-dts-base/gs101-cp-s5200-thermal-zone.dtsi"

@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * USB device tree source code for Zuma SoC
+ *
+ * Copyright 2022 Google LLC.
+ */
+
+&udc {
+	extcon = <&max77759tcpc>;
+};
+
+&usbdrd_phy0 {
+	extcon = <&max77759tcpc>;
+};
+
+&pinctrl_12 {
+	eusb_init_state: eusb_init_state {
+		samsung,pins = "gpp21-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+&eusb_repeater_tune {
+	status = "okay";
+	repeater_tune_cnt = <5>;
+	/* 0xffffffff means using default value */
+	/* tune value - reg value shift mask*/
+	repeater_tune1 {
+		tune_name = "eusb_mode_control";
+		tune_value = <0x50 0x0a 0x0 0xff>;
+	};
+
+	repeater_tune2 {
+		tune_name = "usb2_tx_adjust_port1";
+		tune_value = <0x70 0x73 0x0 0xff>;
+	};
+
+	repeater_tune3 {
+		tune_name = "usb2_hs_rx_pre_emphasus_p1";
+		tune_value = <0x71 0x2e 0x0 0xff>;
+	};
+
+	repeater_tune4 {
+		tune_name = "usb2_disconnect_squelch_port1";
+		tune_value = <0x73 0x86 0x0 0xff>;
+	};
+
+	repeater_tune5 {
+		tune_name = "eusb_rx_adjust_port1";
+		tune_value = <0x79 0x40 0x0 0xff>;
+	};
+
+};
+
+&hsi2c_11 {
+       #address-cells = <1>;
+       #size-cells = <0>;
+       status = "okay";
+       eusb-repeater@3E {
+               compatible = "samsung,eusb-repeater";
+               reg = <0x3E>;
+               status = "okay";
+               pinctrl-names = "init_state";
+               pinctrl-0 = <&eusb_init_state>;
+               repeater_tune_param = <&eusb_repeater_tune>;
+               vdd33-supply = <&m_ldo19_reg>;
+       };
+};
