@@ -1,0 +1,11 @@
+What:		/sys/class/input/input(x)/device/default/reset
+Date:		December 2023
+Contact:	Tai Kuo <taikuo@google.com>
+Description:
+		Hardware reset trigger.
+
+		Access: Read, Write
+
+		Valid values: Represented as integer
+			0: Make a reset decision and trigger reset if needed.
+			1: Manual reset
