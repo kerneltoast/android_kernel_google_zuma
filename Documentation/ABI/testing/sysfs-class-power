@@ -1,0 +1,9 @@
+What:		/sys/class/power_supply/maxfg/fg_learning_events
+Date:		Feb 2024
+Contact:	apelosi@google.com
+Description:
+		Report a snapshot of fuel gauge registers captured during
+                each learning event. Write 0 to clear the events.
+
+		Access: Read/Write
+		Valid values: Represented as string
