@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: GPL-2.0
+
+source "$(KCONFIG_EXT_PREFIX)drivers/pci/controller/dwc/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/misc/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/clk/gs/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/soc/google/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/input/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/char/hw_random/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/tty/serial/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/ufs/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/i2c/busses/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/usb/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/rtc/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/dma/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/dma-buf/heaps/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/spi/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/spmi/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/pinctrl/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/power/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/thermal/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/watchdog/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/regulator/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/mfd/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/media/platform/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/video/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/clocksource/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/iommu/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/cpufreq/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/devfreq/google/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/performance/gs_perf_mon/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/performance/lat_governors/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/iio/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/phy/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/staging/android/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/bts/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)drivers/block/zram/Kconfig"
+
+source "$(KCONFIG_EXT_PREFIX)Kconfig.ext_modules"

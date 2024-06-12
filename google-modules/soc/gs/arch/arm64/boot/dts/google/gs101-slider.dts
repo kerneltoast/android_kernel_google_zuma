@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * slider board device tree source
+ *
+ * Copyright 2021 Google LLC
+ *
+ */
+
+/dts-v1/;
+/plugin/;
+
+#define WC_BUS &hsi2c_0
+
+#include "gs101-slider-common.dtsi"
+
+#include "gs101-camera-slider1.dtsi"
+#include "gs101-slider-audio.dtsi"
+#include "gs101-slider-cp-s5200-sit.dtsi"
+#include "gs101-slider-ese.dtsi"
+#include "gs101-slider1-battery.dtsi"
+#include "gs101-slider1-gps.dtsi"
+
+/ {
+	board_id = <0x201>;
+	board_rev = <0x100>;
+	fragment@boardbase {
+		target-path = "/";
+		__overlay__ {
+			model = "GS101 SLIDER board based on GS101";
+			compatible = "google,GS101", "google,GS101 SLIDER";
+		};
+	};
+};

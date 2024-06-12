@@ -1,0 +1,220 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load("@bazel_skylib//lib:selects.bzl", "selects")
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+
+package(
+    default_visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+# Force the user to define the generic gs_* flags
+filegroup(
+    name = "gs_undefined",
+    srcs = [],
+)
+
+label_flag(
+    name = "gs_kernel_build",
+    build_setting_default = ":gs_undefined",
+)
+
+label_flag(
+    name = "gs_soc_module",
+    build_setting_default = ":gs_undefined",
+)
+
+config_setting(
+    name = "gki_aosp",
+    flag_values = {
+        ":gki_kernel_dir": "aosp",
+    },
+)
+
+config_setting(
+    name = "gki_aosp_staging",
+    flag_values = {
+        ":gki_kernel_dir": "aosp-staging",
+    },
+)
+
+string_flag(
+    name = "gki_kernel_dir",
+    build_setting_default = "aosp",
+)
+
+string_flag(
+    name = "debug_fragment",
+    build_setting_default = "",
+)
+
+config_setting(
+    name = "blktest",
+    flag_values = {
+        ":debug_fragment": "blktest",
+    },
+)
+
+config_setting(
+    name = "debug_api",
+    flag_values = {
+        ":debug_fragment": "debug_api",
+    },
+)
+
+config_setting(
+    name = "debug_kmemleak",
+    flag_values = {
+        ":debug_fragment": "debug_kmemleak",
+    },
+)
+
+config_setting(
+    name = "debug_locking",
+    flag_values = {
+        ":debug_fragment": "debug_locking",
+    },
+)
+
+config_setting(
+    name = "debug_memory",
+    flag_values = {
+        ":debug_fragment": "debug_memory",
+    },
+)
+
+config_setting(
+    name = "debug_memory_accounting",
+    flag_values = {
+        ":debug_fragment": "debug_memory_accounting",
+    },
+)
+
+config_setting(
+    name = "function_tracer",
+    flag_values = {
+        ":debug_fragment": "function_tracer",
+    },
+)
+
+config_setting(
+    name = "kasan",
+    flag_values = {
+        ":debug_fragment": "kasan",
+    },
+)
+
+config_setting(
+    name = "khwasan",
+    flag_values = {
+        ":debug_fragment": "khwasan",
+    },
+)
+
+config_setting(
+    name = "cmdline_lto_is_none",
+    flag_values = {
+        "//build/kernel/kleaf:lto": "none",
+    },
+)
+
+# These debug fragments sets LTO=none.
+selects.config_setting_group(
+    name = "lto_none",
+    match_any = [
+        # keep sorted
+        ":cmdline_lto_is_none",
+        ":function_tracer",
+        ":kasan",
+    ],
+)
+
+filegroup(
+    name = "gs_soc.kconfig",
+    srcs = glob([
+        "**/Kconfig",
+    ]) + [
+        "Kconfig.ext",
+        "Kconfig.ext_modules",
+    ],
+    visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+filegroup(
+    name = "gs.dt-bindings",
+    srcs = glob([
+        "include/dt-bindings/**",
+        "include/dtc/**",
+    ]),
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/gs/arch/arm64/boot/dts:__pkg__",
+    ],
+)
+
+filegroup(
+    name = "gs_soc_sources",
+    srcs = glob(
+        ["**"],
+        exclude = [
+            ".*",
+            ".*/**",
+            "BUILD.bazel",
+            "**/*.bzl",
+            "build.config.*",
+        ],
+    ) + [
+        "//private/google-modules/bms/misc:headers",
+        "//private/google-modules/trusty:headers",
+    ],
+    visibility = [
+        # keep sorted
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+filegroup(
+    name = "gs_soc_headers",
+    srcs = glob([
+        # Standard pixel headers
+        "include/**/*.h",
+        "include/**/uapi/*.h",
+    ] + [
+        # List of headers needed by external modules
+        "drivers/dma-buf/heaps/samsung/samsung-dma-heap.h",
+        "drivers/usb/host/xhci-exynos.h",
+        "drivers/soc/google/cpif/modem_notifier.h",
+
+        # Needed for external modules to include in their makefiles
+        "Makefile.include",
+    ]),
+    visibility = [
+        # keep sorted
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+)
+
+exports_files([
+    # keep sorted
+    "Kconfig.ext",
+    "Makefile",
+    "build.config.slider.blktest",
+    "build.config.slider.debug_api",
+    "build.config.slider.debug_kmemleak",
+    "build.config.slider.debug_locking",
+    "build.config.slider.debug_memory",
+    "build.config.slider.debug_memory_accounting",
+    "build.config.slider.kasan",
+    "build.config.slider.khwasan",
+    "build.config.zuma",
+    "system_dlkm.props.zuma",
+    "vendor_dlkm.blocklist.zuma",
+    "vendor_dlkm.props.zuma",
+    "vendor_dlkm_modules.zuma",
+    "vendor_kernel_boot_modules.zuma",
+])

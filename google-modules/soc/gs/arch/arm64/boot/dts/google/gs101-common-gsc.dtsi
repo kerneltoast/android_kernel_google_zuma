@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google GS101 Board device tree source
+ *
+ * Copyright (c) 2020 Google LLC
+ *		https://www.google.com
+ */
+
+#include <dt-bindings/pinctrl/samsung.h>
+#include <dt-bindings/pinctrl/gs101.h>
+
+&pinctrl_0 {
+	ap_gsc_irq: ap_gsc_irq {
+		samsung,pins = "gpa4-1";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
+	};
+};
+
+&pinctrl_5 {
+	ap_dtls_cs: ap-dtls-cs {
+		samsung,pins = "gpp21-3";
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+&spi_10 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi10_bus &spi10_cs_func &ap_dtls_cs>;
+
+	gsc@0 {
+		compatible = "google,gsc";
+		interrupt-parent = <&gpa9>;
+		interrupts = <5 0 0>;
+		gsc,ctdl_ap_irq = <&gpa9 1 0>; // XEINT_21
+		gsc,ctdl_rst = <&gpa4 2 0>; // XAPM_USI0_RTSn_DI
+		pinctrl-names = "default";
+		pinctrl-0 = <&ap_gsc_irq>;
+		reg = <0>;
+		spi-max-frequency = <1200000>;
+		controller-data {
+			samsung,spi-feedback-delay = <1>;
+			samsung,spi-chip-select-mode = <0>;
+		};
+	};
+};

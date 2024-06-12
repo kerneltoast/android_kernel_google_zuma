@@ -1,0 +1,9 @@
+blocklist bcmdhd4398
+blocklist bcmdhd4383
+blocklist cs40l26_i2c
+blocklist ftm5
+blocklist goodix_brl_touch
+blocklist mali_kutf
+blocklist mali_kutf_clk_rate_trace_test_portal
+blocklist sec_touch
+blocklist aoc_unit_test_dev

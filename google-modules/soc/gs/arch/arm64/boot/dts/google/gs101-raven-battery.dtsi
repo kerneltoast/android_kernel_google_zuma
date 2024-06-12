@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to raven
+ *
+ * Copyright 2021 Google,LLC
+ *
+ */
+
+&google_battery {
+	google,chg-battery-capacity = <4905>;
+};
+
+&max77759_fg {
+	maxim,fg-data {
+		#include "gs101-raven-battery-data.dtsi"
+	};
+};
+
+/ {
+	fragment@battery {
+		target-path = "/";
+		__overlay__ {
+			google_battery: google,battery {
+				google,ttf-temp-idx= <2>;
+				google,ttf-adapter = <3000>;
+				google,ttf-soc-table =  <50 57 70 73 80 84  91 100>;
+				google,ttf-elap-table = <39 47 55 66 78 89 138 178>;
+				google,ttf-tier-table = <0 57 74>;
+			};
+
+			google_bms {
+				nvmem-names = "5-00500";
+				/* pack eeprom is available only with P20+ batteries */
+				google,bee-name = "5-00500";
+			};
+		};
+	};
+};

@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Google GS101 Board device tree source
+ *
+ * Copyright (c) 2019 Google, LLC
+ *		https://www.google.com
+ *
+*/
+#include "gs101-whitefin-nfc.dtsi"
