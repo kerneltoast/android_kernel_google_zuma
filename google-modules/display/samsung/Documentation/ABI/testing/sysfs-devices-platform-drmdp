@@ -1,0 +1,90 @@
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport/hpd
+Date:		August 2023
+KernelVersion:	5.15
+Contact:	"Petri Gynther" <pgynther@google.com>
+Description:
+		USB HAL uses this interface to report HPD events.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport/irq_hpd
+Date:		August 2023
+KernelVersion:	5.15
+Contact:	"Petri Gynther" <pgynther@google.com>
+Description:
+		USB HAL uses this interface to report IRQ_HPD events.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport/link_status
+Date:		August 2023
+KernelVersion:	5.15
+Contact:	"Petri Gynther" <pgynther@google.com>
+Description:
+		USB HAL uses this interface to check on DP link status.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport/orientation
+Date:		August 2023
+KernelVersion:	5.15
+Contact:	"Petri Gynther" <pgynther@google.com>
+Description:
+		USB HAL uses this interface to report DP cable orientation.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport/pin_assignment
+Date:		August 2023
+KernelVersion:	5.15
+Contact:	"Petri Gynther" <pgynther@google.com>
+Description:
+		USB HAL uses this interface to report DP cable pin assignment.
+
+What:          /sys/devices/platform/110f0000.drmdp/drm-displayport/dp_hotplug_error_code
+Date:          September 2023
+KernelVersion: 5.15
+Contact:       "Sergey Volk" <servolk@google.com>
+Description:
+               Used to pass error code associated with a hotplug event sent to client.
+               Zero indicates successful hotplug event, non-zero value indicates hotplug failure.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport-stats/link_negotiation_failures
+Date:		November 2023
+KernelVersion:	5.15
+Contact:	"Weizhung Ding" <weizhungding@google.com>
+Description:
+		Used to count the unmber of link negotiation failures, Link training failed
+		will increase the count.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport-stats/edid_read_failures
+Date:		November 2023
+KernelVersion:	5.15
+Contact:	"Weizhung Ding" <weizhungding@google.com>
+Description:
+		Used to count the number of edid read failures. Read EDID failed will
+		increase the count.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport-stats/dpcd_read_failures
+Date:		November 2023
+KernelVersion:	5.15
+Contact:	"Weizhung Ding" <weizhungding@google.com>
+Description:
+		Used to count the unmber of dpcd read failures. Read sink failed will increase
+		the count.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport-stats/edid_invalid_failures
+Date:		November 2023
+KernelVersion:	5.15
+Contact:	"Weizhung Ding" <weizhungding@google.com>
+Description:
+		Used to count the number of edid invalid failures. If EDID is invalid, the count
+		will be increased.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport-stats/sink_count_invalid_failures
+Date:		November 2023
+KernelVersion:	5.15
+Contact:	"Weizhung Ding" <weizhungding@google.com>
+Description:
+		Used to count the number of sink count invalid failures. If sink count is invalid,
+		the count will be increased.
+
+What:		/sys/devices/platform/110f0000.drmdp/drm-displayport-stats/link_unstable_failures
+Date:		November 2023
+KernelVersion:	5.15
+Contact:	"Weizhung Ding" <weizhungding@google.com>
+Description:
+		Used to count the number of link unstable failures. When DP link is down and re-establish
+		the link, the count will be increased.
