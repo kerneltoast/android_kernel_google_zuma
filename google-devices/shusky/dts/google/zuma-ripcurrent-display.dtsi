@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Display nodes for slider-related boards.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include "zuma-shusky-display.dtsi"
+
+&drmdsim0 {
+	panel@0 {
+		touch = <&spitouch>;
+	};
+};
+
+&drmdsim1 {
+	panel@2 {
+		compatible = "google,hk3";
+		label = "google-hk3";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_bucka_reg>;
+	};
+	panel@3 {
+		compatible = "google,bigsurf";
+		label = "google-bigsurf";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_bucka_reg>;
+		vddd-supply = <&disp_vddd>;
+	};
+	panel@4 {
+		compatible = "google,shoreline";
+		label = "google-shoreline";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_bucka_reg>;
+		vddd-supply = <&disp_vddd>;
+	};
+};
+
+&disp_vddd {
+	status = "okay";
+	gpio = <&s2mpg15_gpio 8 GPIO_ACTIVE_HIGH>;
+};
+
+&s_ldo8_reg {
+	/delete-property/ regulator-always-on;
+};
+
+&drmdecon1 {
+	status = "okay";
+};
+
+&drmdp {
+	status = "okay";
+};
+
+&drmdecon2 {
+	status = "okay";
+};

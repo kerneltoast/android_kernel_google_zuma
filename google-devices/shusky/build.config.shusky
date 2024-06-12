@@ -1,0 +1,13 @@
+# KERNEL_DIR is set by the environment to the directory where the BUILD_CONFIG
+# file is located.
+DEVICE_DIR=${KERNEL_DIR}
+SOC_DIR=private/google-modules/soc/gs
+# Compile these modules with the GKI kernel
+KERNEL_DIR=${GKI_KERNEL_DIR:-"aosp"}
+
+# These just need to be relative to the ROOT_DIR
+GKI_FRAGMENT_DEFCONFIG=${DEVICE_DIR}/shusky_gki.fragment
+. ${ROOT_DIR}/${SOC_DIR}/build.config.zuma
+
+DTC_INCLUDE=${ROOT_DIR}/${SOC_DIR}/include/dtc
+MKDTIMG_FLAGS="--page_size=4096 --id=/:board_id --rev=/:board_rev"

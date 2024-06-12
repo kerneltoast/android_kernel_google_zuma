@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * DMA heap device tree entries specific to husky and shiba.
+ *
+ * Copyright 2023 Google,LLC
+ *
+ */
+
+&faceauth_tpu {
+	size = <0x00C00000>; /* 12MB */
+};
+
+&faprev {
+	size = <0x01800000>; /* 24MB */
+};

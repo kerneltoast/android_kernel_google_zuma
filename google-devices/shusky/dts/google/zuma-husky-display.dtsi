@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Display nodes for husky-related boards.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include "zuma-shusky-display.dtsi"
+
+&drmdsim0 {
+	google_hk3: panel@0 {
+		compatible = "google,hk3";
+		label = "google-hk3";
+		touch = <&spitouch>;
+	};
+};
+
+&drmdsim1 {
+	status = "disabled";
+};
+
+&drmdp {
+	status = "okay";
+};
+
+&drmdecon1 {
+	status = "okay";
+	connector = <0x10>;
+};

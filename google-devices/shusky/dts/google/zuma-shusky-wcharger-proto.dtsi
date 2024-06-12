@@ -1,0 +1,96 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Wireless Charger device tree entries.
+ *
+ * Copyright 2022 Google LLC
+ */
+
+#include <dt-bindings/pinctrl/samsung.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/ {
+	fragment@wlc {
+		target-path = "/";
+		__overlay__ {
+			google,charger {
+				google,wlc-power-supply = "wireless";
+			};
+		};
+	};
+};
+
+&pinctrl_0 {
+	/* XIENT_23 P9412 Wireless Charger Interrupt */
+	wc_irq: wc_irq {
+		samsung,pins = "gpa8-1"; /* QI_INT_R */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+	wc_pdet_irq: wc_pdet_irq {
+		samsung,pins = "gpa8-2"; /* QI_INT_R */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+};
+
+&pinctrl_8 {
+	/* XHSI1_GPIO6 P9412 Wireless Charger Enable */
+	wc_en: wc_en {
+		samsung,pins = "gph1-4"; /* QI_EN_L */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT0>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+&hsi2c_9 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	p9412@3c {
+		dev-name = "p9412";
+		compatible = "idt,p9412";
+		reg = <0x3c>;
+		status = "ok";
+
+		/* RTX: configure boost to 7V through wlc chip */
+		idt,apbst_en;
+
+		/* Granvilla GPIO 2~4 */
+		idt,gpio_ben = <&max777x9_gpio 4 GPIO_ACTIVE_HIGH>;  /* EXT_BST_EN */
+		idt,gpio_boost = <&s2mpg14_gpio 3 GPIO_ACTIVE_HIGH>; /* WLC_TX_SW_EN */
+		/* idt,gpio_switch = <&p9xxx_gpio 3 GPIO_ACTIVE_HIGH>; */ /* EXT_BST_VTRX */
+		idt,gpio_extben = <&s2mpg14_gpio 2 GPIO_ACTIVE_HIGH>; /* AP2QI_EXTBST_EN */
+		/* CSP */
+		idt,fuel-gauge = <&google_battery>;
+
+		/* WLCDC */
+		idt,gpio_dc_switch = <&s2mpg14_gpio 0 GPIO_ACTIVE_HIGH>; /* WLC_RX_SW_EN */
+		idt,max_vout_mv = <19500>;
+		idt,has_wlc_dc = <1>;
+		google,power_mitigate_threshold = <90>;
+		google,has-sw-ramp;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&wc_pdet_irq &wc_irq &wc_en>;
+
+		idt,gpio_wlc_en = <&gph1 4 GPIO_ACTIVE_LOW>;
+		idt,gpio_qi_vbus_en = <&s2mpg14_gpio 5 GPIO_ACTIVE_HIGH>;
+		idt,gpio_qien = <&gph1 4 GPIO_ACTIVE_LOW>;
+		idt,irq_gpio = <&gpa8 1 GPIO_ACTIVE_LOW>;
+		idt,irq_det_gpio = <&gpa8 2 GPIO_ACTIVE_LOW>;
+
+		/* TXID: Phone type */
+		idt,tx_id_phone_type = /bits/ 8 <3>;
+
+		p9xxx_gpio: p9xxx_gpio {
+			gpio-controller;
+			#gpio-cells = <2>;
+			ngpios = <16>;
+		};
+
+	};
+};

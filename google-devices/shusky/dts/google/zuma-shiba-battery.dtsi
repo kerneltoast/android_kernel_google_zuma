@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to panther
+ *
+ * Copyright 2022 Google,LLC
+ *
+ */
+
+&google_battery {
+	google,chg-battery-capacity = <4485>;
+	google,chg-cc-limits = <
+		50   30    0   0
+                70   30   30  30
+               120  120  120  50
+               100  100  100  50
+                50   50    0   0
+                30    0    0   0
+	>;
+	google,batt-id-1-atl {
+		google,batt-id = <1>;
+		google,aacr-ref-cycles = <200 300 400 500 600 700 800>;
+		google,aacr-ref-fade10 = < 15  24  32  40  49  58  66>;
+	};
+	google,batt-id-2-cos {
+		google,batt-id = <2>;
+		google,aacr-ref-cycles = <100 200 300 400 500 600 700 800>;
+		google,aacr-ref-fade10 = <  6  19  29  39  47  54  62  69>;
+	};
+};
+
+&max77759_fg {
+	maxim,rc-enable;
+	maxim,rc-soc = <20>;
+	maxim,rc-temp = <50>;
+
+	maxim,filtercfg-temp = <100>;
+	maxim,filtercfg-temp-hysteresis = <30>;
+	maxim,filtercfg-default = /bits/ 16 <0x0613>;
+	maxim,filtercfg-adjust = /bits/ 16 <0x0616>;
+
+	maxim,fg-data {
+		#include "zuma-shiba-battery-data.dtsi"
+	};
+};
