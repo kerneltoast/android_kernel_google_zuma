@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
+
+kernel_module(
+    name = "gxp",
+    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+        "gcip-kernel-driver/drivers/gcip/Makefile",
+        "Makefile",
+    ]) + [
+        "//private/google-modules/soc/gs:gs_soc_headers",
+    ],
+    outs = [
+        "gxp.ko",
+    ],
+    kernel_build = "//private/google-modules/soc/gs:gs_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/soc/gs:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/edgetpu/rio/drivers/edgetpu:edgetpu.rio",
+        "//private/google-modules/soc/gs:gs_soc_module",
+    ],
+)
