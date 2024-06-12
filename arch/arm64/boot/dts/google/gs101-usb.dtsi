@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * GS101 SoC
+ *
+ * Copyright 2019 Google LLC
+ *
+ */
+
+&reserved_memory {
+	xhci_dma: xhci_dma@97000000 {
+		compatible = "shared-dma-pool";
+		reg = <0x0 0x97000000 0x400000>;
+		no-map;
+	};
+};

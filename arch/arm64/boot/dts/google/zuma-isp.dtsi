@@ -1,0 +1,1418 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Zuma camera ISP device tree source
+ *
+ * Copyright 2022 Google LLC.
+ */
+
+#include <dt-bindings/clock/zuma.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/interrupt-controller/zuma.h>
+#include "zuma-isp-event-info.dtsi"
+
+/ {
+	sysreg_csis_reset: system-controller@1C020500 {
+		compatible = "samsung,exynos-csis", "syscon";
+		reg = <0x0 0x1C020500 0x8>;
+	};
+
+	mipi_phy_csis0_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C101200 {
+		/* DPHY 4.5 Gbps 4lane */
+		/* CPHY 2.5 Gbps 3lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <0>; /* reset bit */
+		reg = <0x0 0x1C101200 0x500>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis1_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C101700 {
+		/* DPHY 4.5 Gbps 4lane */
+		/* CPHY 2.5 Gbps 3lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <1>; /* reset bit */
+		reg = <0x0 0x1C101700 0x500>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis2_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C102200 {
+		/* DPHY 4.5 Gbps 4lane */
+		/* CPHY 2.5 Gbps 3lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <2>; /* reset bit */
+		reg = <0x0 0x1C102200 0x500>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis3_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C102700 {
+		/* DPHY 4.5 Gbps 4lane */
+		/* CPHY 2.5 Gbps 3lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <3>; /* reset bit */
+		reg = <0x0 0x1C102700 0x500>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis4_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C102C00 {
+		/* CPHY 2.5 Gbps 1lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <4>; /* reset bit */
+		reg = <0x0 0x1C102C00 0x100>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis5_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C103100 {
+		/* DPHY 4.5 Gbps 4lane */
+		/* CPHY 2.5 Gbps 3lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <5>; /* reset bit */
+		reg = <0x0 0x1C103100 0x500>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis6_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C103600 {
+		/* CPHY 2.5 Gbps 1lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <6>; /* reset bit */
+		reg = <0x0 0x1C103600 0x100>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis7_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C103700 {
+		/* DPHY 4.5 Gbps 4lane */
+		/* CPHY 2.5 Gbps 3lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <7>; /* reset bit */
+		reg = <0x0 0x1C103700 0x500>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	mipi_phy_csis8_m0s4s4s4s4s4: dcphy_m0s4s4s4s4s4_csi0@1C103C00 {
+		/* CPHY 2.5 Gbps 1lane */
+		compatible = "samsung,mipi-phy-m0s4s4s4s4s4";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		isolation = <0x3ebc>; /* PMU address offset */
+		samsung,reset-sysreg = <&sysreg_csis_reset>;
+		reset = <8>; /* reset bit */
+		reg = <0x0 0x1C103C00 0x100>;
+		owner = <1>; /* 0: DSI,  1: CSI */
+		#phy-cells = <1>;
+	};
+
+	lwis_top: lwis_top@0 {
+		compatible = "google,lwis-top-device";
+
+		/* Device node name */
+		node-name = "top";
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_dpm: lwis_dpm@0 {
+		compatible = "google,lwis-dpm-device";
+
+		/* Device node name */
+		node-name = "dpm";
+	};
+
+	lwis_test: lwis_test@0 {
+		compatible = "google,lwis-test-device";
+
+		/* Device node name */
+		node-name = "test";
+
+		/* Register space */
+		reg = <0x0 0x0 0x20>;
+		reg-names = "test";
+		interrupt-names = "test_event_inj";
+		interrupt-event-infos = <&test_event_inj>;
+	};
+
+	lwis_isp_fe: lwis_isp_fe@1C000000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "isp-fe";
+
+		/* Register space */
+		reg =
+			<0x0 0x1C300000 0x100000>, /* ISPFE */
+			<0x0 0x1C040000 0xD0000>,  /* CSIS LINK & PHY*/
+			<0x0 0x1C020000 0x10000>,  /* SYSREG_ISPFE */
+			<0x0 0x1C390000 0x5000>,   /* PDMA */
+			<0x0 0x1C395000 0x1000>,   /* PDMA WRAP */
+			<0x0 0x26040000 0x10000>;  /* CMU TOP */
+		reg-names =
+			"isp-fe",
+			"csis-link-phy",
+			"isp-fe-sysreg",
+			"pdma",
+			"pdma-wrap",
+			"cmu-top";
+
+		clocks = <&clock UMUX_CLKCMU_ISPFE>;
+		clock-names = "UMUX_CLKCMU_ISPFE";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_CAM>;
+		bts-scenario = "camera_default";
+
+		interrupts =
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_ISPFE_0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS5_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS6_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS7_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS8_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS9_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS10_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS11_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS5_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS6_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS7_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS8_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS9_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS10_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS11_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS5_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS6_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS7_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS8_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS9_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS10_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS11_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS0_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS1_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS2_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS3_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS4_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS5_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS6_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS7_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS8_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS9_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS10_ISPFE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_CSIS11_ISPFE IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"isp_fe_ctx0_fc_bayer",
+			"isp_fe_ctx1_fc_bayer",
+			"isp_fe_ctx2_fc_bayer",
+			"isp_fe_ctx3_fc_bayer",
+			"isp_fe_ctx4_fc_bayer",
+			"isp_fe_ctx0_fc_pdaf",
+			"isp_fe_ctx1_fc_pdaf",
+			"isp_fe_ctx2_fc_pdaf",
+			"isp_fe_ctx3_fc_pdaf",
+			"isp_fe_ctx0_pdma",
+			"isp_fe_ctx1_pdma",
+			"isp_fe_ctx2_pdma",
+			"isp_fe_ctx3_pdma",
+			"isp_fe_ctx4_pdma",
+			"isp_fe_ctx0_pdma_err",
+			"isp_fe_ctx1_pdma_err",
+			"isp_fe_ctx2_pdma_err",
+			"isp_fe_ctx3_pdma_err",
+			"isp_fe_ctx4_pdma_err",
+			"isp_fe_ctx0_pdma_rstctl",
+			"isp_fe_ctx1_pdma_rstctl",
+			"isp_fe_ctx2_pdma_rstctl",
+			"isp_fe_ctx3_pdma_rstctl",
+			"isp_fe_ctx4_pdma_rstctl",
+			"isp_fe_ctx0_lmp_bayer",
+			"isp_fe_ctx1_lmp_bayer",
+			"isp_fe_ctx2_lmp_bayer",
+			"isp_fe_ctx3_lmp_bayer",
+			"isp_fe_ctx4_lmp_bayer",
+			"isp_fe_ctx0_lmp_pdaf",
+			"isp_fe_ctx1_lmp_pdaf",
+			"isp_fe_ctx2_lmp_pdaf",
+			"isp_fe_ctx3_lmp_pdaf",
+			"isp_fe_lmp_debug",
+			"isp_fe_csis_core_cmn_ctl",
+			"isp_fe_csis_core_ebuf_ctl",
+			"isp_fe_loch0_csis_core_img_abort_done",
+			"isp_fe_loch1_csis_core_img_abort_done",
+			"isp_fe_loch2_csis_core_img_abort_done",
+			"isp_fe_loch3_csis_core_img_abort_done",
+			"isp_fe_loch4_csis_core_img_abort_done",
+			"isp_fe_loch5_csis_core_img_abort_done",
+			"isp_fe_loch6_csis_core_img_abort_done",
+			"isp_fe_loch0_csis_core_img_proc",
+			"isp_fe_loch1_csis_core_img_proc",
+			"isp_fe_loch2_csis_core_img_proc",
+			"isp_fe_loch3_csis_core_img_proc",
+			"isp_fe_loch4_csis_core_img_proc",
+			"isp_fe_loch5_csis_core_img_proc",
+			"isp_fe_loch6_csis_core_img_proc",
+			"isp_fe_loch0_csis_core_img_err",
+			"isp_fe_loch1_csis_core_img_err",
+			"isp_fe_loch2_csis_core_img_err",
+			"isp_fe_loch3_csis_core_img_err",
+			"isp_fe_loch4_csis_core_img_err",
+			"isp_fe_loch5_csis_core_img_err",
+			"isp_fe_loch6_csis_core_img_err",
+			"isp_fe_loch0_csis_core_img_mute",
+			"isp_fe_loch1_csis_core_img_mute",
+			"isp_fe_loch2_csis_core_img_mute",
+			"isp_fe_loch3_csis_core_img_mute",
+			"isp_fe_loch4_csis_core_img_mute",
+			"isp_fe_loch5_csis_core_img_mute",
+			"isp_fe_loch6_csis_core_img_mute",
+			"isp_fe_loch0_csis_core_pd_abort_done",
+			"isp_fe_loch1_csis_core_pd_abort_done",
+			"isp_fe_loch2_csis_core_pd_abort_done",
+			"isp_fe_loch3_csis_core_pd_abort_done",
+			"isp_fe_loch4_csis_core_pd_abort_done",
+			"isp_fe_loch5_csis_core_pd_abort_done",
+			"isp_fe_loch6_csis_core_pd_abort_done",
+			"isp_fe_loch0_csis_core_pd_proc",
+			"isp_fe_loch1_csis_core_pd_proc",
+			"isp_fe_loch2_csis_core_pd_proc",
+			"isp_fe_loch3_csis_core_pd_proc",
+			"isp_fe_loch4_csis_core_pd_proc",
+			"isp_fe_loch5_csis_core_pd_proc",
+			"isp_fe_loch6_csis_core_pd_proc",
+			"isp_fe_loch0_csis_core_pd_err",
+			"isp_fe_loch1_csis_core_pd_err",
+			"isp_fe_loch2_csis_core_pd_err",
+			"isp_fe_loch3_csis_core_pd_err",
+			"isp_fe_loch4_csis_core_pd_err",
+			"isp_fe_loch5_csis_core_pd_err",
+			"isp_fe_loch6_csis_core_pd_err",
+			"isp_fe_loch0_csis_core_pd_mute",
+			"isp_fe_loch1_csis_core_pd_mute",
+			"isp_fe_loch2_csis_core_pd_mute",
+			"isp_fe_loch3_csis_core_pd_mute",
+			"isp_fe_loch4_csis_core_pd_mute",
+			"isp_fe_loch5_csis_core_pd_mute",
+			"isp_fe_loch6_csis_core_pd_mute",
+			"isp_fe_loch0_csis_core_vc_abort_done",
+			"isp_fe_loch1_csis_core_vc_abort_done",
+			"isp_fe_loch2_csis_core_vc_abort_done",
+			"isp_fe_loch3_csis_core_vc_abort_done",
+			"isp_fe_loch4_csis_core_vc_abort_done",
+			"isp_fe_loch5_csis_core_vc_abort_done",
+			"isp_fe_loch6_csis_core_vc_abort_done",
+			"isp_fe_loch7_csis_core_vc_abort_done",
+			"isp_fe_loch8_csis_core_vc_abort_done",
+			"isp_fe_loch9_csis_core_vc_abort_done",
+			"isp_fe_loch10_csis_core_vc_abort_done",
+			"isp_fe_loch11_csis_core_vc_abort_done",
+			"isp_fe_loch12_csis_core_vc_abort_done",
+			"isp_fe_loch13_csis_core_vc_abort_done",
+			"isp_fe_loch0_csis_core_vc_proc",
+			"isp_fe_loch1_csis_core_vc_proc",
+			"isp_fe_loch2_csis_core_vc_proc",
+			"isp_fe_loch3_csis_core_vc_proc",
+			"isp_fe_loch4_csis_core_vc_proc",
+			"isp_fe_loch5_csis_core_vc_proc",
+			"isp_fe_loch6_csis_core_vc_proc",
+			"isp_fe_loch7_csis_core_vc_proc",
+			"isp_fe_loch8_csis_core_vc_proc",
+			"isp_fe_loch9_csis_core_vc_proc",
+			"isp_fe_loch10_csis_core_vc_proc",
+			"isp_fe_loch11_csis_core_vc_proc",
+			"isp_fe_loch12_csis_core_vc_proc",
+			"isp_fe_loch13_csis_core_vc_proc",
+			"isp_fe_loch0_csis_core_vc_err",
+			"isp_fe_loch1_csis_core_vc_err",
+			"isp_fe_loch2_csis_core_vc_err",
+			"isp_fe_loch3_csis_core_vc_err",
+			"isp_fe_loch4_csis_core_vc_err",
+			"isp_fe_loch5_csis_core_vc_err",
+			"isp_fe_loch6_csis_core_vc_err",
+			"isp_fe_loch7_csis_core_vc_err",
+			"isp_fe_loch8_csis_core_vc_err",
+			"isp_fe_loch9_csis_core_vc_err",
+			"isp_fe_loch10_csis_core_vc_err",
+			"isp_fe_loch11_csis_core_vc_err",
+			"isp_fe_loch12_csis_core_vc_err",
+			"isp_fe_loch13_csis_core_vc_err",
+			"isp_fe_loch0_csis_core_vc_mute",
+			"isp_fe_loch1_csis_core_vc_mute",
+			"isp_fe_loch2_csis_core_vc_mute",
+			"isp_fe_loch3_csis_core_vc_mute",
+			"isp_fe_loch4_csis_core_vc_mute",
+			"isp_fe_loch5_csis_core_vc_mute",
+			"isp_fe_loch6_csis_core_vc_mute",
+			"isp_fe_loch7_csis_core_vc_mute",
+			"isp_fe_loch8_csis_core_vc_mute",
+			"isp_fe_loch9_csis_core_vc_mute",
+			"isp_fe_loch10_csis_core_vc_mute",
+			"isp_fe_loch11_csis_core_vc_mute",
+			"isp_fe_loch12_csis_core_vc_mute",
+			"isp_fe_loch13_csis_core_vc_mute",
+			"isp_fe_ctx0_csis_core_rdma_abort_done",
+			"isp_fe_ctx1_csis_core_rdma_abort_done",
+			"isp_fe_ctx0_csis_core_rdma_proc",
+			"isp_fe_ctx1_csis_core_rdma_proc",
+			"isp_fe_ctx0_csis_core_rdma_err",
+			"isp_fe_ctx1_csis_core_rdma_err",
+			"isp_fe_ctx0_csis_int0",
+			"isp_fe_ctx1_csis_int0",
+			"isp_fe_ctx2_csis_int0",
+			"isp_fe_ctx3_csis_int0",
+			"isp_fe_ctx4_csis_int0",
+			"isp_fe_ctx5_csis_int0",
+			"isp_fe_ctx6_csis_int0",
+			"isp_fe_ctx7_csis_int0",
+			"isp_fe_ctx8_csis_int0",
+			"isp_fe_ctx9_csis_int0",
+			"isp_fe_ctx10_csis_int0",
+			"isp_fe_ctx11_csis_int0",
+			"isp_fe_ctx0_csis_int1",
+			"isp_fe_ctx1_csis_int1",
+			"isp_fe_ctx2_csis_int1",
+			"isp_fe_ctx3_csis_int1",
+			"isp_fe_ctx4_csis_int1",
+			"isp_fe_ctx5_csis_int1",
+			"isp_fe_ctx6_csis_int1",
+			"isp_fe_ctx7_csis_int1",
+			"isp_fe_ctx8_csis_int1",
+			"isp_fe_ctx9_csis_int1",
+			"isp_fe_ctx10_csis_int1",
+			"isp_fe_ctx11_csis_int1",
+			"isp_fe_ctx0_csis_fs_int",
+			"isp_fe_ctx1_csis_fs_int",
+			"isp_fe_ctx2_csis_fs_int",
+			"isp_fe_ctx3_csis_fs_int",
+			"isp_fe_ctx4_csis_fs_int",
+			"isp_fe_ctx5_csis_fs_int",
+			"isp_fe_ctx6_csis_fs_int",
+			"isp_fe_ctx7_csis_fs_int",
+			"isp_fe_ctx8_csis_fs_int",
+			"isp_fe_ctx9_csis_fs_int",
+			"isp_fe_ctx10_csis_fs_int",
+			"isp_fe_ctx11_csis_fs_int",
+			"isp_fe_ctx0_csis_fe_int",
+			"isp_fe_ctx1_csis_fe_int",
+			"isp_fe_ctx2_csis_fe_int",
+			"isp_fe_ctx3_csis_fe_int",
+			"isp_fe_ctx4_csis_fe_int",
+			"isp_fe_ctx5_csis_fe_int",
+			"isp_fe_ctx6_csis_fe_int",
+			"isp_fe_ctx7_csis_fe_int",
+			"isp_fe_ctx8_csis_fe_int",
+			"isp_fe_ctx9_csis_fe_int",
+			"isp_fe_ctx10_csis_fe_int",
+			"isp_fe_ctx11_csis_fe_int";
+		interrupt-event-infos =
+			<&isp_fe_ctx0_fc_bayer>,
+			<&isp_fe_ctx1_fc_bayer>,
+			<&isp_fe_ctx2_fc_bayer>,
+			<&isp_fe_ctx3_fc_bayer>,
+			<&isp_fe_ctx4_fc_bayer>,
+			<&isp_fe_ctx0_fc_pdaf>,
+			<&isp_fe_ctx1_fc_pdaf>,
+			<&isp_fe_ctx2_fc_pdaf>,
+			<&isp_fe_ctx3_fc_pdaf>,
+			<&isp_fe_ctx0_pdma>,
+			<&isp_fe_ctx1_pdma>,
+			<&isp_fe_ctx2_pdma>,
+			<&isp_fe_ctx3_pdma>,
+			<&isp_fe_ctx4_pdma>,
+			<&isp_fe_ctx0_pdma_err>,
+			<&isp_fe_ctx1_pdma_err>,
+			<&isp_fe_ctx2_pdma_err>,
+			<&isp_fe_ctx3_pdma_err>,
+			<&isp_fe_ctx4_pdma_err>,
+			<&isp_fe_ctx0_pdma_rstctl>,
+			<&isp_fe_ctx1_pdma_rstctl>,
+			<&isp_fe_ctx2_pdma_rstctl>,
+			<&isp_fe_ctx3_pdma_rstctl>,
+			<&isp_fe_ctx4_pdma_rstctl>,
+			<&isp_fe_ctx0_lmp_bayer>,
+			<&isp_fe_ctx1_lmp_bayer>,
+			<&isp_fe_ctx2_lmp_bayer>,
+			<&isp_fe_ctx3_lmp_bayer>,
+			<&isp_fe_ctx4_lmp_bayer>,
+			<&isp_fe_ctx0_lmp_pdaf>,
+			<&isp_fe_ctx1_lmp_pdaf>,
+			<&isp_fe_ctx2_lmp_pdaf>,
+			<&isp_fe_ctx3_lmp_pdaf>,
+			<&isp_fe_lmp_debug>,
+			<&isp_fe_csis_core_cmn_ctl>,
+			<&isp_fe_csis_core_ebuf_ctl>,
+			<&isp_fe_loch0_csis_core_img_abort_done>,
+			<&isp_fe_loch1_csis_core_img_abort_done>,
+			<&isp_fe_loch2_csis_core_img_abort_done>,
+			<&isp_fe_loch3_csis_core_img_abort_done>,
+			<&isp_fe_loch4_csis_core_img_abort_done>,
+			<&isp_fe_loch5_csis_core_img_abort_done>,
+			<&isp_fe_loch6_csis_core_img_abort_done>,
+			<&isp_fe_loch0_csis_core_img_proc>,
+			<&isp_fe_loch1_csis_core_img_proc>,
+			<&isp_fe_loch2_csis_core_img_proc>,
+			<&isp_fe_loch3_csis_core_img_proc>,
+			<&isp_fe_loch4_csis_core_img_proc>,
+			<&isp_fe_loch5_csis_core_img_proc>,
+			<&isp_fe_loch6_csis_core_img_proc>,
+			<&isp_fe_loch0_csis_core_img_err>,
+			<&isp_fe_loch1_csis_core_img_err>,
+			<&isp_fe_loch2_csis_core_img_err>,
+			<&isp_fe_loch3_csis_core_img_err>,
+			<&isp_fe_loch4_csis_core_img_err>,
+			<&isp_fe_loch5_csis_core_img_err>,
+			<&isp_fe_loch6_csis_core_img_err>,
+			<&isp_fe_loch0_csis_core_img_mute>,
+			<&isp_fe_loch1_csis_core_img_mute>,
+			<&isp_fe_loch2_csis_core_img_mute>,
+			<&isp_fe_loch3_csis_core_img_mute>,
+			<&isp_fe_loch4_csis_core_img_mute>,
+			<&isp_fe_loch5_csis_core_img_mute>,
+			<&isp_fe_loch6_csis_core_img_mute>,
+			<&isp_fe_loch0_csis_core_pd_abort_done>,
+			<&isp_fe_loch1_csis_core_pd_abort_done>,
+			<&isp_fe_loch2_csis_core_pd_abort_done>,
+			<&isp_fe_loch3_csis_core_pd_abort_done>,
+			<&isp_fe_loch4_csis_core_pd_abort_done>,
+			<&isp_fe_loch5_csis_core_pd_abort_done>,
+			<&isp_fe_loch6_csis_core_pd_abort_done>,
+			<&isp_fe_loch0_csis_core_pd_proc>,
+			<&isp_fe_loch1_csis_core_pd_proc>,
+			<&isp_fe_loch2_csis_core_pd_proc>,
+			<&isp_fe_loch3_csis_core_pd_proc>,
+			<&isp_fe_loch4_csis_core_pd_proc>,
+			<&isp_fe_loch5_csis_core_pd_proc>,
+			<&isp_fe_loch6_csis_core_pd_proc>,
+			<&isp_fe_loch0_csis_core_pd_err>,
+			<&isp_fe_loch1_csis_core_pd_err>,
+			<&isp_fe_loch2_csis_core_pd_err>,
+			<&isp_fe_loch3_csis_core_pd_err>,
+			<&isp_fe_loch4_csis_core_pd_err>,
+			<&isp_fe_loch5_csis_core_pd_err>,
+			<&isp_fe_loch6_csis_core_pd_err>,
+			<&isp_fe_loch0_csis_core_pd_mute>,
+			<&isp_fe_loch1_csis_core_pd_mute>,
+			<&isp_fe_loch2_csis_core_pd_mute>,
+			<&isp_fe_loch3_csis_core_pd_mute>,
+			<&isp_fe_loch4_csis_core_pd_mute>,
+			<&isp_fe_loch5_csis_core_pd_mute>,
+			<&isp_fe_loch6_csis_core_pd_mute>,
+			<&isp_fe_loch0_csis_core_vc_abort_done>,
+			<&isp_fe_loch1_csis_core_vc_abort_done>,
+			<&isp_fe_loch2_csis_core_vc_abort_done>,
+			<&isp_fe_loch3_csis_core_vc_abort_done>,
+			<&isp_fe_loch4_csis_core_vc_abort_done>,
+			<&isp_fe_loch5_csis_core_vc_abort_done>,
+			<&isp_fe_loch6_csis_core_vc_abort_done>,
+			<&isp_fe_loch7_csis_core_vc_abort_done>,
+			<&isp_fe_loch8_csis_core_vc_abort_done>,
+			<&isp_fe_loch9_csis_core_vc_abort_done>,
+			<&isp_fe_loch10_csis_core_vc_abort_done>,
+			<&isp_fe_loch11_csis_core_vc_abort_done>,
+			<&isp_fe_loch12_csis_core_vc_abort_done>,
+			<&isp_fe_loch13_csis_core_vc_abort_done>,
+			<&isp_fe_loch0_csis_core_vc_proc>,
+			<&isp_fe_loch1_csis_core_vc_proc>,
+			<&isp_fe_loch2_csis_core_vc_proc>,
+			<&isp_fe_loch3_csis_core_vc_proc>,
+			<&isp_fe_loch4_csis_core_vc_proc>,
+			<&isp_fe_loch5_csis_core_vc_proc>,
+			<&isp_fe_loch6_csis_core_vc_proc>,
+			<&isp_fe_loch7_csis_core_vc_proc>,
+			<&isp_fe_loch8_csis_core_vc_proc>,
+			<&isp_fe_loch9_csis_core_vc_proc>,
+			<&isp_fe_loch10_csis_core_vc_proc>,
+			<&isp_fe_loch11_csis_core_vc_proc>,
+			<&isp_fe_loch12_csis_core_vc_proc>,
+			<&isp_fe_loch13_csis_core_vc_proc>,
+			<&isp_fe_loch0_csis_core_vc_err>,
+			<&isp_fe_loch1_csis_core_vc_err>,
+			<&isp_fe_loch2_csis_core_vc_err>,
+			<&isp_fe_loch3_csis_core_vc_err>,
+			<&isp_fe_loch4_csis_core_vc_err>,
+			<&isp_fe_loch5_csis_core_vc_err>,
+			<&isp_fe_loch6_csis_core_vc_err>,
+			<&isp_fe_loch7_csis_core_vc_err>,
+			<&isp_fe_loch8_csis_core_vc_err>,
+			<&isp_fe_loch9_csis_core_vc_err>,
+			<&isp_fe_loch10_csis_core_vc_err>,
+			<&isp_fe_loch11_csis_core_vc_err>,
+			<&isp_fe_loch12_csis_core_vc_err>,
+			<&isp_fe_loch13_csis_core_vc_err>,
+			<&isp_fe_loch0_csis_core_vc_mute>,
+			<&isp_fe_loch1_csis_core_vc_mute>,
+			<&isp_fe_loch2_csis_core_vc_mute>,
+			<&isp_fe_loch3_csis_core_vc_mute>,
+			<&isp_fe_loch4_csis_core_vc_mute>,
+			<&isp_fe_loch5_csis_core_vc_mute>,
+			<&isp_fe_loch6_csis_core_vc_mute>,
+			<&isp_fe_loch7_csis_core_vc_mute>,
+			<&isp_fe_loch8_csis_core_vc_mute>,
+			<&isp_fe_loch9_csis_core_vc_mute>,
+			<&isp_fe_loch10_csis_core_vc_mute>,
+			<&isp_fe_loch11_csis_core_vc_mute>,
+			<&isp_fe_loch12_csis_core_vc_mute>,
+			<&isp_fe_loch13_csis_core_vc_mute>,
+			<&isp_fe_ctx0_csis_core_rdma_abort_done>,
+			<&isp_fe_ctx1_csis_core_rdma_abort_done>,
+			<&isp_fe_ctx0_csis_core_rdma_proc>,
+			<&isp_fe_ctx1_csis_core_rdma_proc>,
+			<&isp_fe_ctx0_csis_core_rdma_err>,
+			<&isp_fe_ctx1_csis_core_rdma_err>,
+			<&isp_fe_ctx0_csis_int0>,
+			<&isp_fe_ctx1_csis_int0>,
+			<&isp_fe_ctx2_csis_int0>,
+			<&isp_fe_ctx3_csis_int0>,
+			<&isp_fe_ctx4_csis_int0>,
+			<&isp_fe_ctx5_csis_int0>,
+			<&isp_fe_ctx6_csis_int0>,
+			<&isp_fe_ctx7_csis_int0>,
+			<&isp_fe_ctx8_csis_int0>,
+			<&isp_fe_ctx9_csis_int0>,
+			<&isp_fe_ctx10_csis_int0>,
+			<&isp_fe_ctx11_csis_int0>,
+			<&isp_fe_ctx0_csis_int1>,
+			<&isp_fe_ctx1_csis_int1>,
+			<&isp_fe_ctx2_csis_int1>,
+			<&isp_fe_ctx3_csis_int1>,
+			<&isp_fe_ctx4_csis_int1>,
+			<&isp_fe_ctx5_csis_int1>,
+			<&isp_fe_ctx6_csis_int1>,
+			<&isp_fe_ctx7_csis_int1>,
+			<&isp_fe_ctx8_csis_int1>,
+			<&isp_fe_ctx9_csis_int1>,
+			<&isp_fe_ctx10_csis_int1>,
+			<&isp_fe_ctx11_csis_int1>,
+			<&isp_fe_ctx0_csis_fs_int>,
+			<&isp_fe_ctx1_csis_fs_int>,
+			<&isp_fe_ctx2_csis_fs_int>,
+			<&isp_fe_ctx3_csis_fs_int>,
+			<&isp_fe_ctx4_csis_fs_int>,
+			<&isp_fe_ctx5_csis_fs_int>,
+			<&isp_fe_ctx6_csis_fs_int>,
+			<&isp_fe_ctx7_csis_fs_int>,
+			<&isp_fe_ctx8_csis_fs_int>,
+			<&isp_fe_ctx9_csis_fs_int>,
+			<&isp_fe_ctx10_csis_fs_int>,
+			<&isp_fe_ctx11_csis_fs_int>,
+			<&isp_fe_ctx0_csis_fe_int>,
+			<&isp_fe_ctx1_csis_fe_int>,
+			<&isp_fe_ctx2_csis_fe_int>,
+			<&isp_fe_ctx3_csis_fe_int>,
+			<&isp_fe_ctx4_csis_fe_int>,
+			<&isp_fe_ctx5_csis_fe_int>,
+			<&isp_fe_ctx6_csis_fe_int>,
+			<&isp_fe_ctx7_csis_fe_int>,
+			<&isp_fe_ctx8_csis_fe_int>,
+			<&isp_fe_ctx9_csis_fe_int>,
+			<&isp_fe_ctx10_csis_fe_int>,
+			<&isp_fe_ctx11_csis_fe_int>;
+
+		phys =
+			<&mipi_phy_csis0_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis1_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis2_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis3_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis4_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis5_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis6_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis7_m0s4s4s4s4s4 0>,
+			<&mipi_phy_csis8_m0s4s4s4s4s4 0>;
+		phy-names =
+			"csis0_dcphy",
+			"csis1_dcphy",
+			"csis2_dcphy",
+			"csis3_dcphy",
+			"csis4_dcphy",
+			"csis5_dcphy",
+			"csis6_dcphy",
+			"csis7_dcphy",
+			"csis8_dcphy";
+
+		iommus =
+			<&sysmmu_ispfe_s0>,
+			<&sysmmu_ispfe_s1>,
+			<&sysmmu_ispfe_s2>;
+		samsung,iommu-group = <&iommu_group_isp>;
+		lwis,iommu-best-fit-algo;
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_gdc0: lwis_gdc@1D440000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "gdc0";
+
+		/* Register space */
+		reg =
+			<0x0 0x1D440000 0x10000>,	/* GDC0 */
+			<0x0 0x1D504000 0xE00>;		/* GDC0 SSMT */
+		reg-names =
+			"gdc",
+			"gdc_ssmt";
+
+		interrupts =
+			<GIC_SPI IRQ_GDC0_IRQ_0_GDC IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GDC0_IRQ_1_GDC IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GDC0_IRQ_0_GDC IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"gdc-int0",
+			"gdc-int1",
+			"gdc-cmdq-int";
+		interrupt-event-infos =
+			<&gdc_int0>,
+			<&gdc_int1>,
+			<&gdc_cmdq_int>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_GDC_GDC0>;
+		clock-names =
+			"UMUX_CLKCMU_GDC_GDC0";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_INTCAM>;
+
+		/*
+		 * GDC0 and GDC1 share the same SysMMU, according to Figure 2 in:
+		 * go/zuma_gdc_blk_hdd
+		*/
+		iommus =
+			<&sysmmu_gdc>;
+		bts-block-names =
+			"gdc";
+		samsung,iommu-group = <&iommu_group_isp>;
+		/* Ref: b/280704201 */
+		samsung,iommu-identity-map =
+			<0x0 0x1C46D000 0x3000>,  /* RGBP */
+			<0x0 0x1C86D000 0x3000>,  /* YUVP */
+			<0x0 0x1CC5D000 0x3000>,  /* GTNR Merge */
+			<0x0 0x1D05D000 0x3000>,  /* MCSC */
+			<0x0 0x1D48D000 0x3000>,  /* GDC1 */
+			<0x0 0x1D85D000 0x3000>;  /* GSE */
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_gdc1: lwis_gdc@1D470000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "gdc1";
+
+		/* Register space */
+		reg =
+			<0x0 0x1D470000 0x10000>,  /* GDC1 */
+			<0x0 0x1D544000 0xE00>;    /* GDC1 SSMT */
+		reg-names =
+			"gdc",
+			"gdc_ssmt";
+
+		interrupts =
+			<GIC_SPI IRQ_GDC1_IRQ_0_GDC IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GDC1_IRQ_1_GDC IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GDC1_IRQ_0_GDC IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"gdc-int0",
+			"gdc-int1",
+			"gdc-cmdq-int";
+		interrupt-event-infos =
+			<&gdc_int0>,
+			<&gdc_int1>,
+			<&gdc_cmdq_int>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_GDC_GDC1>;
+		clock-names =
+			"UMUX_CLKCMU_GDC_GDC1";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_INTCAM>;
+
+		/*
+		 * GDC0 and GDC1 share the same SysMMU, according to Figure 2 in:
+		 * go/zuma_gdc_blk_hdd
+		*/
+		iommus =
+			<&sysmmu_gdc>;
+		bts-block-names =
+			"gdc";
+		samsung,iommu-group = <&iommu_group_isp>;
+		/* Ref: b/280704201 */
+		samsung,iommu-identity-map =
+			<0x0 0x1C46D000 0x3000>,  /* RGBP */
+			<0x0 0x1C86D000 0x3000>,  /* YUVP */
+			<0x0 0x1CC5D000 0x3000>,  /* GTNR Merge */
+			<0x0 0x1D05D000 0x3000>,  /* MCSC */
+			<0x0 0x1D45D000 0x3000>,  /* GDC0 */
+			<0x0 0x1D85D000 0x3000>;  /* GSE */
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_mcsc: lwis_mcsc@1D040000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "mcsc";
+
+		/* Register space */
+		/*
+		 * Add a CMU MCSC register space temporarily to support Lyric to configure
+		 * MCSC CMU (b/242366764). After ACPM fix is merged, we can remove CMU MCSC
+		 * register space.
+		*/
+		reg =
+			<0x0 0x1D040000 0x10000>,  /* MCSC */
+			<0x0 0x1D104000 0xE00>,    /* SSMT D0 MCSC */
+			<0x0 0x1D114000 0xE00>,    /* SSMT D1 MCSC */
+			<0x0 0x1D124000 0xE00>,    /* SSMT D2 MCSC */
+			<0x0 0x1D134000 0xE00>,    /* SSMT D3 MCSC */
+			<0x0 0x1D144000 0xE00>,    /* SSMT D4 MCSC */
+			<0x0 0x1D154000 0xE00>,    /* SSMT D5 MCSC */
+			<0x0 0x1D164000 0xE00>,    /* SSMT D6 MCSC */
+			<0x0 0x1D000000 0x10000>,  /* CMU MCSC */
+			<0x0 0x1D020400 0x4>;      /* MCSC MCSC_USER_CON0 SYSREG */
+		reg-names =
+			"mcsc",
+			"ssmt_d0_mcsc",
+			"ssmt_d1_mcsc",
+			"ssmt_d2_mcsc",
+			"ssmt_d3_mcsc",
+			"ssmt_d4_mcsc",
+			"ssmt_d5_mcsc",
+			"ssmt_d6_mcsc",
+			"cmu_mcsc",
+			"mcsc_sysreg";
+
+		interrupts =
+			<GIC_SPI IRQ_MCSC_0_MCSC IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_MCSC_1_MCSC IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_MCSC_0_MCSC IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"mcsc_int0",
+			"mcsc_int1",
+			"mcsc_cmdq_int";
+		interrupt-event-infos =
+			<&mcsc_int0>,
+			<&mcsc_int1>,
+			<&mcsc_cmdq_int>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_MCSC>;
+		clock-names =
+			"UMUX_CLKCMU_MCSC";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_INTCAM>;
+
+		iommus =
+			<&sysmmu_mcsc>;
+		samsung,iommu-group = <&iommu_group_isp>;
+		/* Ref: b/280704201 */
+		samsung,iommu-identity-map =
+			<0x0 0x1C46D000 0x3000>,  /* RGBP */
+			<0x0 0x1C86D000 0x3000>,  /* YUVP */
+			<0x0 0x1CC5D000 0x3000>,  /* GTNR Merge */
+			<0x0 0x1D45D000 0x3000>,  /* GDC0 */
+			<0x0 0x1D48D000 0x3000>,  /* GDC1 */
+			<0x0 0x1D85D000 0x3000>;  /* GSE */
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_gse: lwis_gse@0x1D840000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "gse";
+
+		/* Register space */
+		reg =
+			<0x0 0x1D840000 0x10000>,  /* GSE */
+			<0x0 0x1D844000 0x00800>,  /* GSE PDMA */
+			<0x0 0x1D844800 0x00200>,  /* GSE PDMA WARP */
+			<0x0 0x1D934000 0xE00>,    /* SSMT D0 GSE */
+			<0x0 0x1D944000 0xE00>,    /* SSMT D1 GSE */
+			<0x0 0x1D954000 0xE00>,    /* SSMT D2 GSE */
+			<0x0 0x1D820400 0x4>;      /* GSE SYSREG GSE_USER_CON0*/
+		reg-names =
+			"gse",
+			"gse_pdma",
+			"gse_pdma_warp",
+			"ssmt_d0_gse",
+			"ssmt_d1_gse",
+			"ssmt_d2_gse",
+			"gse_sysreg";
+
+		interrupts =
+			<GIC_SPI IRQ_GSE_NonSecu_IRQ_GSE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GSE_NonSecu_IRQ_GSE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GSE_NonSecu_IRQ_GSE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GSE_NonSecu_IRQ_GSE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GSE_NonSecu_IRQ_GSE IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_GSE_NonSecu_IRQ_GSE IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"gse_irq",
+			"gse_pdma",
+			"gse_pdma_err",
+			"gse_pdma_rstctl",
+			"gse_isp_rstctl",
+			"gse_csr_bus_wrap";
+		interrupt-event-infos =
+			<&gse_irq>,
+			<&gse_pdma>,
+			<&gse_pdma_err>,
+			<&gse_pdma_rstctl>,
+			<&gse_isp_rstctl>,
+			<&gse_csr_bus_wrap>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_GSE>;
+		clock-names =
+			"UMUX_CLKCMU_GSE";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_INTCAM>;
+
+		iommus =
+			<&sysmmu_gse>;
+		samsung,iommu-group = <&iommu_group_isp>;
+		/* Ref: b/280704201 */
+		samsung,iommu-identity-map =
+			<0x0 0x1C46D000 0x3000>,  /* RGBP */
+			<0x0 0x1C86D000 0x3000>,  /* YUVP */
+			<0x0 0x1CC5D000 0x3000>,  /* GTNR Merge */
+			<0x0 0x1D05D000 0x3000>,  /* MCSC */
+			<0x0 0x1D45D000 0x3000>,  /* GDC0 */
+			<0x0 0x1D48D000 0x3000>;  /* GDC1 */
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_be_core: lwis_be_core@1C440000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "be-core";
+
+		/* Register space */
+		reg =
+			<0x0 0x1C440000 0x10000>,  /* RGBP */
+			<0x0 0x1C470000 0x10000>,  /* MCFP */
+			<0x0 0x1C840000 0x10000>,  /* YUVP */
+			<0x0 0x1C5D4000 0xE00>,    /* SSMT D0 RGBP */
+			<0x0 0x1C914000 0xE00>,    /* SSMT D1 YUVP */
+			<0x0 0x1C420404 0x4>,      /* SYSREG RGBP */
+			<0x0 0x1C604000 0xE00>,    /* SSMT D0 MCFP */
+			<0x0 0x1C614000 0xE00>,    /* SSMT D1 MCFP */
+			<0x0 0x1C624000 0xE00>,    /* SSMT D2 MCFP */
+			<0x0 0x1C634000 0xE00>,    /* SSMT D3 MCFP */
+			<0x0 0x1C644000 0xE00>;    /* SSMT D4 MCFP */
+		reg-names =
+			"rgbp",
+			"mcfp",
+			"yuvp",
+			"ssmt_d0_rgbp",
+			"ssmt_d1_yuvp",
+			"sysreg_rgbp",
+			"ssmt_d0_mcfp",
+			"ssmt_d1_mcfp",
+			"ssmt_d2_mcfp",
+			"ssmt_d3_mcfp",
+			"ssmt_d4_mcfp";
+
+		interrupts =
+			<GIC_SPI IRQ_RGBP_INTREQ_0_RGBP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_RGBP_INTREQ_1_RGBP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_RGBP_INTREQ_0_RGBP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_MCFP_INTREQ_0_RGBP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_MCFP_INTREQ_1_RGBP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_MCFP_INTREQ_0_RGBP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_YUVP_0_YUVP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_YUVP_1_YUVP IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_YUVP_0_YUVP IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"be_core_rgbp_int0",
+			"be_core_rgbp_int1",
+			"be_core_rgbp_cmdq_int",
+			"be_core_mcfp_int0",
+			"be_core_mcfp_int1",
+			"be_core_mcfp_cmdq_int",
+			"be_core_yuvp_int0",
+			"be_core_yuvp_int1",
+			"be_core_yuvp_cmdq_int";
+		interrupt-event-infos =
+			<&be_core_rgbp_int0>,
+			<&be_core_rgbp_int1>,
+			<&be_core_rgbp_cmdq_int>,
+			<&be_core_mcfp_int0>,
+			<&be_core_mcfp_int1>,
+			<&be_core_mcfp_cmdq_int>,
+			<&be_core_yuvp_int0>,
+			<&be_core_yuvp_int1>,
+			<&be_core_yuvp_cmdq_int>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_YUVP>,
+			<&clock UMUX_CLKCMU_RGBP_RGBP>,
+			<&clock UMUX_CLKCMU_RGBP_MCFP>,
+			/* RGBP C Loader resides in BLK_GDC */
+			<&clock UMUX_CLKCMU_GDC_GDC0>;
+		clock-names =
+			"UMUX_CLKCMU_YUVP",
+			"UMUX_CLKCMU_RGBP_RGBP",
+			"UMUX_CLKCMU_RGBP_MCFP",
+			"UMUX_CLKCMU_GDC_GDC0";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_INTCAM>;
+		bts-block-names =
+			"rgbp",
+			"yuvp",
+			"gdc";
+
+		iommus =
+			<&sysmmu_yuvp>,
+			<&sysmmu_rgbp_s0>,
+			<&sysmmu_rgbp_s1>,
+			/* TODO(b/235406857): check if the WA can be removed. */
+			<&sysmmu_gdc>;
+		samsung,iommu-group = <&iommu_group_isp>;
+
+		/* Ref: b/280704201 */
+		samsung,iommu-identity-map =
+			<0x0 0x1CC5D000 0x3000>,  /* GTNR Merge */
+			<0x0 0x1D05D000 0x3000>,  /* MCSC */
+			<0x0 0x1D45D000 0x3000>,  /* GDC0 */
+			<0x0 0x1D48D000 0x3000>,  /* GDC1 */
+			<0x0 0x1D85D000 0x3000>;  /* GSE */
+
+		power-domains =
+			<&pd_yuvp>,
+			<&pd_rgbp>,
+			<&pd_gdc>;
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_gtnr_merge: lwis_gtnr_merge@1CC40000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "gtnr-merge";
+
+		/* Register space */
+		/*
+		 * Add a GTNR CMU register space temporarily to support Lyric to
+		 * configure TNR CMU (b/242953352). After ACPM fix is merged, we can
+		 * remove GTNR MERGE CMU register space.
+		*/
+		reg =
+			<0x0 0x1CC40000 0x10000>,  /* GTNR Merge */
+			<0x0 0x1CF34000 0xE00>,    /* GTNR Merge SSMT D0 */
+			<0x0 0x1CF44000 0xE00>,    /* GTNR Merge SSMT D1 */
+			<0x0 0x1CF54000 0xE00>,    /* GTNR Merge SSMT D2 */
+			<0x0 0x1CF64000 0xE00>,    /* GTNR Merge SSMT D3 */
+			<0x0 0x1CF74000 0xE00>,    /* GTNR Merge SSMT D4 */
+			<0x0 0x1CF84000 0xE00>,    /* GTNR Merge SSMT D5 */
+			<0x0 0x1CF94000 0xE00>,    /* GTNR Merge SSMT D6 */
+			<0x0 0x1CFA4000 0xE00>,    /* GTNR Merge SSMT D7 */
+			<0x0 0x1CFB4000 0xE00>,    /* GTNR Merge SSMT D8 */
+			<0x0 0x1CFC4000 0xE00>,    /* GTNR Merge SSMT D9 */
+			<0x0 0x1CFD4000 0xE00>,    /* GTNR Merge SSMT D10 */
+			<0x0 0x1CFE4000 0xE00>,    /* GTNR Merge SSMT D11 */
+			<0x0 0x1CC00000 0x10000>,  /* GTNR CMU */
+			<0x0 0x1CC20400 0x4>;      /* GTNR MERGE SYSREG LH_AST_GLUE_OTF*/
+
+		reg-names =
+			"gtnr_merge",
+			"gtnr_merge_ssmt_d0",
+			"gtnr_merge_ssmt_d1",
+			"gtnr_merge_ssmt_d2",
+			"gtnr_merge_ssmt_d3",
+			"gtnr_merge_ssmt_d4",
+			"gtnr_merge_ssmt_d5",
+			"gtnr_merge_ssmt_d6",
+			"gtnr_merge_ssmt_d7",
+			"gtnr_merge_ssmt_d8",
+			"gtnr_merge_ssmt_d9",
+			"gtnr_merge_ssmt_d10",
+			"gtnr_merge_ssmt_d11",
+			"gtnr_cmu",
+			"gtnr_merge_sysreg";
+
+		interrupts =
+			<GIC_SPI IRQ_TNR_0_TNR IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_TNR_1_TNR IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_TNR_0_TNR IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"gtnr-merge-int0",
+			"gtnr-merge-int1",
+			"gtnr-merge-cmdq-int";
+		interrupt-event-infos =
+			<&gtnr_merge_int0>,
+			<&gtnr_merge_int1>,
+			<&gtnr_merge_cmdq_int>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_TNR_MERGE>;
+		clock-names =
+			"UMUX_CLKCMU_TNR_MERGE";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_TNR>;
+
+		iommus =
+			<&sysmmu_tnr_s0>,
+			<&sysmmu_tnr_s1>;
+		samsung,iommu-group = <&iommu_group_isp>;
+		/* Ref: b/280704201 */
+		samsung,iommu-identity-map =
+			<0x0 0x1C46D000 0x3000>,  /* RGBP */
+			<0x0 0x1C86D000 0x3000>,  /* YUVP */
+			<0x0 0x1D05D000 0x3000>,  /* MCSC */
+			<0x0 0x1D45D000 0x3000>,  /* GDC0 */
+			<0x0 0x1D48D000 0x3000>,  /* GDC1 */
+			<0x0 0x1D85D000 0x3000>;  /* GSE */
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_gtnr_align: lwis_gtnr_align@1CC60000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "gtnr-align";
+
+		/* Register space */
+		reg =
+			<0x0 0x1CC60000 0x10000>;  /* GTNR Align */
+		reg-names =
+			"gtnr_align";
+
+		interrupts =
+			<GIC_SPI IRQ_TNR_A_TNR IRQ_TYPE_LEVEL_HIGH>,
+			<GIC_SPI IRQ_TNR_A_TNR IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"gtnr-align-int",
+			"gtnr-align-mute";
+		interrupt-event-infos =
+			<&gtnr_align_int>,
+			<&gtnr_align_secu_int_mute>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_TNR_ALIGN>;
+		clock-names =
+			"UMUX_CLKCMU_TNR_ALIGN";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_TNR>;
+
+		iommus =
+			<&sysmmu_tnr_s2>;
+		samsung,iommu-group = <&iommu_group_isp>;
+	};
+
+	lwis_lme: lwis_lme@1D4A0000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "lme";
+
+		/* Register space */
+		reg =
+			<0x0 0x1D4A0000 0x10000>;  /* LME */
+		reg-names =
+			"lme";
+
+		interrupts =
+			<GIC_SPI IRQ_LME_IntReq_GDC IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names =
+			"lme_int1";
+		interrupt-event-infos =
+			<&lme_int1>;
+
+		clocks =
+			<&clock UMUX_CLKCMU_GDC_LME>;
+		clock-names =
+			"UMUX_CLKCMU_GDC_LME";
+		clock-rates = <0>;
+		clock-family = <CAMERA_CLOCK_FAMILY_INTCAM>;
+
+		/*
+		 * LME shares the same SysMMU with GDC0/1, according to Figure 2 in:
+		 * go/zuma_gdc_blk_hdd
+		*/
+		iommus =
+			<&sysmmu_gdc>;
+		bts-block-names =
+			"gdc";
+		samsung,iommu-group = <&iommu_group_isp>;
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_votf: lwis_votf@1C460000 {
+		compatible = "google,lwis-ioreg-device";
+
+		/* Device node name */
+		node-name = "votf";
+
+		/* Register space */
+		reg =
+			<0x0 0x1C460000 0x10000>,  /* RGBP C2SERV */
+			<0x0 0x1C860000 0x10000>,  /* YUVP C2SERV */
+			<0x0 0x1CC50000 0x10000>,  /* TNR  C2SERV */
+			<0x0 0x1D050000 0x10000>,  /* MCSC C2SERV */
+			<0x0 0x1D450000 0x10000>,  /* GDC0 C2SERV */
+			<0x0 0x1D480000 0x10000>,  /* GDC1 C2SERV */
+			<0x0 0x1D850000 0x10000>;  /* GSE  C2SERV */
+		reg-names =
+			"rgbp-c2serv",
+			"yuvp-c2serv",
+			"tnr-c2serv",
+			"mcsc-c2serv",
+			"gdc0-c2serv",
+			"gdc1-c2serv",
+			"gse-c2serv";
+
+		iommus =
+			<&sysmmu_yuvp>,
+			<&sysmmu_rgbp_s0>,
+			<&sysmmu_rgbp_s1>,
+			<&sysmmu_tnr_s0>,
+			<&sysmmu_tnr_s1>,
+			<&sysmmu_tnr_s2>,
+			<&sysmmu_gdc>,
+			<&sysmmu_gse>,
+			<&sysmmu_mcsc>;
+		samsung,iommu-group = <&iommu_group_isp>;
+
+		power-domains =
+			<&pd_yuvp>,
+			<&pd_rgbp>,
+			<&pd_tnr>,
+			<&pd_gdc>,
+			<&pd_gse>,
+			<&pd_mcsc>;
+
+		/* Thread priority */
+		transaction-thread-priority = <99>;
+	};
+
+	lwis_slc: lwis_slc@0 {
+		compatible = "google,lwis-slc-device";
+
+		/* Device node name */
+		node-name = "slc";
+
+		/* SLC partitions */
+		pt_id =
+			"CAMERA1WAY0",
+			"CAMERA1WAY1",
+			"CAMERA2WAY0",
+			"CAMERA2WAY1",
+			"CAMERA3WAY0",
+			"CAMERA3WAY1",
+			"CAMERA3WAY2",
+			"CAMERA4WAY0",
+			"CAMERA6WAY0";
+
+		pt_size = <512 512 1024 1024 1536 1536 1536 2048 3072>;
+	};
+
+};

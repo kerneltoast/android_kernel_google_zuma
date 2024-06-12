@@ -1,0 +1,298 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * USB device tree source code for Zuma SoC
+ *
+ * Copyright 2022 Google LLC.
+ */
+
+#include <dt-bindings/interrupt-controller/zuma.h>
+//#include <dt-bindings/clock/gs101.h>
+
+&reserved_memory {
+	xhci_dma: xhci_dma@97000000 {
+		compatible = "shared-dma-pool";
+		reg = <0x0 0x97000000 0x400000>;
+		no-map;
+	};
+};
+
+/ {
+	sysreg_hsi0: sysreg_hsi0@11020000 {
+		compatible = "samsung,sysreg-hsi0", "syscon";
+		reg = <0x0 0x11020000 0x10000>;
+	};
+
+	eusb_repeater_tune:hs_tune_eusb {
+                status = "disabled";
+	};
+
+	usb_hs_tune:hs_tune_phy {
+		status = "disabled";
+		hs_tune_cnt = <12>;
+		/* value = <device host> */
+		/* 0xffffffff means using default value */
+		hs_tune1 {
+			tune_name = "tx_fsls_slew_rate";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune2 {
+			tune_name = "tx_fsls_vref_tune";
+			tune_value = <0x0 0x0>;
+		};
+
+		hs_tune3 {
+			tune_name = "tx_fsls_vreg_bypass";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune4 {
+			tune_name = "tx_hs_vref_tune";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune5 {
+			tune_name = "tx_hs_xv";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune6 {
+			tune_name = "tx_preemp";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune7 {
+			tune_name = "tx_res";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune8 {
+			tune_name = "tx_rise";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune9 {
+			tune_name = "rx_eq_ctle";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune10 {
+			tune_name = "rx_hs_term_en";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune11 {
+			tune_name = "rx_hs_tune";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		hs_tune12 {
+			tune_name = "reg_direct";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+	};
+
+	usb_ss_tune:ss_tune {
+		status = "disabled";
+		ss_tune_cnt = <13>;
+		/* value = <device host> */
+		/* 0xffffffff means using default value */
+		ss_tune1 {
+			tune_name = "tx_eq_pre_g1";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune2 {
+			tune_name = "tx_eq_pre_g2";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune3 {
+			tune_name = "tx_eq_post_g1";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune4 {
+			tune_name = "tx_eq_post_g2";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune5 {
+			tune_name = "tx_eq_main_g1";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune6 {
+			tune_name = "tx_eq_main_g2";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune7 {
+			tune_name = "tx_vswing_lvl";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune8 {
+			tune_name = "rx_eq_att_lvl";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune9 {
+			tune_name = "rx_eq_afe_gain";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune10 {
+			tune_name = "rx_eq_ctle_boost";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune11 {
+			tune_name = "rx_term_ctrl";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune12 {
+			tune_name = "tx_term_ctrl";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+
+		ss_tune13 {
+			tune_name = "tx_rxdet_time";
+			tune_value = <0xffffffff 0xffffffff>;
+		};
+	};
+
+	udc: usb@11210000 {
+		compatible = "samsung,exynos9-dwusb";
+		clocks = <&clock GATE_USB32DRD_LINK>,
+			<&clock MUX_HSI0_USB20_REF>,
+			<&clock VDOUT_CLK_TOP_HSI0_NOC>;
+		clock-names = "aclk", "sclk", "bus";
+		reg = <0x0 0x11210000 0x10000>;
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges;
+		status = "okay";
+		power-domains = <&pd_hsi0>;
+		samsung,sysreg-hsi0 = <&sysreg_hsi0>;
+
+		interrupts = <GIC_SPI IRQ_USB32DRD_GIC_0_HSI0 IRQ_TYPE_LEVEL_HIGH>;
+		tx-fifo-resize = <0>;
+		adj-sof-accuracy = <1>;
+		is_not_vbus_pad = <1>;
+		usb_host_device_timeout = <200>;
+		enable_sprs_transfer = <1>;
+
+		samsung,no-extra-delay;
+		xhci_l2_support = <1>;
+
+		phys = <&usbdrd_phy0 0>, <&usbdrd_phy0 1>;
+		phy-names = "usb2-phy", "usb3-phy";
+		/* check susphy support */
+		suspend_clk_freq = <19200000>;
+
+		usbdrd_dwc3: dwc3 {
+			compatible = "synopsys,dwc3";
+			reg = <0x0 0x11210000 0x10000>;
+			interrupts = <GIC_SPI IRQ_USB32DRD_GIC_0_HSI0 IRQ_TYPE_LEVEL_HIGH>;
+			memory-region = <&xhci_dma>;
+			dr_mode = "peripheral";
+			phys = <&usbdrd_phy0 0>, <&usbdrd_phy0 1>;
+			phy-names = "usb2-phy", "usb3-phy";
+			/* support usb audio offloading: 1, if not: 0 */
+			usb_audio_offloading = <1>;
+			direct-usb-access;
+
+			maximum-speed = "super-speed-plus";
+			usb-psy-name = "usb";
+			snps,quirk-frame-length-adjustment = <0x20>;
+
+			snps,has-lpm-erratum;
+			snps,lpm-nyet-threshold = <0>;
+
+			snps,usb2-gadget-lpm-disable;
+
+			/*
+			 * dis-u2-freeclk-exists-quirk, dis_u2_susphy_quirk are alternative.
+			 * One of them should be selected
+			 */
+			snps,dis-u2-freeclk-exists-quirk;
+			/*snps,dis_u2_susphy_quirk;*/
+
+			/* http://b/171478776 : disabling U1/U2 speed up NCM tethering by >2x */
+			snps,dis-u1-entry-quirk;
+			snps,dis-u2-entry-quirk;
+			xhci_l2_support = <1>;
+		};
+	};
+
+	usbdrd_phy0: phy@11100000 {
+		compatible = "samsung,exynos-usbdrd-phy";
+		reg = <0x0 0x11100000 0x200>,
+			<0x0 0x11110000 0x200>,
+			<0x0 0x11120000 0x200>,
+			<0x0 0x11130000 0x800>,
+			<0x0 0x11140000 0x800>,
+			<0x0 0x11210000 0x10000>;
+		interrupts = <GIC_SPI IRQ_USB2_REMOTE_WAKEUP_GIC_HSI0 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI IRQ_USB2_REMOTE_CONNECT_GIC_HSI0 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI IRQ_USB32DRD_REWA_WAKEUP_REQ_HSI0 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&clock MUX_HSI0_USB20_REF>, <&clock GATE_USB32DRD_LINK>;
+		clock-names = "phy_ref", "aclk";
+		samsung,pmu-syscon = <&pmu_system_controller>;
+		power-domains = <&pd_hsi0>;
+		pmu_mask = <0x0>;
+		pmu_offset = <0x3EB0>;
+		pmu_offset_dp = <0x3EB4>;
+		/* USBDP combo phy version  - 0x200 */
+		phy_version = <0x600>;
+		phy_eusb_version = <0x700>;
+		/* if it doesn't need phy user mux, */
+		/*  you should write "none" */
+		/*  but refclk shouldn't be omitted */
+		phyclk_mux = "none";
+		phy_refclk = "phy_ref";
+		phy_ref_clock = <19200000>;
+		s2mpus = <&s2mpu_s0_hsi0>;
+
+		/* if Main phy has the other phy, it must be set to 1. jusf for usbphy_info */
+		has_other_phy = <0>;
+		/* if combo phy is used, it must be set to 1. usbphy_sub_info is enabled */
+		has_combo_phy = <1>;
+		sub_phy_version = <0x801>;
+		usbdp_mode = <1>;
+
+		/* ip type */
+		/* USB3DRD = 0 */
+		/*  USB3HOST = 1 */
+		/*  USB2DRD = 2 */
+		/*  USB2HOST = 3 */
+		ip_type = <0x0>;
+
+		/* for PHY CAL */
+		/* choice only one item */
+		phy_refsel_clockcore = <1>;
+		phy_refsel_ext_osc = <0>;
+		phy_refsel_xtal = <0>;
+		phy_refsel_diff_pad = <0>;
+		phy_refsel_diff_internal = <0>;
+		phy_refsel_diff_single = <0>;
+
+		/* true : 1 , false : 0 */
+		use_io_for_ovc = <0>;
+		common_block_disable = <1>;
+		is_not_vbus_pad = <1>;
+		used_phy_port = <0>;
+
+		status = "okay";
+
+		/* TODO - will change if EUSB repeater SW is ready */
+		hs_tune_param = <&usb_hs_tune>;
+		ss_tune_param = <&usb_ss_tune>;
+		//extcon = <&max77759tcpc>;
+
+		#phy-cells = <1>;
+		ranges;
+	};
+};

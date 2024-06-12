@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Google GS101 Board device tree source
+ *
+ * Copyright (c) 2021 Google, LLC
+ *		https://www.google.com
+*/
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/samsung.h>
+#include <dt-bindings/pinctrl/gs101.h>
+
+&pinctrl_0 {
+	dw3xxx_sync: dw3xxx-sync {
+		samsung,pins = "gpa9-4";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PDN_PREV>;
+	};
+};
+
+&pinctrl_1 {
+	dw3xxx_irq: dw3xxx-irq {
+		samsung,pins = "gpa7-2";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PDN_PREV>;
+	};
+};
+
+&pinctrl_4 {
+	dw3xxx_ap_rst: dw3xxx-ap-rst {
+		samsung,pins = "gpp11-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PDN_PREV>;
+	};
+};
+
+&spi_10 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	cs-gpios = <&gpp21 3 GPIO_ACTIVE_LOW>;
+	num-cs = <1>;
+
+	dw3xxx_prod@0 {
+		compatible = "decawave,dw3000";
+		reg = <0>;
+
+		interrupt-parent = <&gpa7>;
+		interrupts = <2 IRQ_TYPE_LEVEL_HIGH 0>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&spi10_cs &dw3xxx_irq &dw3xxx_ap_rst &dw3xxx_sync>;
+		spi-max-frequency = <40000000>;
+
+		uwbhal,reset-gpio = <&aoc_gpiochip 0 GPIO_OPEN_DRAIN>;
+		power_reg_2p5-supply = <&s_ldo4_reg>;
+		power_reg_1p8-supply = <&s_ldo14_reg>;
+
+		decawave,eui64 = /bits/ 64 <0>;
+		decawave,panid = /bits/ 16 <0>;
+
+		status = "okay";
+	};
+};
+
+&spi10_bus {
+	samsung,pin-drv = <GS101_PIN_DRV_10_MA>;
+	samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+};
+
+&spi10_cs {
+	samsung,pin-drv = <GS101_PIN_DRV_10_MA>;
+};
+

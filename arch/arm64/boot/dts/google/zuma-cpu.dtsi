@@ -1,0 +1,326 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+/ {
+	cpus {
+		#address-cells = <2>;
+		#size-cells = <0>;
+
+		#define CPU_CL0 "0-3"
+		#define CPU_CL1 "4-7"
+		#define CPU_CL2 "8"
+		#define CPU_ALL "0-8"
+
+		cpu-map {
+			cluster0 {
+				core0 {
+					cpu = <&cpu0>;
+				};
+				core1 {
+					cpu = <&cpu1>;
+				};
+				core2 {
+					cpu = <&cpu2>;
+				};
+				core3 {
+					cpu = <&cpu3>;
+				};
+				core4 {
+					cpu = <&cpu4>;
+				};
+				core5 {
+					cpu = <&cpu5>;
+				};
+				core6 {
+					cpu = <&cpu6>;
+				};
+				core7 {
+					cpu = <&cpu7>;
+				};
+				core8 {
+					cpu = <&cpu8>;
+				};
+			};
+		};
+
+		cpu0: cpu@0000 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0000>;
+			enable-method = "psci";
+			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
+			capacity-dmips-mhz = <193>;
+			dynamic-power-coefficient = <70>;
+		};
+		cpu1: cpu@0100 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0100>;
+			enable-method = "psci";
+			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
+			capacity-dmips-mhz = <193>;
+			dynamic-power-coefficient = <70>;
+		};
+		cpu2: cpu@0200 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0200>;
+			enable-method = "psci";
+			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
+			capacity-dmips-mhz = <193>;
+			dynamic-power-coefficient = <70>;
+		};
+		cpu3: cpu@0300 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0300>;
+			enable-method = "psci";
+			cpu-idle-states =  <&KLEIN_CPU_SLEEP>;
+			capacity-dmips-mhz = <193>;
+			dynamic-power-coefficient = <70>;
+		};
+		cpu4: cpu@0400 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0400>;
+			enable-method = "psci";
+			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
+			capacity-dmips-mhz = <927>;
+			dynamic-power-coefficient = <513>;
+		};
+		cpu5: cpu@0500 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0500>;
+			enable-method = "psci";
+			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
+			capacity-dmips-mhz = <927>;
+			dynamic-power-coefficient = <513>;
+		};
+		cpu6: cpu@0600 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0600>;
+			enable-method = "psci";
+			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
+			capacity-dmips-mhz = <927>;
+			dynamic-power-coefficient = <513>;
+		};
+		cpu7: cpu@0700 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0700>;
+			enable-method = "psci";
+			cpu-idle-states =  <&MAKALU_CPU_SLEEP>;
+			capacity-dmips-mhz = <927>;
+			dynamic-power-coefficient = <513>;
+		};
+		cpu8: cpu@0800 {
+			device_type = "cpu";
+			compatible = "arm,armv9";
+			reg = <0x0 0x0800>;
+			enable-method = "psci";
+			cpu-idle-states =  <&MAKALUELP_CPU_SLEEP>;
+			capacity-dmips-mhz = <1024>;
+			dynamic-power-coefficient = <757>;
+		};
+
+		idle-states {
+			entry-method = "arm,psci";
+			KLEIN_CPU_SLEEP: klein-cpu-sleep {
+				idle-state-name = "c2";
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x0010000>;
+				local-timer-stop;
+				entry-latency-us = <70>;
+				exit-latency-us = <160>;
+				min-residency-us = <2000>;
+				status = "okay";
+			};
+			MAKALU_CPU_SLEEP: makalu-cpu-sleep {
+				idle-state-name = "c2";
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x0010000>;
+				local-timer-stop;
+				entry-latency-us = <150>;
+				exit-latency-us = <190>;
+				min-residency-us = <2500>;
+				status = "okay";
+			};
+			MAKALUELP_CPU_SLEEP: makaluelp-cpu-sleep {
+				idle-state-name = "c2";
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x0010000>;
+				local-timer-stop;
+				entry-latency-us = <235>;
+				exit-latency-us = <220>;
+				min-residency-us = <3500>;
+				status = "okay";
+			};
+		};
+	};
+
+	psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
+		status = "okay";
+	};
+
+        exynos-cpuphp {
+                compatible = "samsung,exynos-cpuhp";
+                status = "okay";
+        };
+
+	cpupm {
+		#define POWERMODE_TYPE_CLUSTER  0
+		#define POWERMODE_TYPE_SYSTEM   1
+
+		compatible = "samsung,exynos-cpupm";
+		status = "okay";
+
+		cpd_cl0 {
+			device_type = "cpupm";
+			target-residency = <10000>;
+			type = <POWERMODE_TYPE_CLUSTER>;
+			cal-id = <0>;
+			siblings = CPU_CL0;
+		};
+
+		cpd_cl1 {
+			device_type = "cpupm";
+			target-residency = <10000>;
+			type = <POWERMODE_TYPE_CLUSTER>;
+			cal-id = <1>;
+			siblings = CPU_CL1;
+			entry-allowed = CPU_CL1;
+		};
+
+		cpd_cl2 {
+			device_type = "cpupm";
+			target-residency = <10000>;
+			type = <POWERMODE_TYPE_CLUSTER>;
+			cal-id = <2>;
+			siblings = CPU_CL2;
+			entry-allowed = CPU_CL2;
+		};
+
+		sicd {
+			device_type = "cpupm";
+			target-residency = <10000>;
+			type = <POWERMODE_TYPE_SYSTEM>;
+			siblings = CPU_ALL;
+			disable-on-boot;
+			entry-allowed = CPU_ALL;
+		};
+
+		wakeup-mask {
+			wakeup-masks {
+				wakeup-mask {
+					mask-reg-offset = <0x3944>;
+					stat-reg-offset = <0x3950>;
+					mask = <0x0ff00000>;
+				};
+				wakeup-mask2 {
+					mask-reg-offset = <0x3964>;
+					stat-reg-offset = <0x3970>;
+					mask = <0x00>;
+				};
+			};
+
+			eint-wakeup-masks {
+				eint-wakeup-mask {
+					mask-reg-offset = <0x3a80>;
+				};
+				eint-wakeup-mask2 {
+					mask-reg-offset = <0x3a84>;
+				};
+				eint-wakeup-mask3 {
+					mask-reg-offset = <0x3a88>;
+				};
+			};
+		};
+
+		idle-ip {
+			extern-idle-ip =
+				"dbg_core";
+		};
+	};
+
+	exynos-acme {
+		compatible = "samsung,exynos-acme";
+		status = "okay";
+
+		cpufreq_domain0: domain@0 {
+			sibling-cpus = CPU_CL0;
+			cal-id = <ACPM_DVFS_CPUCL0>;
+			dm-type = <DM_CPU_CL0>;
+
+			min-freq = <324000>;
+			max-freq = <1704000>;
+
+			#cooling-cells = <2>; /* min followed by max */
+			ect-coeff-index = <2>;
+			tz-cooling-name = "LITTLE";
+			skip-boot-pmqos;
+			use-em-coeff;
+
+			dsu-bci-constraint-table =
+				/* CL0    DSU    BCI */
+				< 2147000 2120000 1790000
+				2098000 2120000 1790000
+				2024000 2120000 1790000
+				1950000 2120000 1790000
+				1785000 1800000 1401000
+				1704000 1800000 1401000
+				1548000 1800000 1401000
+				1425000 1800000 1401000
+				1328000 1328000 1205000
+				1197000 1328000 1205000
+				1098000 1328000 1205000
+				955000  1328000 1205000
+				820000  1328000 1205000
+				610000  1328000 1205000
+				324000  970000  1050000 >;
+		};
+
+		cpufreq_domain1: domain@1 {
+			sibling-cpus = CPU_CL1;
+			cal-id = <ACPM_DVFS_CPUCL1>;
+			dm-type = <DM_CPU_CL1>;
+
+			min-freq = <402000>;
+			max-freq = <2367000>;
+
+			#cooling-cells = <2>; /* min followed by max */
+			ect-coeff-index = <1>;
+			tz-cooling-name = "MID";
+			skip-boot-pmqos;
+			use-em-coeff;
+			need-awake;
+		};
+
+		cpufreq_domain2: domain@2 {
+			sibling-cpus = CPU_CL2;
+			cal-id = <ACPM_DVFS_CPUCL2>;
+			dm-type = <DM_CPU_CL2>;
+
+			min-freq = <500000>;
+			max-freq = <2914000>;
+
+			#cooling-cells = <2>; /* min followed by max */
+			ect-coeff-index = <0>;
+			tz-cooling-name = "BIG";
+			skip-boot-pmqos;
+			use-em-coeff;
+			need-awake;
+		};
+	};
+
+	pixel_em: pixel-em {
+		compatible = "google,pixel-em";
+		// 'profiles' field defined in A0/B0 dtsi files
+	};
+};

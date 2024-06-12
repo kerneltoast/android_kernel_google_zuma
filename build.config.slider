@@ -1,0 +1,64 @@
+DEVICE_MODULES_DIR=${KERNEL_DIR}
+# Compile these modules with the GKI kernel
+KERNEL_DIR="aosp"
+# Compute the path of this project relative to KERNEL_DIR
+DEVICE_MODULES_REL_DIR=$(realpath ${DEVICE_MODULES_DIR} --relative-to ${KERNEL_DIR})
+KCONFIG_EXT_PREFIX=${DEVICE_MODULES_DIR}
+
+. ${ROOT_DIR}/${DEVICE_MODULES_DIR}/build.config.gs101
+
+MAKE_GOALS="$MAKE_GOALS
+modules
+dtbs
+"
+
+DTS_EXT_DIR="${DEVICE_MODULES_DIR}/arch/arm64/boot/dts"
+DTC_INCLUDE=${ROOT_DIR}/${DEVICE_MODULES_DIR}/include/dtc
+BUILD_DTBO_IMG=1
+MKDTIMG_FLAGS="--page_size=4096 --id=/:board_id --rev=/:board_rev"
+# These paths need to be relative to KERNEL_DIR.
+MKDTIMG_DTBOS="
+${DEVICE_MODULES_REL_DIR}/arch/arm64/boot/dts/google/*.dtbo
+"
+
+# These paths need to be relative to KERNEL_DIR.
+FILES="
+${DEVICE_MODULES_REL_DIR}/arch/arm64/boot/dts/google/gs101-a0.dtb
+${DEVICE_MODULES_REL_DIR}/arch/arm64/boot/dts/google/gs101-b0.dtb
+"
+
+MODULES_LIST=${DEVICE_MODULES_DIR}/vendor_boot_modules.slider
+
+VENDOR_RAMDISK_CMDS="modify_vendor_ramdisk"
+function modify_vendor_ramdisk() {
+  ln -f init.recovery.gs101.rc init.recovery.slider.rc
+  ln -f init.recovery.gs101.rc init.recovery.whitefin.rc
+  ln -f init.recovery.gs101.rc init.recovery.oriole.rc
+  ln -f init.recovery.gs101.rc init.recovery.raven.rc
+}
+
+KCONFIG_EXT_MODULES_PREFIX=$(realpath ${ROOT_DIR} --relative-to ${KERNEL_DIR})/
+EXT_MODULES+="
+private/google-modules/bms/misc
+private/google-modules/soc/gs
+private/google-modules/display
+private/google-modules/wlan/bcmdhd4389
+private/google-modules/gpu/mali_pixel
+private/google-modules/gpu/mali_kbase
+private/google-modules/lwis
+private/google-modules/edgetpu/drivers/edgetpu
+private/google-modules/bms
+private/google-modules/amplifiers/drv2624
+private/google-modules/amplifiers/cs40l25
+private/google-modules/amplifiers/cs35l41
+private/google-modules/amplifiers/audiometrics
+private/google-modules/aoc
+private/google-modules/aoc/alsa
+private/google-modules/touch/common
+private/google-modules/touch/fts/ftm5
+private/google-modules/touch/sec
+private/google-modules/power/reset
+private/google-modules/bluetooth/broadcom
+private/google-modules/nfc
+private/google-modules/uwb/kernel
+"

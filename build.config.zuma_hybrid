@@ -1,0 +1,51 @@
+# KERNEL_DIR is set by the environment to the directory where the BUILD_CONFIG
+# file is located.
+DEVICE_DIR=${KERNEL_DIR}
+SOC_DIR=${DEVICE_DIR}
+# Compile these modules with the GKI kernel
+KERNEL_DIR=${GKI_KERNEL_DIR:-"aosp-staging"}
+# Compute the path of this project relative to KERNEL_DIR
+DEVICE_MODULES_REL_DIR=$(rel_path ${DEVICE_DIR} ${KERNEL_DIR})
+
+GKI_FRAGMENT_DEFCONFIG=${DEVICE_DIR}/arch/arm64/configs/zuma_hybrid.fragment
+
+. ${ROOT_DIR}/${SOC_DIR}/build.config.zuma
+
+VENDOR_BOOTCONFIG="androidboot.boot_devices=14100000.virtio_block"
+
+DIST_CMDS="ufdt_apply_overlay \${DIST_DIR}/zuma-a0-foplp.dtb \${DIST_DIR}/zuma-hybrid.dtbo \${DIST_DIR}/zuma-out-a0-foplp.dtb && ufdt_apply_overlay \${DIST_DIR}/zuma-a0-ipop.dtb \${DIST_DIR}/zuma-hybrid.dtbo \${DIST_DIR}/zuma-out-a0-ipop.dtb && ufdt_apply_overlay \${DIST_DIR}/zuma-b0-foplp.dtb \${DIST_DIR}/zuma-hybrid.dtbo \${DIST_DIR}/zuma-out-b0-foplp.dtb && ufdt_apply_overlay \${DIST_DIR}/zuma-b0-ipop.dtb \${DIST_DIR}/zuma-hybrid.dtbo \${DIST_DIR}/zuma-out-b0-ipop.dtb"
+
+MAKE_GOALS="$MAKE_GOALS
+modules
+dtbs
+"
+
+DTS_EXT_DIR="${DEVICE_DIR}/arch/arm64/boot/dts"
+DTC_INCLUDE=${ROOT_DIR}/${SOC_DIR}/include/dtc
+BUILD_DTBO_IMG=1
+MKDTIMG_FLAGS="--page_size=4096 --id=/:board_id --rev=/:board_rev"
+# These paths need to be relative to KERNEL_DIR.
+MKDTIMG_DTBOS="
+${DEVICE_MODULES_REL_DIR}/arch/arm64/boot/dts/google/*.dtbo
+"
+
+# Sync with zuma.bzl
+FILES="
+google/zuma-a0-foplp.dtb
+google/zuma-a0-ipop.dtb
+google/zuma-b0-foplp.dtb
+google/zuma-b0-ipop.dtb
+google/zuma-hybrid.dtbo
+"
+
+MODULES_LIST=${DEVICE_DIR}/vendor_kernel_boot_modules.zuma_zebu
+
+EXT_MODULES+="
+private/google-modules/bms/misc
+private/google-modules/soc/gs
+private/google-modules/display
+private/google-modules/gpu/mali_kbase
+private/google-modules/gpu/mali_pixel
+private/google-modules/lwis
+private/google-modules/video/gchips
+"

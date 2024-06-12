@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+config GS_LATENCY_GOVERNOR
+	tristate "Google Memory Latency Governors"
+	depends on GS_PERF_MON
+	default n
+	help
+	  A set of latency governors providing votes for the memory subsystem.
+	  The governors only compute target frequencies for the DSU, BCI, and DDR
+	  then supplies them to the devfreq for processing.
+
+config GS_LATENCY_DEVFREQ
+	tristate "Google Memory Latency Drivers"
+	depends on GS_PERF_MON
+	default n
+	help
+	  This adds the DEVFREQ drivers for the Google Latency Governors.

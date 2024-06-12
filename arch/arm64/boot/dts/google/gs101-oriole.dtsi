@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Oriole DVT common devicetree
+ *
+ * Copyright 2021 Google,LLC
+ */
+
+#include "gs101-oriole-common.dtsi"
+
+#include "gs101-oriole-battery.dtsi"
+#include "gs101-oriole-camera-pmic.dtsi"
+#include "gs101-oriole-pmic.dtsi"
+#include "gs101-oriole-wcharger.dtsi"
+#include "gs101-raviole-charging.dtsi"
+#include "gs101-raviole-usecases.dtsi"
+#include "gs101-oriole-charging.dtsi"

@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google Slider Board device tree source
+ *
+ * Copyright 2020 Google, LLC.
+ */
+
+#include "gs101-common-touch.dtsi"
+
+&ts_spi_cs_active {
+	samsung,pins = "gpp23-3";
+	samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+	samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
+};
+
+&spitouch {
+	status = "ok";
+	compatible = "st,fts";
+	spi-max-frequency = <10000000>;
+
+	pinctrl-names = "pmx_ts_active", "pmx_ts_suspend";
+
+	st,irq-gpio = <&gpa9 0 0>;
+	st,reset-gpio = <&gpp26 0 0>;
+
+	/* Either st,panel_map or st,max-coords should be used
+	 * in the product touch dtsi */
+
+	st,grip_area = /bits/ 8 <15>; /* Left and right grip rejection
+					 area. Unit: pixels */
+
+	controller-data {
+		samsung,spi-feedback-delay = <1>;
+		samsung,spi-chip-select-mode = <0>;
+		cs-clock-delay = <2>;
+	};
+};

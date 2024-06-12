@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Zuma on hybrid emulator device tree source
+ *
+ * Copyright 2020-2021 Google LLC
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include "zuma-emul-display.dtsi"
+
+/ {
+	board_id = <0x58000>;
+	board_rev = <0x4>;
+	fragment@boardbase {
+		target-path="/";
+		__overlay__ {
+			model = "ZUMA Hybrid based";
+			compatible = "google,ZUMA Hybrid", "google,ZUMA";
+		};
+	};
+};
+
+&serial_0 {
+	status = "okay";
+};
+
+/ {
+	fragment@virtio {
+		target-path = "/";
+		__overlay__ {
+			virtio_0: virtio_block@14100000 {
+				compatible = "virtio,mmio";
+				reg = <0x0 0x14100000 0x10000>;
+				interrupts = <GIC_SPI 900 IRQ_TYPE_LEVEL_HIGH>;
+			};
+			virtio_1: virtio_block@14110000 {
+				compatible = "virtio,mmio";
+				reg = <0x0 0x14110000 0x10000>;
+				interrupts = <GIC_SPI 901 IRQ_TYPE_LEVEL_HIGH>;
+			};
+			virtio_9p2000: virtio_block@14200000 {
+				compatible = "virtio,mmio";
+				reg = <0x0 0x14200000 0x10000>;
+				interrupts = <0x0 752 0x4>;
+				phandle = <0x1a>;
+			};
+		};
+	};
+};
