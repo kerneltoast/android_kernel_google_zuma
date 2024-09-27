@@ -1310,7 +1310,7 @@ static void decon_mode_update_bts(struct decon_device *decon,
 	decon->config.image_width = mode->hdisplay;
 	decon->config.image_height = mode->vdisplay;
 
-	decon_info(decon, "update decon bts config for mode: %dx%dx%d(%d)\n",
+	decon_debug(decon, "update decon bts config for mode: %dx%dx%d(%d)\n",
 		mode->hdisplay, mode->vdisplay,
 		_decon_get_current_fps(decon), decon->bts.fps);
 
