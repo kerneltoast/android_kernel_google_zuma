@@ -1210,7 +1210,6 @@ static int init_domain(struct exynos_cpufreq_domain *domain,
 	unsigned long *freq_table;
 	unsigned int *volt_table;
 	const char *buf;
-	struct device *cpu_dev;
 	int ret;
 	unsigned int resume_freq = 0;
 
@@ -1410,12 +1409,21 @@ static int init_domain(struct exynos_cpufreq_domain *domain,
 	if (list_empty(&domain->dm_list))
 		domain->need_awake = false;
 
-	cpu_dev = get_cpu_device(cpumask_first(&domain->cpus));
-	dev_pm_opp_of_register_em(cpu_dev, &domain->cpus);
-
 	pr_info("Complete to initialize cpufreq-domain%d\n", domain->id);
 
 	return 0;
+}
+
+static void register_energy_model(void)
+{
+	struct exynos_cpufreq_domain *domain;
+
+	list_for_each_entry(domain, &domains, list) {
+		int first_cpu = cpumask_first(&domain->cpus);
+		struct device *cpu_dev = get_cpu_device(first_cpu);
+
+		dev_pm_opp_of_register_em(cpu_dev, &domain->cpus);
+	}
 }
 
 static int exynos_cpufreq_probe(struct platform_device *pdev)
@@ -1464,6 +1472,9 @@ static int exynos_cpufreq_probe(struct platform_device *pdev)
 		pr_err("failed to register cpufreq driver\n");
 		return ret;
 	}
+
+	/* Energy Model must be registered after CPUFreq is up */
+	register_energy_model();
 
 	/*
 	 * Post-initialization
