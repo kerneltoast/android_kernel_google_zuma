@@ -104,7 +104,7 @@ void gs_panel_node_attach(struct gs_drm_connector *gs_connector);
 #ifdef CONFIG_DEBUG_FS
 int gs_panel_create_debugfs_entries(struct gs_panel *ctx, struct dentry *parent);
 #else
-static int gs_panel_create_debugfs_entries(struct gs_panel *ctx, struct dentry *parent)
+static inline int gs_panel_create_debugfs_entries(struct gs_panel *ctx, struct dentry *parent)
 {
 	return -EOPNOTSUPP;
 }

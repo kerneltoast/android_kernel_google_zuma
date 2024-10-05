@@ -34,6 +34,24 @@
 
 static struct hdcp_link_data lkd;
 
+char *hdcp_link_st_str[] = {
+	"ST_INIT",
+	"ST_H0_NO_RX_ATTACHED",
+	"ST_H1_TX_LOW_VALUE_CONTENT",
+	"ST_A0_DETERMINE_RX_HDCP_CAP",
+	"ST_A1_EXCHANGE_MASTER_KEY",
+	"ST_A2_LOCALITY_CHECK",
+	"ST_A3_EXCHANGE_SESSION_KEY",
+	"ST_A4_TEST_REPEATER",
+	"ST_A5_AUTHENTICATED",
+	"ST_A6_WAIT_RECEIVER_ID_LIST",
+	"ST_A7_VERIFY_RECEIVER_ID_LIST",
+	"ST_A8_SEND_RECEIVER_ID_LIST_ACK",
+	"ST_A9_CONTENT_STREAM_MGT",
+	"ST_END",
+	NULL
+};
+
 static int auth22_determine_rx_hdcp_cap(struct hdcp_link_data *lk)
 {
 	int ret;
