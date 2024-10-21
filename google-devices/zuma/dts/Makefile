@@ -7,7 +7,8 @@ zuma_overlays := \
 	zuma-emulator.dtbo \
 	zuma-hybrid.dtbo
 
-zuma_dtbs := \
+DTC_FLAGS := -@
+dtb-$(CONFIG_SOC_ZUMA) := \
 	zuma-a0-foplp.dtb \
 	zuma-a0-ipop.dtb \
 	zuma-b0-foplp.dtb \
