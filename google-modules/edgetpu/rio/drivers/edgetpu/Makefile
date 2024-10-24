@@ -10,8 +10,6 @@ ifndef CONFIG_EDGETPU_TEST
 KBUILD_OPTIONS	+= CONFIG_RIO=m
 endif
 
-KBUILD_OPTIONS	+= CONFIG_GCIP=y
-
 -include $(KERNEL_SRC)/../private/google-modules/soc/gs/Makefile.include
 
 ifneq ("$(wildcard $(OUT_DIR)/../private/google-modules/power/mitigation/Module.symvers)","")

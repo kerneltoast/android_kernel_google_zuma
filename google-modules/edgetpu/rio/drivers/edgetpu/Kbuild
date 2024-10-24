@@ -59,6 +59,9 @@ rio-objs	:= rio-core.o \
 		   rio-vii-packet.o \
 		   $(edgetpu-objs)
 
+%/gcip.o: FORCE
+	$(Q)$(MAKE) $(build)=$(@D) $@
+
 CFLAGS_rio-fs.o := -DCONFIG_RIO=1
 CFLAGS_rio-core.o := -DCONFIG_RIO=1
 CFLAGS_rio-devfreq.o := -DCONFIG_RIO=1

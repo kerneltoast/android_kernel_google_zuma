@@ -153,6 +153,9 @@ ifneq ($(wildcard $(GMODULE_OUT_PATH)/perf/google_pm_qos_Module.symvers),)
 EXTRA_SYMBOLS += $(GMODULE_OUT_PATH)/perf/google_pm_qos_Module.symvers
 endif
 
+%/gcip.o: FORCE
+	$(Q)$(MAKE) $(build)=$(@D) $@
+
 modules modules_install:
 	$(MAKE) -C $(KERNEL_SRC) M=$(M)/$(GCIP_DIR) gcip.o
 	$(MAKE) -C $(KERNEL_SRC) M=$(M) W=1 $(KBUILD_OPTIONS) \
