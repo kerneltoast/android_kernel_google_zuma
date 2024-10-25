@@ -96,6 +96,7 @@ CONFIG_RANDOMIZE_BASE=y
 CONFIG_CMDLINE="console=ttynull stack_depot_disable=on cgroup_disable=pressure kasan.page_alloc.sample=10 kasan.stacktrace=off kvm-arm.mode=protected bootconfig ioremap_guard"
 CONFIG_CMDLINE_EXTEND=y
 # CONFIG_EFI is not set
+CONFIG_PM_USERSPACE_AUTOSLEEP=y
 CONFIG_PM_WAKELOCKS=y
 CONFIG_PM_WAKELOCKS_LIMIT=0
 # CONFIG_PM_WAKELOCKS_GC is not set
