@@ -1272,7 +1272,6 @@ static int max77779_fg_monitor_log_data(struct max77779_fg_chip *chip, bool forc
 {
 	int ret, charge_counter = -1;
 	u16 repsoc, data;
-	char buf[256] = { 0 };
 
 	ret = REGMAP_READ(&chip->regmap, MAX77779_FG_RepSOC, &data);
 	if (ret < 0)
@@ -1282,17 +1281,9 @@ static int max77779_fg_monitor_log_data(struct max77779_fg_chip *chip, bool forc
 	if (repsoc == chip->pre_repsoc && !force_log)
 		return ret;
 
-	ret = maxfg_reg_log_data(&chip->regmap, &chip->regmap_debug, buf);
-	if (ret < 0)
-		return ret;
-
 	ret = max77779_fg_update_battery_qh_based_capacity(chip);
 	if (ret == 0)
 		charge_counter = reg_to_capacity_uah(chip->current_capacity, chip);
-
-	gbms_logbuffer_devlog(chip->monitor_log, chip->dev, LOGLEVEL_INFO, 0, LOGLEVEL_INFO,
-			      "0x%04X %02X:%04X %s CC:%d", MONITOR_TAG_RM, MAX77779_FG_RepSOC, data,
-			      buf, charge_counter);
 
 	chip->pre_repsoc = repsoc;
 
