@@ -24,7 +24,6 @@ struct max77779_chgr_data {
 	struct irq_domain	*domain;
 	uint32_t		mask;
 	uint32_t		mask_u;  /* pending updates */
-	uint32_t		trig_type;
 	struct mutex 		irq_lock;
 
 	struct power_supply *psy;
