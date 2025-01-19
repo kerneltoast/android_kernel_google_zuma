@@ -3517,22 +3517,16 @@ static void max77779_chg_irq_enable(struct irq_data *d)
 
 static int max77779_chg_set_irq_type(struct irq_data *d, unsigned int type)
 {
-	struct max77779_chgr_data *data = irq_data_get_irq_chip_data(d);
-
 	switch (type) {
 	case IRQF_TRIGGER_NONE:
 	case IRQF_TRIGGER_RISING:
 	case IRQF_TRIGGER_FALLING:
 	case IRQF_TRIGGER_HIGH:
 	case IRQF_TRIGGER_LOW:
-		data->trig_type &= (0xf << (d->hwirq * 4));
-		data->trig_type |= (type << (d->hwirq * 4));
-		break;
-	default:
-		return -EINVAL;
+		return 0;
 	}
 
-	return 0;
+	return -EINVAL;
 }
 
 static void max77779_chg_bus_lock(struct irq_data *d)
