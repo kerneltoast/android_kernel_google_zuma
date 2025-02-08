@@ -549,7 +549,7 @@ int bts_update_bw(unsigned int index, struct bts_bw bw)
 		goto err;
 	}
 
-	mutex_lock(&btsdev->mutex_lock);
+	rt_mutex_lock(&btsdev->mutex_lock);
 	bts_bw[index].peak = bw.peak;
 	bts_bw[index].read = bw.read;
 	bts_bw[index].write = bw.write;
@@ -573,7 +573,7 @@ int bts_update_bw(unsigned int index, struct bts_bw bw)
 
 	bts_calc_bw();
 	bts_update_stats(index);
-	mutex_unlock(&btsdev->mutex_lock);
+	rt_mutex_unlock(&btsdev->mutex_lock);
 
 	return 0;
 
@@ -728,7 +728,7 @@ static int exynos_bts_bw_open_show(struct seq_file *buf, void *d)
 {
 	int i;
 
-	mutex_lock(&btsdev->mutex_lock);
+	rt_mutex_lock(&btsdev->mutex_lock);
 	for (i = 0; (btsdev->bts_bw[i].name != NULL) &&
 		(i < btsdev->num_bts); i++) {
 		seq_printf(
@@ -738,7 +738,7 @@ static int exynos_bts_bw_open_show(struct seq_file *buf, void *d)
 			btsdev->bts_bw[i].write, btsdev->bts_bw[i].peak,
 			btsdev->bts_bw[i].rt);
 	}
-	mutex_unlock(&btsdev->mutex_lock);
+	rt_mutex_unlock(&btsdev->mutex_lock);
 	return 0;
 }
 
@@ -752,7 +752,7 @@ static int exynos_bts_bw_hist_open_show(struct seq_file *buf, void *d)
 {
 	int i, j;
 
-	mutex_lock(&btsdev->mutex_lock);
+	rt_mutex_lock(&btsdev->mutex_lock);
 	seq_printf(buf, "Total BW, Count:\nkB/s:\t");
 	for (i = 0; i < BTS_HIST_BIN - 1; i++) {
 		seq_printf(
@@ -845,7 +845,7 @@ static int exynos_bts_bw_hist_open_show(struct seq_file *buf, void *d)
 		}
 		seq_printf(buf, "\n");
 	}
-	mutex_unlock(&btsdev->mutex_lock);
+	rt_mutex_unlock(&btsdev->mutex_lock);
 	return 0;
 }
 
@@ -860,7 +860,7 @@ static ssize_t bts_stats_show(struct device *dev, struct device_attribute *attr,
 	int i, j;
 	ssize_t ret = 0;
 
-	mutex_lock(&btsdev->mutex_lock);
+	rt_mutex_lock(&btsdev->mutex_lock);
 	ret += scnprintf(buf + ret, PAGE_SIZE - ret,
 			"Total BW, Time in ms:\nkB/s:\t");
 	for (i = 0; i < BTS_HIST_BIN - 1; i++) {
@@ -917,7 +917,7 @@ static ssize_t bts_stats_show(struct device *dev, struct device_attribute *attr,
 		}
 		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
 	}
-	mutex_unlock(&btsdev->mutex_lock);
+	rt_mutex_unlock(&btsdev->mutex_lock);
 	return ret;
 }
 
@@ -2083,7 +2083,7 @@ static int bts_probe(struct platform_device *pdev)
 		return ret;
 	}
 	spin_lock_init(&btsdev->lock);
-	mutex_init(&btsdev->mutex_lock);
+	rt_mutex_init(&btsdev->mutex_lock);
 	INIT_LIST_HEAD(&btsdev->scen_node);
 
 	ret = bts_initialize(btsdev);
