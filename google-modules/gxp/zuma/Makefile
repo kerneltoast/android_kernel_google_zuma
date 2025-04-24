@@ -83,7 +83,7 @@ endif
 
 KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
 -include $(KERNEL_SRC)/../private/google-modules/soc/gs/Makefile.include
-M ?= $(shell pwd)
+M ?= $(srctree)/$(src)
 
 # Obtain the current git commit hash for logging on probe
 GIT_PATH=$(shell cd $(KERNEL_SRC); readlink -e $(M))

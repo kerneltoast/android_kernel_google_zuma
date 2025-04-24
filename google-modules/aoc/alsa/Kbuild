@@ -4,8 +4,8 @@
 #
 
 # Only one of them exists at build time, depending on :radio flag.
-ccflags-y       += -I$(srctree)/../private/google-modules/radio/samsung/s5300
-ccflags-y       += -I$(srctree)/../private/google-modules/radio/samsung/s5400
+ccflags-y       += -I$(srctree)/google-modules/radio/samsung/s5300
+ccflags-y       += -I$(srctree)/google-modules/radio/samsung/s5400
 
 obj-$(CONFIG_AOC_DRIVER)	+= aoc_alsa_dev.o
 obj-$(CONFIG_AOC_DRIVER)	+= aoc_alsa_dev_util.o
