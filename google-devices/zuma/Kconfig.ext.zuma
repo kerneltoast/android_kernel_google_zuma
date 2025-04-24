@@ -82,4 +82,10 @@ source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/power/mitigation/Kco
 
 source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/power/reset/Kconfig"
 
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/radio/samsung/s5300/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/touch/common/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/touch/fts/ftm5/Kconfig"
+
 source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/trusty/drivers/trusty/Kconfig"
