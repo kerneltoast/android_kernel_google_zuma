@@ -1,0 +1,37 @@
+menu "EdgeTPU devices"
+
+config EDGETPU_FRAMEWORK
+	tristate "EdgeTPU framework"
+	depends on ARM64
+	select DMA_SHARED_BUFFER
+	select GENERIC_ALLOCATOR
+	select IOMMU_API
+	select SYNC_FILE
+	help
+	  This framework supports the Edge TPU Machine Learning accelerator
+	  devices included in various Google SoCs.
+
+config RIO
+	tristate "Rio ML accelerator device driver"
+	depends on EDGETPU_FRAMEWORK
+	select PM
+	help
+	  This driver supports the Rio device.  Say Y if you want to include
+	  this driver in the kernel.
+
+	  To compile this driver as a module, choose M here.  The module
+	  will be called "rio".
+
+config EDGETPU_TELEMETRY_TRACE
+	bool "Build EdgeTPU driver with firmware tracing support"
+	depends on EDGETPU_FRAMEWORK
+	default y
+	help
+	  Say Y to have the driver handle the tracing events sent from the
+	  firmware. Enable this will increase the time for setup, suggest to
+	  disable this in production mode to reduce the software overhead.
+
+	  It's fine to have this enabled even the firmware doesn't send tracing
+	  events.
+
+endmenu

@@ -1,0 +1,205 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+# Firmware Management
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/load_firmware
+Date:		January 2020
+Description:
+		To load a firmware file, echo the OS firmware location-relative path of the firmware
+		image file to load to this attribute.  For example:
+		  # echo google/my-test.fw > /sys/class/edgetpu/edgetpu-soc/device/load_firmware
+		cat this file to see the name of the currently-loaded firmware image.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/firmware_type
+Date:		August 2020
+Description:
+		“prod” or “test” firmware type/flavor.  (Or “unknown” or “custom” or “stage 2
+		bootloader”.)
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/firmware_version
+Date:		November 2020
+Description:
+		Firmware major.minor version from the header, plus VII and KCI version numbers and
+		google3 build CL:
+		  # cat /sys/class/edgetpu/hermosa.0.0/device/firmware_version
+		  1.0 vii=2 kci=1 cl=371245025
+Users:		Edge TPU runtime library (libedgetpu)
+
+# General Status
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/clients
+Date:		July 2021
+Description:
+		List clients that have opened the device by process and thread IDs.  Also shows
+		current wakelock counts for debugging which client is holding the device powered.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/groups
+Date:		August 2021
+Description:
+		List currently formed, forming, and disbanding device groups, with client PIDs and
+		amount of host and dma-buf memory mapped to the TPU, plus errors and VCIDs.
+Users:		Edge TPU runtime library (libedgetpu)
+
+# Error Statistics
+# These statistics are maintained by the kernel driver.
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/firmware_crash_count
+Date:		April 2021
+Description:
+		Count of “unrecoverable” firmware crash events; does not include “non-fatal” crashes
+		in non-privileged VII job processing code from which the firmware indicates it can
+		recover (that is, it only counts crashes in privileged firmware processing).  (No
+		clear action.)
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/watchdog_timeout_count
+Date:		April 2021
+Description:
+		Count of watchdog timeout events, including both host software watchdog timeouts
+		(that is, firmware fails to respond to periodic query by the host kernel) and
+		device-side watchdog timeout events sent from firmware (on Hermosa).  (No clear
+		action.)
+Users:		Edge TPU runtime library (libedgetpu)
+
+# Performance/Usage Statistics
+# These stats are gathered from the firmware periodically while the device is powered up, and also
+# at mobile power down time (or Hermosa device group disband time).  Reading the sysfs file will
+# immediately poll for updated values if the TPU device is currently powered on; if the (mobile)
+# device is powered down then the last received value is returned.  Some of these attributes are
+# only provided for certain chipsets as noted below.
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/tpu_usage
+Date:		January 2021
+Description:
+		TPU usage duration in microseconds per “UID” (an Android app context ID for
+		Android/Pixel; on Hermosa the UID is always zero).  Write to clear.  Used for
+		Android battery consumption blaming.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/tpu_utilization
+Date:		February 2021
+Description:
+		TPU (GCB only) utilization as a percentage of time.  (No clear action.)
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/device_utilization
+Date:		February 2021
+Description:
+		Whole TPU device utilization as a percentage of time.  (No clear action.)
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/tpu_active_cycle_count
+Date:		March 2021
+Description:
+		Number of active TPU cycles since last reset (Mobile power down or Hermosa device
+		group disband).  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/tpu_throttle_stall_count
+Date:		March 2021
+Description:
+		Number of hardware throttling stall cycles inserted since last reset (Mobile power
+		down or Hermosa device group disband).  Write to clear.  (Always zero on Abrolhos.)
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/inference_count
+Date:		April 2021
+Description:
+		Number of graph invocations.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/tpu_op_count
+Date:		April 2021
+Description:
+		Number of TPU offload op invocations.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/param_cache_hit_count
+Date:		April 2021
+Description:
+		Number of times a TPU op invocation used its cached parameters.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/param_cache_miss_count
+Date:		April 2021
+Description:
+		Number of times a TPU op invocation had to cache its parameters.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/context_preempt_count
+Date:		April 2021
+Description:
+		Number of times an application/client context was preempted by another context.
+		Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/outstanding_commands_max
+Date:		April 2021
+Description:
+		Maximum number of outstanding commands.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/preempt_depth_max
+Date:		April 2021
+Description:
+		Maximum number of preempted application/client contexts at any time.  Write to
+		clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/fw_thread_stats
+Date:		April 2021
+Description:
+		Maximum stack depth per thread id.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+# The following are not present or not meaningful (always zero) on Abrolhos or Hermosa; are present
+# on mobile Janeiro and beyond.
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/hardware_preempt_count
+Date:		November 2021
+Description:
+		Number of times a hardware preemption occurred.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/hardware_ctx_save_time
+Date:		April 2022
+Description:
+		Hardware context save time in usecs.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/hardware_ctx_save_time_max
+Date:		April 2022
+Description:
+		Maximum time spent saving a hardware context, in usecs.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/scalar_fence_wait_time
+Date:		April 2022
+Description:
+		Total time spent waiting to hit a scalar fence during hardware preemption, in usecs.
+		Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/scalar_fence_wait_time_max
+Date:		April 2022
+Description:
+		Maximum time spent waiting to hit a scalar fence during hardware preemption, in
+		usecs.  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/long_suspend_count
+Date:		April 2022
+Description:
+		Count of “long” suspends (“number of times Pipeline::Suspend takes longer than
+		5ms”).  Write to clear.
+Users:		Edge TPU runtime library (libedgetpu)
+
+What:		/sys/class/edgetpu/edgetpu-soc/device/suspend_time_max
+Date:		April 2022
+Description:
+		Maximum suspend time (“high water mark for time spent in Pipeline::Suspend”).  Write
+		to clear.
+Users:		Edge TPU runtime library (libedgetpu)
