@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shiba-specific PMIC settings
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+// Spare LDOs
+&s_ldo16_reg {
+	schematic-name = "L16S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo17_reg {
+	schematic-name = "L17S_SPARE";
+	subsys-name = "Spare";
+};

@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shiba board device tree source
+ *
+ * Copyright 2022 Google LLC
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "zuma-shiba-common.dtsi"
+#include "zuma-shusky-wcharger.dtsi"
+
+/ {
+	board_id = <0x40303>;
+	board_rev = <0x010000>;
+	fragment@boardbase {
+		target-path = "/";
+		__overlay__ {
+			model = "ZUMA SHIBA EVT 1.0 A0 based on ZUMA";
+			compatible = "google,ZUMA SHIBA", "google,ZUMA";
+		};
+	};
+};

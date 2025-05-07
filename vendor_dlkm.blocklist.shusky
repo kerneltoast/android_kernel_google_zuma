@@ -1,0 +1,8 @@
+blocklist bcmdhd4398
+blocklist cs40l26_i2c
+blocklist ftm5
+blocklist gnss_spi
+blocklist gnssif
+blocklist goodix_brl_touch
+blocklist rt6160_regulator
+blocklist sec_touch

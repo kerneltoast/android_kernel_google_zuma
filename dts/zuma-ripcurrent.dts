@@ -1,0 +1,59 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Ripcurrent board device tree source
+ *
+ * Copyright 2022 Google LLC
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/pinctrl/zuma.h>
+#include <arm64/exynos/exynos-pinctrl.h>
+
+#include "zuma/zuma-common.dtsi"
+
+#include "zuma/zuma-ripcurrent-battery.dtsi"
+#include "zuma/zuma-ripcurrent-camera-pmic.dtsi"
+#include "zuma/zuma-ripcurrent-camera.dtsi"
+#include "zuma/zuma-ripcurrent-charging.dtsi"
+#include "zuma/zuma-ripcurrent-display.dtsi"
+#include "zuma/zuma-ripcurrent-gsa-gsc.dtsi"
+#include "zuma/zuma-ripcurrent-pmic.dtsi"
+#include "zuma/zuma-ripcurrent-touch.dtsi"
+#include "zuma/zuma-ripcurrent-usb.dtsi"
+#include "zuma/zuma-ripcurrent-usecases.dtsi"
+#include "zuma/zuma-ripcurrent-wcharger.dtsi"
+#include "zuma/zuma-board-wlan.dtsi"
+#include "zuma/zuma-board-cp-s5300-sit.dtsi"
+#include "zuma/zuma-board-bluetooth.dtsi"
+#include "zuma/zuma-board-ese.dtsi"
+#include "zuma/zuma-board-nfc.dtsi"
+#include "zuma/zuma-board-gps.dtsi"
+#include "zuma/zuma-board-udfps.dtsi"
+#include "zuma/zuma-ripcurrent-audio.dtsi"
+#include "zuma/zuma-board-pcie.dtsi"
+#include "zuma/zuma-ripcurrent-haptics.dtsi"
+#include "zuma/zuma-board-uwb.dtsi"
+#include "zuma/zuma-ripcurrent-thermal.dtsi"
+#include "zuma/zuma-ripcurrent-sbbm.dtsi"
+#include "zuma/zuma-ripcurrent-bcl.dtsi"
+#include "zuma/zuma-ripcurrent-bluetooth.dtsi"
+#include "zuma/zuma-ripcurrent-bluetooth-offmode.dtsi"
+#include "zuma/zuma-typec.dtsi"
+#include "zuma/zuma-ripcurrent-typec.dtsi"
+#include "zuma/gs101-cp-s5200-thermal-zone.dtsi"
+
+/ {
+	board_id = <0x40101>;
+	board_rev = <0x000000>;
+	fragment@boardbase {
+		target-path = "/";
+		__overlay__ {
+			model = "ZUMA Ripcurrent board based on ZUMA";
+			compatible = "google,ZUMA Ripcurrent", "google,ZUMA";
+		};
+	};
+};
+

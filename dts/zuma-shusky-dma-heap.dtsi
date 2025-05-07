@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * DMA heap device tree entries specific to husky and shiba.
+ *
+ * Copyright 2023 Google,LLC
+ *
+ */
+
+#include <linux/kconfig.h>
+
+&farawimg {
+        size = <0xAC00000>; /* 172MB */
+};
+
+&faceauth_tpu {
+	size = <0x00C00000>; /* 12MB */
+};
+
+#if IS_ENABLED(CONFIG_ARM64_4K_PAGES)
+
+&faprev {
+	size = <0x01800000>; /* 24MB */
+};
+
+#elif IS_ENABLED(CONFIG_ARM64_16K_PAGES)
+
+// The minimum allocation for CMA is usually one huge page.
+// The huge page size for 16kb page size config is 32MB.
+// The reserved memory allocations have to be multiple of
+// huge page size.
+//
+// See include/linux/pageblock-flags.h
+
+&faprev {
+	size = <0x02000000>; /* 32MB */
+};
+
+&vstream {
+	size = <0x04000000>; /* 64MB */
+};
+
+&vscaler {
+	size = <0x02000000>; /* 32MB */
+};
+
+#else
+#error Must select 4kb or 16kb page sizes.
+#endif

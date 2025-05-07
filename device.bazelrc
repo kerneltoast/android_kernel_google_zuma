@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Copyright (C) 2022 Google LLC
+
+build:shusky --//private/devices/google/common:kernel=//private/devices/google/shusky:kernel
+build:shusky --//private/google-modules/soc/gs:gs_soc_module=//private/devices/google/shusky:zuma_soc.shusky
+build:shusky --//private/google-modules/aoc/alsa:radio=s5300
+build:shusky --//private/google-modules/power/mitigation:radio=s5300
