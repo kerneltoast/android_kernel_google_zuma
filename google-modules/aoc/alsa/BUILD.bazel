@@ -1,0 +1,83 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
+
+filegroup(
+    name = "headers",
+    srcs = glob([
+        "*.h",
+    ]),
+    visibility = [
+        "//private/google-modules/display/samsung:__pkg__",
+        "//private/google-modules/radio:__subpackages__",
+    ],
+)
+
+config_setting(
+    name = "radio_s5300",
+    flag_values = {
+        ":radio": "s5300",
+    },
+)
+
+config_setting(
+    name = "radio_s5300_dit",
+    flag_values = {
+        ":radio": "s5300_dit",
+    },
+)
+
+config_setting(
+    name = "radio_s5400",
+    flag_values = {
+        ":radio": "s5400",
+    },
+)
+
+string_flag(
+    name = "radio",
+    build_setting_default = "undefined",
+)
+
+kernel_module(
+    name = "alsa",
+    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+    ]) + [
+        "Kbuild",
+        "Makefile",
+        "//private/google-modules/amplifiers/audiometrics:headers",
+        "//private/google-modules/aoc:headers",
+        "//private/google-modules/aoc_ipc:headers",
+        "//private/google-modules/display/samsung:headers",
+        "//private/google-modules/soc/gs:gs_soc_headers",
+    ] + select({
+        "//private/google-modules/aoc/alsa:radio_s5300_dit": ["//private/google-modules/radio/samsung/s5300:cpif_headers"],
+        "//private/google-modules/aoc/alsa:radio_s5300": ["//private/google-modules/radio/samsung/s5300:cpif_headers"],
+        "//private/google-modules/aoc/alsa:radio_s5400": ["//private/google-modules/radio/samsung/s5400:cpif_headers"],
+        "//conditions:default": [],
+    }),
+    outs = [
+        "aoc_alsa_dev.ko",
+        "aoc_alsa_dev_util.ko",
+    ],
+    kernel_build = "//private/devices/google/common:kernel",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/aoc/usb:__pkg__",
+        "//private/google-modules/soc/gs:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/amplifiers/audiometrics",
+        "//private/google-modules/aoc",
+        "//private/google-modules/display/samsung:display.samsung",
+        "//private/google-modules/soc/gs:gs_soc_module",
+    ] + select({
+        "//private/google-modules/aoc/alsa:radio_s5300_dit": ["//private/google-modules/radio/samsung/s5300:cpif.dit"],
+        "//private/google-modules/aoc/alsa:radio_s5300": ["//private/google-modules/radio/samsung/s5300:cpif"],
+        "//private/google-modules/aoc/alsa:radio_s5400": ["//private/google-modules/radio/samsung/s5400:cpif"],
+        "//conditions:default": [],
+    }),
+)
