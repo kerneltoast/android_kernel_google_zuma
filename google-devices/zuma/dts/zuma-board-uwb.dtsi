@@ -1,0 +1,62 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Zuma UWB device tree source
+ *
+ * Copyright (c) 2023 Google, LLC
+ * https://www.google.com
+*/
+
+#include <dt-bindings/gpio/gpio.h>
+#include <arm64/exynos/exynos-pinctrl.h>
+
+&pinctrl_1 {
+	qm35_irq: qm35-irq {
+		samsung,pins = "gpn5-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PDN_PREV>;
+	};
+};
+
+&pinctrl_11 {
+	qm35_ap_rst: qm35-ap-rst {
+		samsung,pins = "gpp14-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT1>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+&spi_18 {
+	/* On Low speed expansion */
+	label = "LS-SPI0";
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	/* QM35 on LS-SPI0 */
+	qm35@0 {
+		compatible = "qorvo,qm35";
+		reg = <0>;
+		spi-max-frequency = <20000000>;
+		pinctrl-0 = <&qm35_irq &qm35_ap_rst>;
+		pinctrl-names = "default";
+		interrupt-parent = <&gpn5>;
+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH 0>;
+		qm35-vdd1-supply = <&s_bucka_reg>;
+		qm35-vdd2-supply = <&s_ldo16_reg>;
+		qm35-vdd3-supply = <&s_bucka_reg>;
+		exton-gpios = <&gpp13 1 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpp14 0 GPIO_ACTIVE_LOW>;
+		ss-ready-gpios = <&gpn4 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+		wakeup-gpios = <&gpa5 6 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+		controller-data {
+			samsung,spi-feedback-delay = <0>;
+			samsung,spi-chip-select-mode = <0>;
+			cs-clock-delay = <10>;
+		};
+	};
+};

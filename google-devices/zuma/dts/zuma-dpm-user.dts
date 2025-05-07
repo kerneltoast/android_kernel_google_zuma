@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "google,ZUMA DPM-user", "google,ZUMA DPM-user";
+};
+
+#include "zuma-dpm-user.dtsi"
+#include "avf-dpm-user.dtsi"

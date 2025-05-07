@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Charge Pump config for pca9468.
+ * Intended to be included into the approriate I2C bus.
+ *
+ * Copyright 2023 Google LLC
+ */
+
+pca9468_dc: pca9468@57 {
+	status = "disabled";
+	compatible = "nxp,pca9468";
+	reg = <0x57>;
+
+	pca9468,psy_name = "dc-mains";
+
+	pinctrl-names = "default";
+
+	pca9468,float-voltage = <4300000>; /* 4.3V */
+
+	pca9468,input-itopoff = <500000>; /* 500mA */
+	pca9468,switching-frequency = <3>; /* 980KHz */
+
+	/* disable USBC NTC */
+	pca9468,ntc-threshold = <0>; /* disabled */
+
+	/* USBC thermal zone */
+	google,usb-port-tz-name = "usbc-therm-adc";
+
+	pca9468,google_cpm = <&google_cpm>;
+};

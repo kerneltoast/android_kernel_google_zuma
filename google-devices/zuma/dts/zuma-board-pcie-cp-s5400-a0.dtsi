@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Board-common PCIe config.
+ *
+ * Copyright 2023 Google LLC
+ */
+#include <dt-bindings/pci/pci.h>
+
+/ {
+	fragment@pcie_0 {
+		target = <&pcie_0>;
+		/* This is a workaround to suppress avoid_default_addr_size
+		 * warnings caused by "ranges" below, which should be fixed
+		 * on upstream. See the discussion:
+		 * https://lore.kernel.org/devicetree-compiler/ZGCCxgVHQ3wJoXFt@yekko/T/#t
+		 */
+		#address-cells = <2>;
+		#size-cells = <1>;
+		__overlay__ {
+			#address-cells = <3>;
+			#size-cells = <2>;
+			num-lanes = <1>;
+			use-sysmmu = "false";
+			ranges = <0x82000000 0 0x40000000 0 0x40000000 0 0xFF0000>;
+		};
+	};
+};
+
+&sysmmu_hsi1 {
+	status = "disabled";
+};

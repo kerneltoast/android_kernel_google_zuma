@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/ {
+	gsa: gsa-ns {
+		compatible = "google,gs101-gsa-v1";
+		#address-cells = <2>;
+		#size-cells = <1>;
+
+		/* NS mailbox */
+		reg = <0 0x16490000 0x1000>;
+
+		log-region = <&gsa_reserved_log>;
+
+		interrupts = <GIC_SPI IRQ_MAILBOX_GSA2NONTZ_GSA
+			      IRQ_TYPE_LEVEL_HIGH 0>;
+
+		s2mpu = <&s2mpu_s0_gsa>;
+	};
+
+	tzprot: tzprot {
+		compatible = "google,gsoc-tzprot-v1";
+	};
+};

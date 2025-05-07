@@ -1,0 +1,69 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Samsung CP interface device tree source
+ *
+ * Copyright (c) 2022 Samsung Electronics Co., Ltd.
+ *             http://www.samsung.com
+ */
+
+/ {
+	fragment@modemif {
+		target-path = "/";
+		__overlay__ {
+			#address-cells = <2>;
+			#size-cells = <1>;
+
+			gnssif {
+				status = "okay";
+				compatible = "samsung,exynos-gnss";
+
+				device,name = "KEPLER";
+				device_node_name = "gnss_ipc";
+				pinctrl-names = "default";
+				pinctrl-0 = <&gnss_spi_irq>,
+					<&gnss_spi_int>;
+
+				gpio_gnss2ap_spi = <&gpa5 4 GPIO_ACTIVE_LOW>;
+				gpio_ap2gnss_spi = <&gpp2 3 GPIO_ACTIVE_LOW>;
+			};
+
+		};
+	};
+};
+
+&spi_21 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	swap-mode = <1>;
+
+	gnss@0 {
+		compatible = "samsung,gnss-spi";
+		reg = <0>;
+		spi-max-frequency = <3125000>;
+		controller-data {
+			samsung,spi-feedback-delay = <0>;
+		};
+	};
+};
+
+&pinctrl_11 {
+	gnss_spi_int: gnss_spi_int {
+		samsung,pins = "gpp2-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <0>;
+	};
+};
+
+&pinctrl_2 {
+	gnss_spi_irq: gnss_spi_irq {
+		samsung,pins = "gpa5-4";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-drv = <0>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+

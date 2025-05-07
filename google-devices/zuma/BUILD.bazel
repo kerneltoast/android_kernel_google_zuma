@@ -1,0 +1,379 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+load("//build/bazel_common_rules/dist:dist.bzl", "copy_to_dist_dir")
+load(
+    "//build/kernel/kleaf:kernel.bzl",
+    "kernel_build",
+    "kernel_build_config",
+    "kernel_dtstree",
+    "kernel_images",
+    "kernel_module",
+    "kernel_module_group",
+    "kernel_modules_install",
+    "kernel_unstripped_modules_archive",
+    "merged_kernel_uapi_headers",
+)
+load("//common:modules.bzl", "get_gki_modules_list")
+load("//private/devices/google/common/kleaf:create_file.bzl", "create_file")
+load(":constants.bzl", "ZUMA_DPM_DTBOS", "ZUMA_DTBS", "ZUMA_MODULE_OUTS")
+
+package(
+    default_visibility = [
+        "//private/devices/google:__subpackages__",
+    ],
+)
+
+kernel_build_config(
+    name = "build_config",
+    srcs = [
+        # do not sort
+        "//common:set_kernel_dir_build_config",
+        "build.config.zuma",
+    ],
+)
+
+kernel_dtstree(
+    name = "dtstree",
+    srcs = glob(["dts/**"]) + [
+        "//private/google-modules/soc/gs:gs.dt-bindings",
+    ],
+    makefile = "dts/Makefile",
+)
+
+create_file(
+    name = "kconfig_ext",
+    srcs = ["Kconfig.ext.zuma"],
+    out = "Kconfig.ext",
+)
+
+filegroup(
+    name = "defconfig_fragments",
+    srcs = ["zuma_defconfig"],
+)
+
+filegroup(
+    name = "kernel_sources",
+    srcs = [
+        # keep sorted
+        "//common:kernel_aarch64_sources",
+        "//private/google-modules/bms/misc:bms-misc.kconfig",
+        "//private/google-modules/display/common:common.kconfig",
+        "//private/google-modules/display/samsung:display.samsung.kconfig",
+        "//private/google-modules/power/mitigation:bcl.kconfig",
+        "//private/google-modules/power/reset:reset.kconfig",
+        "//private/google-modules/soc/gs:gs_soc.kconfig",
+        "//private/google-modules/trusty:trusty.kconfig",
+    ],
+)
+
+kernel_build(
+    name = "kernel",
+    srcs = [":kernel_sources"],
+    outs = ZUMA_DTBS + ZUMA_DPM_DTBOS,
+    base_kernel = "//common:kernel_aarch64",
+    build_config = ":build_config",
+    collect_unstripped_modules = True,
+    defconfig_fragments = [":defconfig_fragments"],
+    dtstree = ":dtstree",
+    kconfig_ext = ":kconfig_ext",
+    make_goals = [
+        "modules",
+        "dtbs",
+    ],
+    module_outs = ZUMA_MODULE_OUTS,
+    strip_modules = True,
+)
+
+kernel_module(
+    name = "zuma_soc",
+    srcs = [
+        "//private/google-modules/soc/gs:gs_soc_sources",
+        "//private/google-modules/trusty:headers",
+    ],
+    outs = [
+        # keep sorted
+        "drivers/block/zram/zcomp_cpu.ko",
+        "drivers/block/zram/zcomp_eh.ko",
+        "drivers/block/zram/zram_gs.ko",
+        "drivers/bts/bts.ko",
+        "drivers/clk/gs/clk_exynos_gs.ko",
+        "drivers/clocksource/exynos_mct_v3.ko",
+        "drivers/cpufreq/exynos-acme.ko",
+        "drivers/devfreq/google/exynos_devfreq.ko",
+        "drivers/dma-buf/heaps/samsung/samsung_dma_heap.ko",
+        "drivers/dma/pl330.ko",
+        "drivers/dma/samsung-dma.ko",
+        "drivers/gpu/exynos/g2d/g2d.ko",
+        "drivers/i2c/busses/i2c-acpm.ko",
+        "drivers/i2c/busses/i2c-exynos5.ko",
+        "drivers/iio/power/odpm.ko",
+        "drivers/input/fingerprint/goodixfp.ko",
+        "drivers/input/keyboard/s2mpg14-key.ko",
+        "drivers/input/keycombo.ko",
+        "drivers/input/keydebug.ko",
+        "drivers/input/misc/vl53l1/stmvl53l1.ko",
+        "drivers/iommu/exynos-pcie-iommu.ko",
+        "drivers/iommu/iovad-best-fit-algo.ko",
+        "drivers/iommu/samsung-iommu-group.ko",
+        "drivers/iommu/samsung-secure-iova.ko",
+        "drivers/iommu/samsung_iommu_v9.ko",
+        "drivers/media/platform/exynos/mfc/exynos_mfc.ko",
+        "drivers/media/platform/exynos/smfc/smfc.ko",
+        "drivers/mfd/s2mpg14-mfd.ko",
+        "drivers/mfd/s2mpg1415-gpio.ko",
+        "drivers/mfd/s2mpg15-mfd.ko",
+        "drivers/mfd/slg51002-core.ko",
+        "drivers/misc/s5910/s5910.ko",
+        "drivers/misc/sbb-mux/sbb-mux.ko",
+        "drivers/misc/sscoredump/sscoredump.ko",
+        "drivers/pci/controller/dwc/pcie-exynos-gs.ko",
+        "drivers/pci/controller/dwc/pcie-exynos-zuma-rc-cal.ko",
+        "drivers/performance/gs_perf_mon/gs_perf_mon.ko",
+        "drivers/performance/lat_governors/gs_governor_dsulat.ko",
+        "drivers/performance/lat_governors/gs_governor_memlat.ko",
+        "drivers/performance/lat_governors/gs_governor_utils.ko",
+        "drivers/phy/samsung/eusb_repeater.ko",
+        "drivers/phy/samsung/phy-exynos-mipi.ko",
+        "drivers/phy/samsung/phy-exynos-mipi-dsim.ko",
+        "drivers/phy/samsung/phy-exynos-usbdrd-eusb-super.ko",
+        "drivers/pinctrl/gs/pinctrl-exynos-gs.ko",
+        "drivers/pinctrl/pinctrl-slg51002.ko",
+        "drivers/power/reset/debug-reboot.ko",
+        "drivers/regulator/pmic_class.ko",
+        "drivers/regulator/rt6160-regulator.ko",
+        "drivers/regulator/s2mpg14-powermeter.ko",
+        "drivers/regulator/s2mpg14-regulator.ko",
+        "drivers/regulator/s2mpg15-powermeter.ko",
+        "drivers/regulator/s2mpg15-regulator.ko",
+        "drivers/regulator/slg51002-regulator.ko",
+        "drivers/rtc/rtc-s2mpg14.ko",
+        "drivers/soc/google/acpm/acpm_flexpmu_dbg.ko",
+        "drivers/soc/google/acpm/acpm_mbox_test.ko",
+        "drivers/soc/google/acpm/gs_acpm.ko",
+        "drivers/soc/google/acpm/power_stats.ko",
+        "drivers/soc/google/bcm_dbg.ko",
+        "drivers/soc/google/cal-if/cmupmucal.ko",
+        "drivers/soc/google/dbgcore-dump.ko",
+        "drivers/soc/google/debug/bookerci.ko",
+        "drivers/soc/google/debug/debug-snapshot-debug-kinfo.ko",
+        "drivers/soc/google/debug/dss.ko",
+        "drivers/soc/google/debug/ehld.ko",
+        "drivers/soc/google/debug/etm2dram.ko",
+        "drivers/soc/google/debug/exynos-adv-tracer.ko",
+        "drivers/soc/google/debug/exynos-adv-tracer-s2d.ko",
+        "drivers/soc/google/debug/exynos-coresight.ko",
+        "drivers/soc/google/debug/exynos-coresight-etm.ko",
+        "drivers/soc/google/debug/exynos-debug-test.ko",
+        "drivers/soc/google/debug/exynos-ecc-handler.ko",
+        "drivers/soc/google/debug/itmon.ko",
+        "drivers/soc/google/debug/pixel-boot-metrics.ko",
+        "drivers/soc/google/debug/pixel-debug-test.ko",
+        "drivers/soc/google/debug/pixel-suspend-diag.ko",
+        "drivers/soc/google/debug/sjtag-driver.ko",
+        "drivers/soc/google/ect_parser.ko",
+        "drivers/soc/google/eh/eh.ko",
+        "drivers/soc/google/exynos-bcm_dbg-dump.ko",
+        "drivers/soc/google/exynos-cpuhp.ko",
+        "drivers/soc/google/exynos-cpupm.ko",
+        "drivers/soc/google/exynos-dm.ko",
+        "drivers/soc/google/exynos-pd.ko",
+        "drivers/soc/google/exynos-pd-dbg.ko",
+        "drivers/soc/google/exynos-pd_el3.ko",
+        "drivers/soc/google/exynos-pd_hsi0.ko",
+        "drivers/soc/google/exynos-pm.ko",
+        "drivers/soc/google/exynos-pmu-if.ko",
+        "drivers/soc/google/exynos_pm_qos.ko",
+        "drivers/soc/google/gcma/gcma.ko",
+        "drivers/soc/google/gnssif_spi/gnss_spi.ko",
+        "drivers/soc/google/gnssif_spi/gnssif.ko",
+        "drivers/soc/google/gs-chipid.ko",
+        "drivers/soc/google/gsa/gsa.ko",
+        "drivers/soc/google/gsa/gsa_gsc.ko",
+        "drivers/soc/google/gsa/tzprot.ko",
+        "drivers/soc/google/hardlockup-debug.ko",
+        "drivers/soc/google/hardlockup-watchdog.ko",
+        "drivers/soc/google/kernel-top.ko",
+        "drivers/soc/google/perf_trace_counters.ko",
+        "drivers/soc/google/pixel_stat/mm/pixel_stat_mm.ko",
+        "drivers/soc/google/pixel_stat/pixel_stat_sysfs.ko",
+        "drivers/soc/google/pkvm-s2mpu/pkvm-s2mpu-v9/pkvm-s2mpu-v9.ko",
+        "drivers/soc/google/pt/slc_acpm.ko",
+        "drivers/soc/google/pt/slc_dummy.ko",
+        "drivers/soc/google/pt/slc_pmon.ko",
+        "drivers/soc/google/pt/slc_pt.ko",
+        "drivers/soc/google/vh/kernel/cgroup/vh_cgroup.ko",
+        "drivers/soc/google/vh/kernel/fs/vh_fs.ko",
+        "drivers/soc/google/vh/kernel/metrics/pixel_metrics.ko",
+        "drivers/soc/google/vh/kernel/mm/vh_mm.ko",
+        "drivers/soc/google/vh/kernel/pixel_em/pixel_em.ko",
+        "drivers/soc/google/vh/kernel/sched/sched_tp.ko",
+        "drivers/soc/google/vh/kernel/sched/vh_preemptirq_long.ko",
+        "drivers/soc/google/vh/kernel/sched/vh_sched.ko",
+        "drivers/soc/google/vh/kernel/systrace.ko",
+        "drivers/soc/google/vh/kernel/thermal/vh_thermal.ko",
+        "drivers/spi/spi-s3c64xx.ko",
+        "drivers/spmi/spmi_bit_bang.ko",
+        "drivers/thermal/google/s2mpg15_spmic_thermal.ko",
+        "drivers/thermal/samsung/gpu_cooling.ko",
+        "drivers/thermal/samsung/gs_thermal.ko",
+        "drivers/tty/serial/exynos_tty.ko",
+        "drivers/ufs/ufs-exynos-gs.ko",
+        "drivers/ufs/ufs-pixel-fips140.ko",
+        "drivers/usb/dwc3/dwc3-exynos-usb.ko",
+        "drivers/usb/gadget/function/usb_f_dm.ko",
+        "drivers/usb/gadget/function/usb_f_dm1.ko",
+        "drivers/usb/gadget/function/usb_f_etr_miu.ko",
+        "drivers/usb/host/xhci-exynos.ko",
+        "drivers/usb/host/xhci-goog-dma.ko",
+        "drivers/usb/typec/tcpm/google/bc_max77759.ko",
+        "drivers/usb/typec/tcpm/google/google_tcpci_shim.ko",
+        "drivers/usb/typec/tcpm/google/max77759_contaminant.ko",
+        "drivers/usb/typec/tcpm/google/max77759_helper.ko",
+        "drivers/usb/typec/tcpm/google/max77779_contaminant.ko",
+        "drivers/usb/typec/tcpm/google/max777x9_contaminant.ko",
+        "drivers/usb/typec/tcpm/google/tcpci_max77759.ko",
+        "drivers/usb/typec/tcpm/google/usb_psy.ko",
+        "drivers/usb/typec/tcpm/google/usbc_cooling_dev.ko",
+        "drivers/watchdog/s3c2410_wdt.ko",
+    ],
+    kernel_build = "//private/devices/google/common:kernel",
+    makefile = ["//private/google-modules/soc/gs:Makefile"],
+    visibility = [
+        # keep sorted
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules:__subpackages__",
+    ],
+    deps = [
+        "//private/google-modules/bms/misc:bms-misc",
+        "//private/google-modules/trusty",
+    ],
+)
+
+kernel_module_group(
+    name = "kernel_ext_modules",
+    srcs = [
+        # keep sorted
+        ":zuma_soc",
+        "//private/google-modules/amplifiers/audiometrics",
+        "//private/google-modules/aoc",
+        "//private/google-modules/aoc/alsa",
+        "//private/google-modules/aoc/usb:aoc.usb",
+        "//private/google-modules/bms",
+        "//private/google-modules/bms/misc:bms-misc",
+        "//private/google-modules/display/common/gs_drm",
+        "//private/google-modules/display/common/gs_panel",
+        "//private/google-modules/display/samsung:display.samsung",
+        "//private/google-modules/edgetpu/rio/drivers/edgetpu:edgetpu.rio",
+        "//private/google-modules/gpu/mali_kbase",
+        "//private/google-modules/gpu/mali_pixel",
+        "//private/google-modules/gxp/zuma:gxp",
+        "//private/google-modules/hdcp/samsung:hdcp.samsung",
+        "//private/google-modules/lwis",
+        "//private/google-modules/misc/sscoredump",
+        "//private/google-modules/power/mitigation:bcl",
+        "//private/google-modules/power/reset",
+        "//private/google-modules/trusty",
+        "//private/google-modules/video/gchips:video.gchips",
+    ],
+)
+
+kernel_modules_install(
+    name = "kernel_modules_install",
+    kernel_build = ":kernel",
+    kernel_modules = [":kernel_ext_modules"],
+)
+
+kernel_unstripped_modules_archive(
+    name = "kernel_unstripped_modules_archive",
+    kernel_build = ":kernel",
+    kernel_modules = [":kernel_ext_modules"],
+)
+
+merged_kernel_uapi_headers(
+    name = "merged_kernel_uapi_headers",
+    kernel_build = ":kernel",
+    kernel_modules = [":kernel_ext_modules"],
+)
+
+create_file(
+    name = "vendor_ramdisk_modules_list",
+    srcs = ["vendor_ramdisk.modules.zuma"],
+    out = "vendor_ramdisk.modules",
+)
+
+create_file(
+    name = "system_dlkm_modules_list",
+    out = "system_dlkm.modules",
+    # The list is used to filter modules with `grep -w`.
+    content = ["^kernel/" + m for m in get_gki_modules_list("arm64")],
+)
+
+create_file(
+    name = "system_dlkm_modules_blocklist",
+    srcs = ["system_dlkm.blocklist.zuma"],
+    out = "system_dlkm.blocklist",
+)
+
+create_file(
+    name = "system_dlkm_props",
+    srcs = ["system_dlkm.props.zuma"],
+    out = "system_dlkm.props",
+)
+
+create_file(
+    name = "vendor_dlkm_modules_list",
+    out = "vendor_dlkm.modules",
+    # The list is used to filter modules with `grep -w`.
+    content = ["^kernel/" + m for m in ZUMA_MODULE_OUTS] + ["^extra/.*"],
+)
+
+create_file(
+    name = "vendor_dlkm_modules_blocklist",
+    srcs = ["vendor_dlkm.blocklist.zuma"],
+    out = "vendor_dlkm.blocklist",
+)
+
+create_file(
+    name = "vendor_dlkm_props",
+    srcs = ["vendor_dlkm.props.zuma"],
+    out = "vendor_dlkm.props",
+)
+
+kernel_images(
+    name = "kernel_images",
+    base_kernel_images = "//common:kernel_aarch64_images",
+    build_initramfs = True,
+    build_system_dlkm = True,
+    build_vendor_dlkm = True,
+    kernel_build = ":kernel",
+    kernel_modules_install = ":kernel_modules_install",
+    modules_list = ":vendor_ramdisk_modules_list",
+    ramdisk_compression = "lz4",
+    system_dlkm_modules_blocklist = ":system_dlkm_modules_blocklist",
+    system_dlkm_modules_list = ":system_dlkm_modules_list",
+    system_dlkm_props = ":system_dlkm_props",
+    vendor_dlkm_archive = True,
+    vendor_dlkm_modules_blocklist = ":vendor_dlkm_modules_blocklist",
+    vendor_dlkm_modules_list = ":vendor_dlkm_modules_list",
+    vendor_dlkm_props = ":vendor_dlkm_props",
+    deps = ["//private/devices/google/common:sepolicy"],
+)
+
+copy_to_dist_dir(
+    name = "dist",
+    data = [
+        # keep sorted
+        ":kernel",
+        ":kernel_images",
+        ":kernel_modules_install",
+        ":kernel_unstripped_modules_archive",
+        ":merged_kernel_uapi_headers",
+        "//common:kernel_aarch64",
+        "//common:kernel_aarch64_gki_boot_image",
+        "//common:kernel_aarch64_gki_modules",
+        "//common:kernel_aarch64_headers",
+    ],
+    dist_dir = "out/zuma/dist",
+    flat = True,
+    log = "info",
+)

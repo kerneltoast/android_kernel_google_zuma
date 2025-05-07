@@ -1,0 +1,67 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to ripcurrent
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "zuma-battery.dtsi"
+
+&pinctrl_0 {
+/* [MAX77759: FG_INTB] > FG_INT_L > [XEINT_21 : SC59845XWE] */
+	if_pmic_fg_irq: if-pmic-fg-irq {
+		samsung,pins = "gpa7-7"; /* XEINT_21 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+};
+
+&pinctrl_0 {
+/* [MAX77729FEWN : INTB] > IF_PMIC_IRQ_L > [XEINT_22 : SC59845XWE] */
+	if_pmic_irq: if-pmic-irq {
+		samsung,pins = "gpa8-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+
+};
+
+&hsi2c11_bus {
+	samsung,pins = "gpp21-0", "gpp21-1";
+	samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+	samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+};
+
+&hsi2c_9 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	clock-frequency = <400000>;
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&hsi2c9_bus>;
+
+	pack_bee: m24c08@50 {
+		status = "okay";
+		compatible = "at,24c08";
+
+		reg = <0x50>;
+	};
+};
+
+&hsi2c_11 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	clock-frequency = <950000>;
+#include "zuma-max777xx.dtsi"
+};
+
+&max77759_fg {
+	pinctrl-0 = <&if_pmic_fg_irq>;
+};

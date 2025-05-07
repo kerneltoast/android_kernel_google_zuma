@@ -1,0 +1,210 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Zuma SoC S2MPUs
+ *
+ * Copyright 2022 Google LLC
+ */
+
+/ {
+	s2mpu_s0_aur: s2mpu_s0_aur@20a80000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x20a80000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S2_NS_AUR_AUR IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_aur>;
+	};
+
+	s2mpu_s0_bw: s2mpu_s0_bw@1a670000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1a670000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S2_NS_BW_BW IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_bw>;
+	};
+
+	s2mpu_s0_cpucl0: s2mpu_s0_cpucl0@29c50000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x29c50000 0x10000>;
+		interrupts = <GIC_SPI INTREQ_S2MPU_S0_CPUCL0_NS_CPUCL0 IRQ_TYPE_LEVEL_HIGH 0>;
+		always-on;
+	};
+
+	s2mpu_s0_dpuf0: s2mpu_s0_dpuf0@19870000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x19870000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_DPUF0_S2_NS_DPUF0 IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_dpuf0>;
+	};
+
+	s2mpu_s0_dpuf1: s2mpu_s0_dpuf1@19c70000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x19c70000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_DPUF1_S2_NS_DPUF1 IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_dpuf1>;
+	};
+
+	s2mpu_s0_eh: s2mpu_s0_eh@16c70000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x16c70000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S2_NS_EH_EH IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_eh>;
+	};
+
+	s2mpu_s0_g2d: s2mpu_s0_g2d@1a8a0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1a8a0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_G2D_STAGE2_NONSEC_G2D IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_g2d>;
+	};
+
+	s2mpu_s0_g3d: s2mpu_s0_g3d@1ee70000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1ee70000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_STAGE2_NONSEC_G3D_G3D IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_g3d>;
+	};
+
+	s2mpu_s0_gdc: s2mpu_s0_gdc@1d4f0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1d4f0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_GDC_STAGE2_NONSEC_GDC IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_gdc>;
+	};
+
+	s2mpu_s0_gse: s2mpu_s0_gse@1d8a0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1d8a0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_GSE_S2_NS_GSE IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_gse>;
+	};
+
+	s2mpu_s0_hsi0: s2mpu_s0_hsi0@11070000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x11070000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_USB_S2_NS_HSI0 IRQ_TYPE_LEVEL_HIGH 0>;
+	};
+
+	s2mpu_s0_hsi1: s2mpu_s0_hsi1@12090000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x12090000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_STAGE2_NS_HSI1 IRQ_TYPE_LEVEL_HIGH 0>;
+		always-on;
+	};
+
+	s2mpu_s0_hsi2: s2mpu_s0_hsi2@131f0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x131f0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_STAGE2_NS_HSI2 IRQ_TYPE_LEVEL_HIGH 0>;
+		always-on;
+	};
+
+	s2mpu_s0_ispfe: s2mpu_s0_ispfe@1c140000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1c140000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_ISPFE_S2_NONSECURE_ISPFE IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_ispfe>;
+	};
+
+	s2mpu_s1_ispfe: s2mpu_s1_ispfe@1c180000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1c180000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S1_ISPFE_S2_NONSECURE_ISPFE IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_ispfe>;
+	};
+
+	s2mpu_s2_ispfe: s2mpu_s2_ispfe@1c1c0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1c1c0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S2_ISPFE_S2_NONSECURE_ISPFE IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_ispfe>;
+	};
+
+	s2mpu_s0_mcsc: s2mpu_s0_mcsc@1d0d0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1d0d0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_MCSC_S2_NONSECURE_MCSC IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_mcsc>;
+	};
+
+	s2mpu_s0_mfc: s2mpu_s0_mfc@1a4a0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1a4a0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_MFC_STAGE2_NONSEC_MFC IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_mfc>;
+	};
+
+	s2mpu_s0_misc: s2mpu_s0_misc@101f0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x101f0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_MISC_S2_NONSEC_MISC IRQ_TYPE_LEVEL_HIGH 0>;
+		always-on;
+	};
+
+	s2mpu_s0_rgbp: s2mpu_s0_rgbp@1c4d0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1c4d0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_RGBP_STAGE2_NONSEC_RGBP IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_rgbp>;
+	};
+
+	s2mpu_s1_rgbp: s2mpu_s1_rgbp@1c510000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1c510000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S1_RGBP_STAGE2_NONSEC_RGBP IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_rgbp>;
+	};
+
+	s2mpu_s0_tnr: s2mpu_s0_tnr@1ccb0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1ccb0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_TNR_S2_NONSEC_TNR IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_tnr>;
+	};
+
+	s2mpu_s1_tnr: s2mpu_s1_tnr@1ccf0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1ccf0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S1_TNR_S2_NONSEC_TNR IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_tnr>;
+	};
+
+	s2mpu_s2_tnr: s2mpu_s2_tnr@1cd30000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1cd30000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S2_TNR_S2_NONSEC_TNR IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_tnr>;
+	};
+
+	s2mpu_s0_tpu: s2mpu_s0_tpu@1a370000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1a370000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S2_NS_TPU_TPU IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_tpu>;
+	};
+
+	s2mpu_s0_yuvp: s2mpu_s0_yuvp@1c8a0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x1c8a0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_YUVP_S2_NONSECURE_YUVP IRQ_TYPE_LEVEL_HIGH 0>;
+		power-domains = <&pd_yuvp>;
+	};
+
+	s2mpu_s0_gsa: s2mpu_s0_gsa@16470000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x16470000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_S0_GSA_S2_NS_GSA IRQ_TYPE_LEVEL_HIGH 0>;
+	};
+
+	s2mpu_s0_aoc: s2mpu_s0_aoc@190c0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x190c0000 0x10000>;
+		interrupts = <GIC_SPI IRQ_SYSMMU_STAGE2_NS_AOC IRQ_TYPE_LEVEL_HIGH 0>;
+		deny-all;
+	};
+
+	s2mpu_s0_alive: s2mpu_s0_alive@155b0000 {
+		compatible = "google,s2mpu-v9";
+		reg = <0x0 0x155b0000 0x10000>;
+		interrupts = <GIC_SPI O_INTERRUPT_STAGE2_NONSEC__SYSMMU_S0_ALIVE_ALIVE IRQ_TYPE_LEVEL_HIGH 0>;
+		off-at-boot;
+		deny-all;
+	};
+};
