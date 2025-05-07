@@ -1,0 +1,114 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google ZUMA GPS device tree source
+ *
+ * Copyright 2022 Google,LLC
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <arm64/exynos/exynos-pinctrl.h>
+
+&spi_21 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	swap-mode = <1>;
+	dma-mode;
+	dmas = <&pdma1 20 &pdma1 21>;
+
+	bcm4775@0 {
+		compatible = "ssp-spi,bcm4775";
+		reg = <0>;
+		spi-max-frequency = <26000000>;
+		spi-cpol;
+		spi-cpha;
+
+		pinctrl-names = "default";
+		pinctrl-0 =
+		<&gps_host_req &gps_mcu_req &gps_mcu_resp &gps_nstandby>;
+
+		mcu-req-gpios = <&gpp4 3 GPIO_ACTIVE_HIGH>;
+		nstandby-gpios= <&gph3 3 GPIO_ACTIVE_LOW>;
+		host-req-gpios = <&gpa5 3 GPIO_ACTIVE_HIGH>;
+		mcu-resp-gpios = <&gph3 2 GPIO_ACTIVE_HIGH>;
+
+		controller-data {
+			samsung,spi-feedback-delay = <1>;
+			samsung,spi-chip-select-mode = <0>;
+		};
+	};
+};
+
+&pinctrl_2 {
+	gps_host_req: gps-host-req {
+		samsung,pins = "gpa5-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+&pinctrl_11 {
+	gps_mcu_req: gps-mcu-req {
+		samsung,pins = "gpp4-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+&pinctrl_9 {
+	gps_mcu_resp: gps-mcu-resp {
+		samsung,pins = "gph3-2";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_DOWN>;
+	};
+	gps_nstandby: gps-nstandby {
+		samsung,pins ="gph3-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+&s_ldo9_reg {
+	schematic-name = "L9S_GNSS_CORE";
+	subsys-name = "GPS";
+	regulator-always-on;
+	regulator-initial-mode = <SEC_OPMODE_ON>;
+};
+
+&s_ldo10_reg {
+	schematic-name = "L10S_GNSS_RF";
+	subsys-name = "GPS";
+	regulator-always-on;
+	regulator-initial-mode = <SEC_OPMODE_ON>;
+};
+
+&s_ldo11_reg {
+	schematic-name = "L11S_GNSS_AUX";
+	subsys-name = "GPS";
+	regulator-always-on;
+	regulator-initial-mode = <SEC_OPMODE_ON>;
+};
+
+/ {
+	fragment@bbd_pps {
+		target-path = "/";
+		__overlay__ {
+			bbd_pps {
+				compatible = "bbd-pps-gpio";
+				status = "okay";
+				gpios = <&gpp14 1 GPIO_ACTIVE_HIGH>;
+				pinctrl-names = "default";
+				assert-falling-edge = <0>;
+			};
+		};
+	};
+};

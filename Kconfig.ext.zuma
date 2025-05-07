@@ -1,0 +1,83 @@
+# SPDX-License-Identifier: GPL-2.0
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/block/zram/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/bts/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/clk/gs/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/clocksource/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/cpufreq/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/devfreq/google/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/dma-buf/heaps/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/dma/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/i2c/busses/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/iio/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/input/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/iommu/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/media/platform/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/mfd/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/misc/s5910/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/misc/sbb-mux/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/misc/sscoredump/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/pci/controller/dwc/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/performance/gs_perf_mon/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/performance/lat_governors/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/phy/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/pinctrl/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/power/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/regulator/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/rtc/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/soc/google/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/spi/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/spmi/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/thermal/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/tty/serial/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/ufs/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/usb/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/video/Kconfig"
+
+source "$(KCONFIG_SOC_GS_PREFIX)drivers/watchdog/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/bms/misc/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/display/common/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/display/samsung/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/display/samsung/panel/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/power/mitigation/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/power/reset/Kconfig"
+
+source "$(KCONFIG_EXT_MODULES_PREFIX)private/google-modules/trusty/drivers/trusty/Kconfig"

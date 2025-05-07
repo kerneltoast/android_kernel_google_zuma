@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Max777xx battery eeprom config.
+ * Intended to be included on the I2C busses for Max777 devices.
+ *
+ * Copyright 2023 Google LLC
+ *
+ */
+
+pack_bee: m24c08@50 {
+	status = "okay";
+	compatible = "at,24c08";
+
+	reg = <0x50>;
+};

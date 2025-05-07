@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries
+ *
+ * Copyright 2023 Google LLC
+ *
+ */
+
+max77779,config {
+
+	/* 3368_1_122222_2mOhm_BC79_r2.009.raw.model.ini, b/284344501#comment2 */
+	max77779,1p5c-10k {
+		max77779,batt-id-kohm = <10>;
+		max77779,model-version = <3>;
+		max77779,force-reset-model-data;
+		max77779,fg-model = /bits/ 16 <
+                        0x8940 0xaba0 0xb790 0xba70 0xbbf0 0xbe30 0xc010 0xc120
+                        0xc240 0xc710 0xc990 0xccf0 0xd0c0 0xd590 0xdb60 0xdec0
+                        0x0020 0x0200 0x0e00 0x1200 0x1540 0x1330 0x0bd0 0x0fd0
+                        0x07b0 0x08f0 0x05f0 0x05c0 0x07f0 0x05f0 0x0590 0x0590
+		>;
+		max77779,fg-params = /bits/ 16 <
+			/* 0x0036 */	0xc1b0	/* nnvcfg0 */
+			/* 0x002a */	0x043c	/* RelaxCFG */
+			/* 0x002F */	0x2602	/* LearnCFG */
+			/* 0x000C */	0x4207	/* Config */
+			/* 0x00AB */	0x0090	/* Config2 */
+			/* 0x0013 */	0x5f05	/* FullSOCthr */
+			/* 0x0010 */	0x0880	/* FullCAPRep */
+			/* 0x00B3 */	0x0880	/* nDesignCap */
+			/* 0x0046 */	0x0C80	/* dPacc */
+			/* 0x00A5 */	0x0880	/* nFullCAPNom */
+			/* 0x00C6 */	0xa561	/* nV_empty */
+			/* 0x0012 */	0x3480	/* QResidual00 */
+			/* 0x0022 */	0x1600	/* QResidual10 */
+			/* 0x0032 */	0x0680	/* QResidual20 */
+			/* 0x0042 */	0x0580	/* QResidual30 */
+			/* 0x00A6 */	0x0520	/* RCOMP0 */
+			/* 0x00A7 */	0x131f	/* TempCo */
+			/* 0x0029 */	0x0147	/* ICHGTerm */
+			/* 0x00B2 */	0x3870	/* nMiscCFG */
+			/* 0x009E */	0x0400	/* nModelCfg */
+			/* 0x00CA */	0x58EF	/* nThermCfg */
+			/* 0x009D */	0xCEA4	/* nFilterCfg */
+		>;
+	};
+};

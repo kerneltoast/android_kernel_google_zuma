@@ -1,0 +1,373 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2021 Google LLC.
+ *
+ */
+
+#include "zuma.dtsi"
+
+&bts_smc0 {
+	reg = <0x0 0x27C4F534 0x4>;
+};
+
+&bts_smc1 {
+	reg = <0x0 0x27D4F534 0x4>;
+};
+
+&bts_smc2 {
+	reg = <0x0 0x27E4F534 0x4>;
+};
+
+&bts_smc3 {
+	reg = <0x0 0x27F4F534 0x4>;
+};
+
+&cpufreq_domain0 {
+	resume-freq = <1425000>;
+};
+
+&cpufreq_domain1 {
+	resume-freq = <1836000>;
+};
+
+&cpufreq_domain2 {
+	resume-freq = <1164000>;
+};
+
+&bigwave {
+	ip_ver = <0x1>;
+};
+
+&gs_governor_dsulat {
+	secondary_frequency_votes {
+		bci_freq {
+			vote_name = "bcilat";
+			pm_qos_class = <PM_QOS_BCI_THROUGHPUT>;
+
+			core-dev-table-latency =
+			/* DSU    BCI */
+			< 324000  315000 >,
+			< 610000  575000 >,
+			< 820000  840000 >,
+			< 970000  1050000 >,
+			< 1197000 1205000 >,
+			< 1548000 1401000 >;
+		};
+	};
+
+	governor_config {
+		gs_dsulat_cl0 {
+			cpulist = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+			ratio_ceil = <700>;
+			stall_floor = <1750>;
+			cpuidle_state_depth_threshold = <2>;
+
+			core-dev-table-latency =
+			/* CL0   DSU */
+			< 324000  324000 >,
+			< 610000  610000 >,
+			< 820000  820000 >,
+			< 955000  970000 >,
+			< 1098000 1098000 >,
+			< 1197000 1197000 >;
+
+			core-dev-table-base =
+			/* CL0    DSU */
+			< 324000  324000 >,
+			< 1098000 610000 >;
+		};
+		gs_dsulat_cl1 {
+			cpulist = <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
+			ratio_ceil = <1000>;
+			stall_floor = <1750>;
+			cpuidle_state_depth_threshold = <2>;
+
+			core-dev-table-latency =
+			/* CL1    DSU */
+			< 402000  324000 >,
+			< 578000  610000 >,
+			< 910000  820000 >,
+			< 1065000 970000 >,
+			< 1836000 1098000 >,
+			< 1945000 1197000 >,
+			< 2130000 1444000 >;
+
+			core-dev-table-base =
+			/* CL1    DSU */
+			< 402000  324000 >,
+			< 1418000 610000 >,
+			< 1836000 970000 >,
+			< 2130000 1098000 >;
+
+		};
+		gs_dsulat_cl2 {
+			cpulist = <&cpu8>;
+			ratio_ceil = <3000>;
+			stall_floor = <1750>;
+			cpuidle_state_depth_threshold = <2>;
+
+			core-dev-table-latency =
+			/* CL2    DSU */
+			< 500000  324000 >,
+			< 880000  610000 >,
+			< 1164000 820000 >,
+			< 1298000 970000 >,
+			< 1885000 1098000 >,
+			< 2147000 1197000 >,
+			< 2363000 1444000 >,
+			< 2850000 1704000 >;
+
+			core-dev-table-base =
+			/* CL2    DSU */
+			< 500000       324000 >,
+			< 1298000      610000 >,
+			< 2049000      970000 >,
+			< 2363000      1098000 >,
+			< 2802000      1444000 >;
+		};
+	};
+};
+
+&gs_governor_memlat {
+	governor_config {
+		gs_memlat_cl0 {
+			cpulist = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+			ratio_ceil = <1800>;
+			stall_floor = <3000>;
+			cpuidle_state_depth_threshold = <2>;
+
+			core-dev-table-latency =
+			/* CL0     MIF */
+			<  250000  546000 >,
+			<  610000  676000 >,
+			<  820000  845000 >,
+			<  955000 1014000 >,
+			< 1098000 1352000 >;
+
+			core-dev-table-base =
+			/* CL0     MIF */
+			< 955000   676000 >;
+
+		};
+		gs_memlat_cl1 {
+			cpulist = <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
+			ratio_ceil = <3700>;
+			stall_floor = <2400>;
+			cpuidle_state_depth_threshold = <2>;
+
+			core-dev-table-latency =
+			/* CL1     MIF */
+			<  320000  546000 >,
+			<  578000  676000 >,
+			<  697000  845000 >,
+			<  712000 1014000 >,
+			< 1065000 1352000 >,
+			< 1328000 1539000 >,
+			< 1572000 1716000 >,
+			< 1836000 3172000 >,
+			< 1945000 3172000 >,
+			< 2130000 3744000 >;
+
+			core-dev-table-base =
+			/* CL1     MIF */
+			< 402000   421000 >,
+			< 1836000  845000 >,
+			< 2130000 1014000 >;
+		};
+		gs_memlat_cl2 {
+			cpulist = <&cpu8>;
+			ratio_ceil = <3400>;
+			stall_floor = <500>;
+			cpuidle_state_depth_threshold = <2>;
+
+			core-dev-table-latency =
+			/* CL2     MIF */
+			<  400000  546000 >,
+			<  880000  676000 >,
+			< 1164000  845000 >,
+			< 1298000 1014000 >,
+			< 1557000 1352000 >,
+			< 1745000 1716000 >,
+			< 2049000 2028000 >,
+			< 2147000 3172000 >,
+			< 2556000 3172000 >,
+			< 2687000 3744000 >;
+
+			core-dev-table-base =
+			/* CL2     MIF */
+			< 500000   421000 >,
+			< 2049000  845000 >,
+			< 2600000 1352000 >;
+		};
+	};
+};
+
+&dsu_lat {
+		/* CL0         DSU */
+	core-dev-table-cl0-low-latency-v2 =
+		<  324000        324000
+		   610000        610000
+		   820000        820000
+		   955000        970000
+		  1098000       1098000
+		  1197000       1197000 >;
+
+		/* CL1         DSU */
+	core-dev-table-cl1-low-latency-v2 =
+		<  402000        324000
+		   578000        610000
+		   910000        820000
+		  1065000        970000
+		  1836000       1098000
+		  1945000       1197000
+		  2130000       1444000 >;
+
+		/* CL2         DSU */
+	core-dev-table-cl2-low-latency-v2 =
+		<  500000        324000
+		   880000        610000
+		  1164000        820000
+		  1298000        970000
+		  1885000       1098000
+		  2147000       1197000
+		  2363000       1444000
+		  2850000       1704000 >;
+
+		   /* CL0         DSU */
+	core-dev-table-cl0-base-v2 =
+		<  324000        324000
+		  1098000        610000 >;
+
+		   /* CL1         DSU */
+	core-dev-table-cl1-base-v2 =
+		<  402000       324000
+		  1418000       610000
+		  1836000       970000
+		  2130000      1098000 >;
+
+		   /* CL2         DSU */
+	core-dev-table-cl2-base-v2 =
+		<  500000       324000
+		  1298000       610000
+		  2049000       970000
+		  2363000      1098000
+		  2802000      1444000 >;
+
+	dsu-bci-table-v2 =
+		/* DSU         BCI */
+		< 324000        315000
+		610000        575000
+		820000        840000
+		970000        1050000
+		1197000       1205000
+		1548000       1401000 >;
+};
+
+/* S2MPUs in B0 has sync device which is not discoverable from IP version. */
+&s2mpu_s0_aur {
+	built-in-sync;
+};
+
+&s2mpu_s0_bw {
+	built-in-sync;
+};
+
+&s2mpu_s0_cpucl0 {
+	built-in-sync;
+};
+
+&s2mpu_s0_dpuf0 {
+	built-in-sync;
+};
+
+&s2mpu_s0_dpuf1 {
+	built-in-sync;
+};
+
+&s2mpu_s0_eh {
+	built-in-sync;
+};
+
+&s2mpu_s0_g2d {
+	built-in-sync;
+};
+
+&s2mpu_s0_g3d {
+	built-in-sync;
+};
+
+&s2mpu_s0_gdc {
+	built-in-sync;
+};
+
+&s2mpu_s0_gse {
+	built-in-sync;
+};
+
+&s2mpu_s0_hsi0 {
+	built-in-sync;
+};
+
+&s2mpu_s0_hsi1 {
+	built-in-sync;
+};
+
+&s2mpu_s0_hsi2 {
+	built-in-sync;
+};
+
+&s2mpu_s0_ispfe {
+	built-in-sync;
+};
+
+&s2mpu_s1_ispfe {
+	built-in-sync;
+};
+
+&s2mpu_s2_ispfe {
+	built-in-sync;
+};
+
+&s2mpu_s0_mcsc {
+	built-in-sync;
+};
+
+&s2mpu_s0_mfc {
+	built-in-sync;
+};
+
+&s2mpu_s0_misc {
+	built-in-sync;
+};
+
+&s2mpu_s0_rgbp {
+	built-in-sync;
+};
+
+&s2mpu_s1_rgbp {
+	built-in-sync;
+};
+
+&s2mpu_s0_tnr {
+	built-in-sync;
+};
+
+&s2mpu_s1_tnr {
+	built-in-sync;
+};
+
+&s2mpu_s2_tnr {
+	built-in-sync;
+};
+
+&s2mpu_s0_tpu {
+	built-in-sync;
+};
+
+&s2mpu_s0_yuvp {
+	built-in-sync;
+};
+
+&s2mpu_s0_gsa {
+	built-in-sync;
+};

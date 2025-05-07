@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * GS101 SoC Faceauth-HEAP
+ *
+ * Copyright 2024 Google LLC
+ */
+
+&gcma_camera_dma_heap {
+	status = "okay";
+};
+
+&gcma_camera {
+	status = "okay";
+};

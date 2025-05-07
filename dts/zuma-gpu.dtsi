@@ -1,0 +1,126 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * ZUMA Mali GPU  device tree source
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+/ {
+	mali_mgm: physical-memory-group-manager {
+		compatible = "arm,physical-memory-group-manager";
+
+		/* SLC partitions */
+		pt_id = "gpu_write_alloc";
+	};
+
+	mali_pma: protected-memory-allocator {
+		compatible = "arm,protected-memory-allocator";
+	};
+
+	mali: mali@1F000000 {
+		compatible = "arm,malit6xx";
+		reg = <0x0 0x1F000000 0x1000000>;
+		l2-hash-values = <0x0036DB6D 0x005B6DB6 0x0>;
+		interrupts =
+			<GIC_SPI IRQ_G3D_IRQJOB_G3D IRQ_TYPE_LEVEL_HIGH 0>,
+			<GIC_SPI IRQ_G3D_IRQMMU_G3D IRQ_TYPE_LEVEL_HIGH 0>,
+			<GIC_SPI IRQ_G3D_IRQGPU_G3D IRQ_TYPE_LEVEL_HIGH 0>;
+		interrupt-names = "JOB", "MMU", "GPU";
+
+		/* Power */
+		power-domains = <&pd_g3d>, <&pd_embedded_g3d>;
+		power-domain-names = "top", "cores";
+		g3d_genpd_name = "pd-embedded_g3d";
+		gpu_pmu_status_reg_offset = <0x1C84>;
+		gpu_pmu_status_local_pwr_mask = <0x1>; /*0x1 << 0*/
+		power_policy = "adaptive";
+		firmware_idle_hysteresis_time_ms = <60>;
+		firmware_idle_hysteresis_gpu_sleep_scaler = <60>;
+		cores_suspend_hysteresis_time_ms = <60>;
+		top_suspend_hysteresis_time_ms = <0>;
+
+		/* Memory */
+		physical-memory-group-manager = <&mali_mgm>;
+
+		/* Protected memory allocator */
+		protected-memory-allocator = <&mali_pma>;
+
+		/* Clocks */
+		gpu0_cmu_cal_id = <ACPM_DVFS_G3DL2>;
+		gpu1_cmu_cal_id = <ACPM_DVFS_G3D>;
+
+		/* DVFS */
+		gpu_dvfs_governor = "quickstep_use_mcu";
+		gpu_dvfs_clockdown_hysteresis = <50>;
+
+		/* DVFS v1 operating points */
+		gpu_dvfs_table_size_v1 = <12 12>; /*<row col>*/
+		gpu_dvfs_table_v1 = <
+			/*
+			 *gpu0    gpu1   down     up    hys      int      mif   little  middle   big         mcu       mcu
+			 * clk     clk   util   util  ticks      min      min      min     min   max   down_util   up_util
+			 *------------------------------------------------------------------------------------------------
+			 */
+			900000  890000     85    100      1        0  3172000        0       0     0         40        100
+			900000  807000     81     97      1        0  1716000        0       0     0         40        60
+			900000  723000     76     94      1        0  1352000        0       0     0         30        60
+			749000  649000     85     96      2        0  1352000        0       0     0         30        40
+			749000  580000     83     97      3        0  1352000        0       0     0         25        40
+			659000  521000     78     95      3        0   845000        0       0     0         25        30
+			659000  467000     80     96      3        0   845000        0       0     0         20        30
+			531000  419000     76     95      3        0        0        0       0     0         20        25
+			531000  376000     72     94      3        0        0        0       0     0         15        25
+			430000  337000     67     94      2        0        0        0       0     0         15        20
+			386000  302000     50     92      1        0        0        0       0     0         8         20
+			160000  150000      0     90      1        0        0        0       0     0         0         20
+		>;
+
+		/* DVFS v2 operating points */
+		gpu_dvfs_table_size_v2 = <14 12>; /*<row col>*/
+		gpu_dvfs_table_v2 = <
+			/*
+			 *gpu0    gpu1   down     up    hys      int      mif   little  middle   big         mcu       mcu
+			 * clk     clk   util   util  ticks      min      min      min     min   max   down_util   up_util
+			 *------------------------------------------------------------------------------------------------
+			 */
+			950000  940000     85    100      1        0  3172000        0       0     0         40        100
+			900000  890000     85     97      1        0  3172000        0       0     0         40        60
+			900000  850000     76     94      1        0  1716000        0       0     0         40        60
+			900000  807000     85     96      2        0  1716000        0       0     0         30        60
+			900000  723000     83     97      3        0  1352000        0       0     0         25        50
+			749000  649000     78     95      3        0  1352000        0       0     0         25        40
+			749000  580000     80     96      3        0  1352000        0       0     0         20        40
+			659000  521000     76     95      3        0   845000        0       0     0         20        35
+			659000  467000     72     95      3        0   845000        0       0     0         20        30
+			531000  419000     67     94      2        0        0        0       0     0         15        30
+			531000  376000     65     94      1        0        0        0       0     0         15        25
+			430000  337000     60     94      1        0        0        0       0     0         12        20
+			386000  302000     50     92      1        0        0        0       0     0         8         20
+			160000  150000      0     90      1        0        0        0       0     0         0         20
+		>;
+
+		/* DVFS step up value */
+		gpu_dvfs_step_up_val = <3>;
+
+		/* Fmax limit */
+		gpu_dvfs_max_freq = <890000>;
+
+		/* QOS */
+		gpu_dvfs_qos_bts_scenario = "g3d_performance";
+		gpu_dvfs_qos_bts_threshold = <400000>;
+		mcu_protm_scale = <3 10>;
+		mcu_down_util_scale = <5 4>;
+
+		/* Thermal */
+		#cooling-cells = <2>;
+		gpu_power_coeff = <625>;
+		ect-coeff-index = <3>;
+
+		/* S2MPU */
+		s2mpus = <&s2mpu_s0_g3d>;
+
+		/* Features mask */
+		gpu_features_mask = <0 4>;
+	};
+};

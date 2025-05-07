@@ -1,0 +1,145 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Zuma PPMU device tree source
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+#include <dt-bindings/soc/google/exynos-bcm_dbg.h>
+
+/ {
+	zuma-ppmu {
+		compatible = "samsung,exynos-bcm_dbg";
+
+		pd-name = "pd-misc", "pd-hsi0", "pd-hsi1", "pd-hsi2",
+			  "pd-gsa", "pd-eh", "pd-aoc", "pd-dpuf0",
+			  "pd-dpuf1", "pd-tpu", "pd-mfc", "pd-bw",
+			  "pd-g2d", "pd-ispfe", "pd-rgbp", "pd-yuvp",
+			  "pd-tnr", "pd-mcsc", "pd-gdc", "pd-gse",
+			  "pd-g3d", "pd-aur", "pd-nocl0", "pd-nocl1a",
+			  "pd-nocl1b", "pd-nocl2aa", "pd-nocl2ab", "pd-cpucl0";
+
+		max_define_event = <PRE_DEFINE_EVT_MAX>;
+		/* define_event_index ev0 ev1 ev2 ev3 ev4 ev5 ev6 ev7 */
+		define_events = <NO_PRE_DEFINE_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<LATENCY_FMT_EVT	0x4  0x2  0x26 0x24 0x5  0x3  0x27 0x25>,
+				<MO_FMT_EVT		0x4  0x0  0x24 0x24 0x5  0x1  0x25 0x25>,
+				<BURST_LENGTH_FMT_EVT	0x4  0x2  0x4  0x26 0x5  0x3  0x5  0x27>,
+				<REQ_BLOCK_FMT_EVT	0x2  0x10 0x10 0x26 0x3  0x11 0x11 0x27>,
+				<DATA_BLOCK_FMT_EVT	0x4  0x12 0x12 0x6  0x5  0x13 0x13 0x14>,
+				<REQ_TYPE_FMT_EVT	0x2  0x15 0x18 0x1B 0x3  0x16 0x19 0x1C>;
+		default_define_event = <LATENCY_FMT_EVT>;
+
+		/* sm_id_mask sm_id_value */
+		define_filter_id = <NO_PRE_DEFINE_EVT	0x0  0x0>,
+				<LATENCY_FMT_EVT	0x0  0x0>,
+				<MO_FMT_EVT		0x0  0x0>,
+				<BURST_LENGTH_FMT_EVT	0x0  0x0>,
+				<REQ_BLOCK_FMT_EVT	0x0  0x0>,
+				<DATA_BLOCK_FMT_EVT	0x0  0x0>,
+				<REQ_TYPE_FMT_EVT	0x0  0x0>;
+		/* ev0 ev1 ev2 ev3 ev4 ev5 ev6 ev7 */
+		define_filter_id_active =
+				<NO_PRE_DEFINE_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<LATENCY_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<MO_FMT_EVT		0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<BURST_LENGTH_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<REQ_BLOCK_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<DATA_BLOCK_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<REQ_TYPE_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>;
+		/* sm_other_type0 sm_other_mask0 sm_other_value0 */
+		define_filter_other_0 = <NO_PRE_DEFINE_EVT	0x0  0x0  0x0>,
+					<LATENCY_FMT_EVT	0x0  0x0  0x0>,
+					<MO_FMT_EVT		0x0  0x0  0x0>,
+					<BURST_LENGTH_FMT_EVT	0x0  0x0  0x0>,
+					<REQ_BLOCK_FMT_EVT	0x0  0x0  0x0>,
+					<DATA_BLOCK_FMT_EVT	0x0  0x0  0x0>,
+					<REQ_TYPE_FMT_EVT	0x0  0x0  0x0>;
+		/* sm_other_type1 sm_other_mask1 sm_other_value1 */
+		define_filter_other_1 = <NO_PRE_DEFINE_EVT	0x0  0x0  0x0>,
+					<LATENCY_FMT_EVT	0x0  0x0  0x0>,
+					<MO_FMT_EVT		0x0  0x0  0x0>,
+					<BURST_LENGTH_FMT_EVT	0x0  0x0  0x0>,
+					<REQ_BLOCK_FMT_EVT	0x0  0x0  0x0>,
+					<DATA_BLOCK_FMT_EVT	0x0  0x0  0x0>,
+					<REQ_TYPE_FMT_EVT	0x0  0x0  0x0>;
+		/* ev0 ev1 ev2 ev3 ev4 ev5 ev6 ev7 */
+		define_filter_other_active =
+				<NO_PRE_DEFINE_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<LATENCY_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<MO_FMT_EVT		0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<BURST_LENGTH_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<REQ_BLOCK_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<DATA_BLOCK_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<REQ_TYPE_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>;
+
+		/* peak_mask peak_id */
+		define_sample_id = <NO_PRE_DEFINE_EVT	0x0  0x0>,
+				<LATENCY_FMT_EVT	0x0  0x0>,
+				<MO_FMT_EVT		0x0  0x0>,
+				<BURST_LENGTH_FMT_EVT	0x0  0x0>,
+				<REQ_BLOCK_FMT_EVT	0x0  0x0>,
+				<DATA_BLOCK_FMT_EVT	0x0  0x0>,
+				<REQ_TYPE_FMT_EVT	0x0  0x0>;
+		/* ev0 ev1 ev2 ev3 ev4 ev5 ev6 ev7 */
+		define_sample_id_enable =
+				<NO_PRE_DEFINE_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>,
+				<LATENCY_FMT_EVT	0x0  0x0  0x1  0x0  0x0  0x0  0x1  0x0>,
+				<MO_FMT_EVT		0x0  0x0  0x1  0x0  0x0  0x0  0x1  0x0>,
+				<BURST_LENGTH_FMT_EVT	0x0  0x0  0x1  0x1  0x0  0x0  0x1  0x1>,
+				<REQ_BLOCK_FMT_EVT	0x0  0x0  0x1  0x1  0x0  0x0  0x1  0x1>,
+				<DATA_BLOCK_FMT_EVT	0x0  0x0  0x1  0x0  0x0  0x0  0x1  0x0>,
+				<REQ_TYPE_FMT_EVT	0x0  0x0  0x0  0x0  0x0  0x0  0x0  0x0>;
+
+		bcm_ip_nr = <102>;
+		bcm_ip_print_nr = <10>;
+
+		ip-name = "misc", "hsi0", "hsi1", "hsi2", "gsacore0",
+			  "gsacore1", "eh", "aoc", "usb", "pcie",
+			  "d0_dpuf0", "d1_dpuf0", "d0_dpuf1", "d1_dpuf1", "d0_tpu",
+			  "d1_tpu", "d0_mfc", "d1_mfc", "bw", "d0_g2d",
+			  "d1_g2d", "d2_g2d", "d0_ispfe", "d1_ispfe", "d2_ispfe",
+			  "d3_ispfe", "d0_rgbp", "d1_rgbp", "d2_rgbp", "d0_mcfp",
+			  "d2_mcfp", "d3_mcfp", "d4_mcfp", "d5_mcfp", "d0_yuvp",
+			  "d1_yuvp", "d4_yuvp", "d0_tnr", "d1_tnr", "d2_tnr",
+			  "d3_tnr", "d4_tnr", "d5_tnr", "d6_tnr", "d7_tnr",
+			  "d8_tnr", "d9_tnr", "d10_tnra", "d11_tnra", "d0_mcsc",
+			  "d1_mcsc", "d2_mcsc", "d3_mcsc", "d4_mcsc", "d5_mcsc",
+			  "d6_mcsc", "d0_gdc0", "d2_gdc0", "d4_gdc0", "d0_gdc1",
+			  "d2_gdc1", "d4_gdc1", "d_lme", "d0_gse", "d1_gse",
+			  "d2_gse", "g3d_d0", "g3d_d1", "g3d_d2", "g3d_d3",
+			  "d0_aur", "d1_aur", "nocl0_ioc0", "nocl0_ioc1", "nocl0_s0",
+			  "nocl0_s1", "nocl0_s2", "nocl0_s3", "nocl0_dp", "nocl0_alive_p",
+			  "nocl0_cpucl0_p", "nocl1a_m0", "nocl1a_m1", "nocl1a_m2", "nocl1a_m3",
+			  "nocl1b_m0", "nocl2aa_m0", "nocl2aa_m1", "nocl2ab_m0", "nocl2ab_m1",
+			  "cpucl0_d0", "cpucl0_d1", "cpucl0_d2", "cpucl0_d3",
+			  "slc_ch0_0", "slc_ch0_1", "slc_ch1_0", "slc_ch1_1",
+			  "slc_ch2_0", "slc_ch2_1", "slc_ch3_0", "slc_ch3_1";
+
+
+		initial_run_bcm_ip =   <0>,  <1>,  <2>,  <3>,              <6>,  <7>,  <8>,  <9>,
+				      <10>, <11>, <12>, <13>, <14>, <15>, <16>, <17>, <18>, <19>,
+				      <20>, <21>, <22>, <23>, <24>, <25>, <26>, <27>, <28>, <29>,
+				      <30>, <31>, <32>, <33>, <34>, <35>, <36>, <37>, <38>, <39>,
+				      <40>, <41>, <42>, <43>, <44>, <45>, <46>, <47>, <48>, <49>,
+				      <50>, <51>, <52>, <53>, <54>, <55>, <56>, <57>, <58>, <59>,
+				      <60>, <61>, <62>, <63>, <64>, <65>, <66>, <67>, <68>, <69>,
+				      <70>, <71>, <72>, <73>, <74>, <75>, <76>, <77>, <78>, <79>,
+				      <80>, <81>, <82>, <83>, <84>, <85>, <86>, <87>, <88>, <89>,
+				      <90>, <91>, <92>, <93>, <94>, <95>, <96>, <97>, <98>, <99>,
+				     <100>,<101>;
+
+		initial_bcm_run = <BCM_STOP>;
+		/* usec (max 1000000 usec) */
+		initial_period = <1000>;
+		initial_bcm_mode = <BCM_MODE_INTERVAL>;
+		available_stop_owner = <PANIC_HANDLE CAMERA_DRIVER MODEM_IF ITMON_HANDLE>;
+		buff_size = <0x100000>;
+
+		ipc_bcm_event {
+			plugin-len = <5>;
+			plugin-name = "BCM";
+		};
+	};
+};
