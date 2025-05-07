@@ -1,0 +1,47 @@
+What:		/sys/devices/platform/hdcp/hdcp2_success_count
+Date:		October 2023
+KernelVersion:	5.15
+Contact:	"Ji Soo Shin" <jisshin@google.com>
+Description:
+		DisplayPort stats uses this interface to count the number of
+		successful HDCP2 connection.
+
+What:		/sys/devices/platform/hdcp/hdcp2_fallback_count
+Date:		October 2023
+KernelVersion:	5.15
+Contact:	"Ji Soo Shin" <jisshin@google.com>
+Description:
+		DisplayPort stats uses this interface to count the number of
+		HDCP2 connection attempt that resorted to HDCP1 instead.
+
+What:		/sys/devices/platform/hdcp/hdcp2_fail_count
+Date:		October 2023
+KernelVersion:	5.15
+Contact:	"Ji Soo Shin" <jisshin@google.com>
+Description:
+		DisplayPort stats uses this interface to count the number of
+		HDCP2 connection attempt that failed.
+
+What:		/sys/devices/platform/hdcp/hdcp1_success_count
+Date:		October 2023
+KernelVersion:	5.15
+Contact:	"Ji Soo Shin" <jisshin@google.com>
+Description:
+		DisplayPort stats uses this interface to count the number of
+		successful HDCP1 connection.
+
+What:		/sys/devices/platform/hdcp/hdcp1_fail_count
+Date:		October 2023
+KernelVersion:	5.15
+Contact:	"Ji Soo Shin" <jisshin@google.com>
+Description:
+		DisplayPort stats uses this interface to count the number of
+		HDCP1 connection attempt that failed.
+
+What:		/sys/devices/platform/hdcp/hdcp0_count
+Date:		October 2023
+KernelVersion:	5.15
+Contact:	"Ji Soo Shin" <jisshin@google.com>
+Description:
+		DisplayPort stats uses this interface to count the number of
+		connections that is incapable of HDCP.
