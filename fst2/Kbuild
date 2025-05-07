@@ -1,0 +1,6 @@
+# FTM5 support
+obj-$(CONFIG_TOUCHSCREEN_FST2)	+= fst2.o
+fst2-objs = fts.o fts_proc.o
+fst2-objs += \
+	fts_lib/fts_flash.o fts_lib/fts_io.o fts_lib/fts_test.o
+
