@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shusky Type-C entries
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+#include "zuma/zuma-typec.dtsi"
+
+&max77759tcpc {
+	ovp-present;
+	sbu-mux-sel-gpio = <&gpa7 5 GPIO_ACTIVE_HIGH>;
+};
+

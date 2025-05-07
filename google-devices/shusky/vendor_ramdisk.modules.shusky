@@ -1,0 +1,11 @@
+extra/private/devices/google/shusky/display/panel-google-bigsurf.ko
+extra/private/devices/google/shusky/display/panel-google-hk3.ko
+extra/private/devices/google/shusky/display/panel-google-shoreline.ko
+extra/private/google-modules/gps/broadcom/bcm47765/bcm47765.ko
+extra/private/google-modules/nfc/st21nfc.ko
+extra/private/google-modules/nfc/ese/st54spi.ko
+extra/private/google-modules/radio/samsung/s5300/shm_ipc.ko
+extra/private/google-modules/radio/samsung/s5300/cpif_page.ko
+extra/private/google-modules/radio/samsung/s5300/cpif.ko
+extra/private/google-modules/touch/common/touch_bus_negotiator.ko
+extra/private/google-modules/touch/common/touch_offload.ko

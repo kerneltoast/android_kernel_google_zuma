@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * shiba audio device tree source
+ *
+ * Copyright 2022 Google LLC
+ */
+
+#include "zuma-shusky-audio.dtsi"
+
+&aoc {
+	aoc-board-cfg = "SB3";
+	aoc-board-id = <0x40302>;
+	aoc-board-rev = <0x10000>;
+	prevent-fw-load = <0x0>;
+};
+

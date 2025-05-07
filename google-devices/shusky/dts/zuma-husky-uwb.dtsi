@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ *
+ * Copyright (c) 2023 Google, LLC
+ * https://www.google.com
+*/
+
+#include "zuma/zuma-board-uwb.dtsi"
+
+&spi_18 {
+        qm35@0 {
+                qm35-vdd4-supply = <&s_ldo17_reg>;
+                ss-irq-gpios = <&gpn5 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+        };
+};
