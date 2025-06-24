@@ -1,0 +1,91 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# Arguments
+#   GMODULE_SRC_PATH: The path of directory containing source of google-modules.
+#                     (default: $(KERNEL_SRC)/../private/google-modules)
+
+# Use the absolute path of this Makefile to get the source directory.
+CURRENT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+GIT_PATH=$(CURRENT_DIR)/../../
+GIT_BIN=/usr/bin/git
+GIT=$(GIT_BIN) -C $(GIT_PATH)
+# TODO(b/336717718): Remove include path of embedded IIF
+ccflags-y	+= $(EXTRA_CFLAGS) -DCONFIG_EDGETPU_TELEMETRY_TRACE=1 -DCONFIG_GCIP=1 \
+		   -I$(CURRENT_DIR)/include \
+		   -I$(CURRENT_DIR)/gcip-kernel-driver/include \
+		   -I$(CURRENT_DIR)/gcip-kernel-driver/drivers/gcip/iif/include
+# Flags needed for external modules.
+ccflags-y	+= -DCONFIG_GOOGLE_BCL
+
+ifeq ($(shell $(GIT) rev-parse --is-inside-work-tree 2> /dev/null),true)
+	GIT_REPO_STATE=$(shell ($(GIT) status --porcelain | grep -q .) && echo -dirty)
+	ccflags-y	+= -DGIT_REPO_TAG=\"$(shell $(GIT) rev-parse --short HEAD)$(GIT_REPO_STATE)\"
+endif
+
+obj-$(CONFIG_RIO)	+= rio.o
+
+GCIP_DIR=gcip-kernel-driver/drivers/gcip
+
+edgetpu-objs	:= edgetpu-async.o \
+		   edgetpu-dmabuf.o \
+		   edgetpu-firmware-util.o \
+		   edgetpu-ikv-additional-info.o \
+		   edgetpu-ikv-mailbox-ops.o \
+		   edgetpu-ikv.o \
+		   edgetpu-iremap-pool.o \
+		   edgetpu-mailbox.o \
+		   edgetpu-mapping.o \
+		   edgetpu-sw-watchdog.o \
+		   edgetpu-telemetry.o \
+		   edgetpu-thermal.o \
+		   edgetpu-trace.o \
+		   edgetpu-wakelock.o
+
+edgetpu-objs	+= $(GCIP_DIR)/gcip.o
+
+rio-objs	:= rio-core.o \
+		   rio-debug.o \
+		   rio-devfreq.o \
+		   rio-device-group.o \
+		   rio-external.o \
+		   rio-firmware.o \
+		   rio-fs.o \
+		   rio-kci.o \
+		   rio-iommu.o \
+		   rio-platform.o \
+		   rio-pm.o \
+		   rio-soc.o \
+		   rio-usage-stats.o \
+		   rio-vii-packet.o \
+		   $(edgetpu-objs)
+
+CFLAGS_rio-fs.o := -DCONFIG_RIO=1
+CFLAGS_rio-core.o := -DCONFIG_RIO=1
+CFLAGS_rio-devfreq.o := -DCONFIG_RIO=1
+CFLAGS_rio-device-group.o := -DCONFIG_RIO=1
+CFLAGS_rio-firmware.o := -DCONFIG_RIO=1
+CFLAGS_rio-iommu.o := -DCONFIG_RIO=1
+CFLAGS_rio-kci.o := -DCONFIG_RIO=1
+CFLAGS_rio-platform.o := -DCONFIG_RIO=1
+CFLAGS_rio-pm.o := -DCONFIG_RIO=1
+CFLAGS_rio-debug.o := -DCONFIG_RIO=1
+CFLAGS_rio-usage-stats.o := -DCONFIG_RIO=1
+CFLAGS_rio-vii-packet.o := -DCONFIG_RIO=1
+CFLAGS_rio-external.o := -DCONFIG_RIO=1
+CFLAGS_rio-soc.o := -DCONFIG_RIO=1
+
+
+
+
+
+# Set the path of google-modules sources if not defined.
+GMODULE_SRC_PATH ?= $(KERNEL_SRC)/../private/google-modules
+
+ifneq ($(wildcard $(GMODULE_SRC_PATH)/power/mitigation),)
+ccflags-y += -I$(GMODULE_SRC_PATH)/power/mitigation
+endif
+
+ifneq ($(wildcard $(GMODULE_SRC_PATH)/iif/include),)
+ccflags-y += -I$(GMODULE_SRC_PATH)/iif/include
+endif
+
