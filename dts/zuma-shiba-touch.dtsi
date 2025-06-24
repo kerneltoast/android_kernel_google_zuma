@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google Shiba touch device tree source
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+#include "zuma/zuma-common-touch.dtsi"
+
+&spi_20 {
+	status = "okay";
+	dma-mode;
+	dmas = <&pdma1 18 &pdma1 19>;
+	swap-mode = <1>;
+};
+
+&spitouch {
+	status = "ok";
+	compatible = "goodix,brl-d";
+
+	spi-max-frequency = <10000000>;
+
+	goodix,irq-gpio = <&gpn0 0 0>;
+	goodix,reset-gpio = <&gpp21 2 0>;
+	goodix,avdd-name = "avdd";
+	goodix,iovdd-name = "vdd";
+	goodix,irq-flags = <2>; /* 1:trigger rising, 2:trigger falling;*/
+	goodix,panel-max-x = <1079>;
+	goodix,panel-max-y = <2399>;
+	goodix,panel-max-w = <255>;
+	goodix,panel-max-p = <255>;
+	goodix,panel-height-mm = <143>;
+	goodix,udfps-x = <540>;
+	goodix,udfps-y = <1717>;
+	goodix,sleep-enable;
+	goodix,use-one-binary;
+
+	goog,panel_map = <&google_bigsurf 0>,
+			<&google_shoreline 1>;
+
+	goog,firmware_names = "goodix_firmware_bigsurf.bin",
+			"goodix_firmware_shoreline.bin";
+
+	goog,test_limits_names = "goodix_test_limits_bigsurf.csv",
+			"goodix_test_limits_shoreline.csv";
+
+	/*goog,vrr-enabled;
+	goog,vrr-display-rate = /bits/ 32 <60 120>;
+	goog,vrr-touch-rate = /bits/ 32 <120 240>;
+	goog,vrr-up-delay = <0>;
+	goog,vrr-down-delay = <2>;*/
+
+	goog,offload-enabled;
+	goog,v4l2-enabled;
+	goog,offload-caps-scan-types = /bits/ 16 <0xC0>;
+	goog,offload-caps-context-channel-types = /bits/ 16 <0x0100>;
+	goog,touch_offload_ids = /bits/ 8 <'s' 'b' '3' '0' 's' 'b' '3' '1'>;
+	goog,display-resolution = /bits/ 16 <1080 2400>;
+	goog,channel-num = /bits/ 16 <16 36>;
+	goog,tbn-enabled;
+	goog,offload-caps-coord-filter;
+	goog,coord-filter-enabled;
+
+	controller-data {
+		samsung,spi-feedback-delay = <0>;
+		samsung,spi-chip-select-mode = <0>;
+	};
+};
+
+&m_ldo25_reg {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+};
+
+&m_ldo4_reg {
+	regulator-min-microvolt = <3300000>;
+	regulator-max-microvolt = <3300000>;
+};

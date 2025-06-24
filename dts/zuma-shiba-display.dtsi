@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Display nodes for shiba-related boards.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include "zuma-shusky-display.dtsi"
+
+&drmdsim0 {
+	google_bigsurf: panel@0 {
+		compatible = "google,bigsurf";
+		label = "google-bigsurf";
+		touch = <&spitouch>;
+		vddd-normal-microvolt = <1150000>;
+		vddd-lp-microvolt     = <1062500>;
+		post-vddd-lp;
+	};
+	google_shoreline: panel@2 {
+		compatible = "google,shoreline";
+		label = "google-shoreline";
+		channel = <0>;
+		touch = <&spitouch>;
+
+		/* reset, power */
+		reset-gpios = <&gpa6 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&m_ldo14_reg>;
+		vddi-supply = <&s_bucka_reg>;
+		vddd-supply = <&m_ldo22_reg>;
+		vddd-normal-microvolt = <1150000>;
+		vddd-lp-microvolt     = <1062500>;
+		post-vddd-lp;
+	};
+};
+
+&drmdsim1 {
+	status = "disabled";
+};
+
+&drmdp {
+	status = "okay";
+};
+
+&drmdecon1 {
+	status = "okay";
+	connector = <0x10>;
+};
