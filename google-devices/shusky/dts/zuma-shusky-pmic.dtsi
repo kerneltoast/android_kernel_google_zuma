@@ -1,0 +1,200 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shusky PMIC settings
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+&pinctrl_0 {
+	odpm_vbatt_enable: odpm-vbatt-enable {
+		samsung,pins = "gpa3-2";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-val = <1>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+	odpm_vbatt_disable: odpm-vbatt-disable {
+		samsung,pins = "gpa3-2";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-val = <0>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_DOWN>;
+	};
+};
+
+&s2mpg14mfd {
+	odpm_vbatt_en: odpm_vbatt_en {
+		compatible = "google,odpm_vbatt_en";
+		pinctrl-names = "odpm-vbatt-enable", "odpm-vbatt-disable";
+		pinctrl-0 = <&odpm_vbatt_enable>;
+		pinctrl-1 = <&odpm_vbatt_disable>;
+		status = "okay";
+	};
+};
+
+&m_ldo4_reg {
+	schematic-name = "L4M_TS_AVDD";
+	subsys-name = "TS";
+};
+
+&m_ldo5_reg {
+	schematic-name = "L5M_AON";
+	subsys-name = "LDO";
+};
+
+&m_ldo22_reg {
+	schematic-name = "L22M_DISP";
+	subsys-name = "Display";
+	regulator-initial-mode = <SEC_OPMODE_ON>;
+};
+
+&m_ldo25_reg {
+	schematic-name = "L25M_TSP_DVDD";
+	subsys-name = "TS";
+};
+
+&s_ldo7_reg {
+	schematic-name = "L7S_SENSORS";
+	subsys-name = "Sensors";
+};
+
+&s_ldo12_reg {
+	schematic-name = "L12S_CAMIO";
+	subsys-name = "Camera";
+};
+
+&s_ldo15_reg {
+	schematic-name = "L15S_UDFPS_AVDD";
+	subsys-name = "FPS";
+	regulator-always-on;
+	regulator-initial-mode = <SEC_OPMODE_ON>;
+};
+
+&s_ldo20_reg {
+	schematic-name = "L20S_DMIC2";
+	subsys-name = "DMIC";
+};
+
+&s_ldo26_reg {
+	schematic-name = "L26S_LDAF";
+	subsys-name = "Camera";
+};
+
+&m_ext4_rail {
+	schematic-name = "VSYS_PWR_VBATT";
+	shunt-res-uohms = <5000>;
+	subsys-name = "BATT";
+};
+
+&s_ext4_rail {
+	schematic-name = "VSYS_PWR_DISPLAY";
+	shunt-res-uohms = <10000>;
+	subsys-name = "Display";
+};
+
+&s_ext5_rail {
+	schematic-name = "VSYS_PWR_WLAN_BT";
+	shunt-res-uohms = <10000>;
+	subsys-name = "WLAN-BT";
+};
+
+&s_ext6_rail {
+	shunt-res-uohms = <10000>;
+};
+
+// Spare LDOs
+&m_ldo12_reg {
+	schematic-name = "L12M_SPARE";
+	subsys-name = "Spare";
+};
+
+&m_ldo15_reg {
+	schematic-name = "L15M_SPARE";
+	subsys-name = "Spare";
+};
+
+&m_ldo23_reg {
+	schematic-name = "L23M_SPARE";
+	subsys-name = "Spare";
+};
+
+&m_ldo24_reg {
+	schematic-name = "L24M_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo4_reg {
+	schematic-name = "L4S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo6_reg {
+	schematic-name = "L6S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo8_reg {
+	schematic-name = "L8S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo13_reg {
+	schematic-name = "L13S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo14_reg {
+	schematic-name = "L14S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo18_reg {
+	schematic-name = "L18S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo22_reg {
+	schematic-name = "L22S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo23_reg {
+	schematic-name = "L23S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo25_reg {
+	schematic-name = "L25S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo27_reg {
+	schematic-name = "L27S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo28_reg {
+	schematic-name = "L28S_SPARE";
+	subsys-name = "Spare";
+};
+
+&s_ldo29_reg {
+	schematic-name = "L29S_SPARE";
+	subsys-name = "Spare";
+};
+
+/* replace L15M_SPARE to L22M_DISP */
+&ch9 {
+	rail-name = "LDO22M";
+};
+
+/* replace L29S_SPARE to L21S_VDD2L_MEM */
+&ch21 {
+	rail-name = "LDO21S";
+};
+
+/* Replace L9S_GNSS_CORE with S6S_LLDO2 */
+&ch20 {
+	rail-name = "BUCK6S";
+};

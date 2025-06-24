@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * husky pmic device tree source
+ *
+ * Copyright 2023 Google LLC.
+ *
+ */
+
+&s_ldo16_reg {
+				regulator-initial-mode = <SEC_OPMODE_OFF>;
+				schematic-name = "L16S_UWB";
+				subsys-name = "UWB";
+};
+
+&s_ldo17_reg {
+				regulator-initial-mode = <SEC_OPMODE_OFF>;
+				schematic-name = "L17S_UWB";
+				subsys-name = "UWB";
+};
