@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright (C) 2022, Google LLC
+ *
+ * Type-C device tree
+ */
+#include <dt-bindings/usb/pd.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/zuma.h>
+#include <arm64/exynos/exynos-pinctrl.h>
+
+&hsi2c_11{
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+#include "max777x9-tcpc.dtsi"
+};
+
+&hsi2c11_bus {
+	samsung,pins = "gpp21-0", "gpp21-1";
+	samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+};
+
+&pinctrl_0 {
+	usb_pd_irq: usb-pd-irq {
+		samsung,pins = "gpa8-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+
+	gpa7_5: gpa7-5 {
+		samsung,pins = "gpa7-5";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+};
+
+#include "max777x9-usbc-cooling-dev.dtsi"

@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * QC ultrasonic fps device tree source
+ *
+ * Copyright 2022 Google,LLC.
+ */
+
+&pinctrl_0 {
+	qcomfp_intr1: qcomfp_intr1 {
+		samsung,pins = "gpa7-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+};
+
+&pinctrl_11 {
+	qcomfp_intr2: qcomfp-intr2 {
+		samsung,pins = "gpp1-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+	};
+};
+
+&odm {
+	qbt_handler: qcom,qbt-handler {
+		status = "okay";
+		compatible = "qcom,qbt-handler";
+		interrupt-parent = <&gpa7>;
+		interrupts = <3 0>;
+		spi-max-frequency = <40000000>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&qcomfp_intr1>;
+		qcom,ipc-gpio = <&gpa7 3 GPIO_ACTIVE_HIGH>;
+		qcom,intr2-gpio = <&gpp1 0 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&s_ldo22_reg {
+	regulator-always-on;
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+};

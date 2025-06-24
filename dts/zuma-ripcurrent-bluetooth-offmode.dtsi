@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Bluetooth device tree for shusky.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <arm64/exynos/exynos-pinctrl.h>
+
+&btbcm {
+	off-mode-latch;
+};

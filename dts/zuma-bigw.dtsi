@@ -1,0 +1,87 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * BigWave device tree source
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+/ {
+	bigwave: bigwave@1A700000 {
+		compatible = "google,bigwave";
+		status = "ok";
+		reg = <0x0 0x1A700000 0x860
+			0x0 0x1A6A4000 0xa00>;
+		reg-names = "regs", "ssmt_pid";
+		interrupts = <GIC_SPI IRQ_BW_XINT_BW IRQ_TYPE_LEVEL_HIGH 0>;
+		vpu-opp-table = <&vpu_opp_table>;
+		vpu-bw-table = <&vpu_bw_table>;
+		iommus = <&sysmmu_bw>;
+		samsung,iommu-group = <&iommu_group_bw>;
+		pt_id = "bigwave";
+		power-domains = <&pd_bw>;
+		ip_ver = <0x1>;
+	};
+
+	vpu_opp_table: vpu_pp_table {
+		opp-100000000 {
+			freq-khz = <166000>;
+			/* 1920x1088@30fps */
+			load-pps = <61200>;
+		};
+		opp-310000000 {
+			freq-khz = <310000>;
+			/* 1920x1088@60fps */
+			load-pps = <122400>;
+		};
+		opp-465000000 {
+			freq-khz = <465000>;
+			/* 4096x2160@30fps */
+			load-pps = <259200>;
+		};
+		opp-711000000 {
+			freq-khz = <711000>;
+			/* 4096x2160@60fps */
+			load-pps = <518400>;
+		};
+	};
+
+	vpu_bw_table: vpu_bw_table {
+		bw-1080p-30 {
+			rd-bw = <380000>;
+			wr-bw = <390000>;
+			pk-bw = <380000>;
+			rd-bw-enc = <157376>;
+			wr-bw-enc = <51488>;
+			pk-bw-enc = <208864>;
+			load-pps = <61200>;
+		};
+		bw-1080p-60 {
+			rd-bw = <760000>;
+			wr-bw = <780000>;
+			pk-bw = <1550000>;
+			rd-bw-enc = <311232>;
+			wr-bw-enc = <97856>;
+			pk-bw-enc = <409088>;
+			load-pps = <122400>;
+		};
+		bw-2160p-30 {
+			rd-bw = <2790000>;
+			wr-bw = <2910000>;
+			pk-bw = <5700000>;
+			rd-bw-enc = <601920>;
+			wr-bw-enc = <182048>;
+			pk-bw-enc = <783968>;
+			load-pps = <259200>;
+		};
+		bw-2160p-60 {
+			rd-bw = <8740000>;
+			wr-bw = <9140000>;
+			pk-bw = <17880000>;
+			rd-bw-enc = <1206176>;
+			wr-bw-enc = <347744>;
+			pk-bw-enc = <1553920>;
+			load-pps = <518400>;
+		};
+	};
+};

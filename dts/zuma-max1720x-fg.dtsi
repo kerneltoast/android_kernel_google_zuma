@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to max1720x-fg
+ *
+ * Copyright 2023 Google LLC
+ *
+ */
+
+max1720x_fg: max1720x@36 {
+	status = "okay";
+	compatible = "maxim,max1720x";
+	reg-names = "m5db", "nvram";
+	reg = <0x36 0x0b>;
+
+	pinctrl-names = "default";
+	maxim,irqf-shared;
+
+	maxim,rsense-default = <300>;
+
+	/* no needed for EEPROM */
+	maxim,batt-id-range-pct = <0>;
+	maxim,psy-type-unknown;
+
+	maxim,dual-battery = "maxfg_secondary";
+	maxim,read-batt-sn = <1>;
+
+	maxim,filtercfg-temp = <100>;
+	maxim,filtercfg-temp-hysteresis = <30>;
+	maxim,filtercfg-default = /bits/ 16 <0xeb5>;
+	maxim,filtercfg-adjust = /bits/ 16 <0xea7>;
+};
