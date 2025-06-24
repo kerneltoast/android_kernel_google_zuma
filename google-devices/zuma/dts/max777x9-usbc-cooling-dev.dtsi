@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * USB-C cooling device common to MAX777*9 TCPC
+ *
+ * Copyright 2023 Google LLC
+ *
+ */
+
+/ {
+	fragment@typec {
+		target-path = "/";
+		__overlay__ {
+			google,usbc_port_cooling_dev {
+				extcon = <&max77759tcpc>;
+				compatible = "google,usbc_port_cooling_dev";
+				google,usb-cd-polling-interval-ms = <5000>;
+				google,usb-cd-connected-interval-ms = <700>;
+				google,usb-cd-unplug-interval-sec = <2>;
+				#cooling-cells = <2>;
+			};
+		};
+	};
+};

@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * GXP device tree source
+ *
+ * Copyright 2022 Google LLC.
+ *
+ */
+
+/ {
+	gxp: callisto@20C00000 {
+		compatible = "google,gxp-zuma";
+		status = "ok";
+		#dma-address-cells = <1>;
+		#dma-size-cells = <2>;
+		dma-window = <0x00001000 0xF 0xFFFFF000>; /* SysMMU attribute. */
+		/* Prevent crossing DMA boundary. */
+		samsung,iommu-reserved-map = <0x0 0x80000000 0x1000>;
+		gcip-dma-window = <0x30000000 0x0 0xC0000000>; /* GCIP IOMMU attribute. */
+		gcip-reserved-map = <0x80000000 0x0 0x1000>;
+		pasid-num-bits = <3>;
+		reg = <0x0 0x20C00000 0x01400000
+		       /* Mailboxes */
+		       0x0 0x15320000 0x1000
+		       0x0 0x15340000 0x1000
+		       0x0 0x15360000 0x1000
+		       0x0 0x15280000 0x1000
+		       0x0 0x152A0000 0x1000
+		       /* CMU AUR */
+		       0x0 0x20A00000 0x1000
+		       /* SSMTs */
+		       0x0 0x20AD0000 0x10000
+		       0x0 0x20AE0000 0x10000>;
+		reg-names = "aur",
+			    "mailbox0", "mailbox1", "mailbox2", "mailbox3", "mailbox4",
+			    "cmu", "ssmt_idma", "ssmt_inst_data";
+		interrupts = <GIC_SPI IRQ_MAILBOX_AURCORE02AP_ALIVE IRQ_TYPE_LEVEL_HIGH 0
+			      GIC_SPI IRQ_MAILBOX_AURCORE12AP_ALIVE IRQ_TYPE_LEVEL_HIGH 0
+			      GIC_SPI IRQ_MAILBOX_AURCORE22AP_ALIVE IRQ_TYPE_LEVEL_HIGH 0
+			      GIC_SPI IRQ_MAILBOX_AURMCUNS02AP_ALIVE IRQ_TYPE_LEVEL_HIGH 0
+			      GIC_SPI IRQ_MAILBOX_AURMCUNS12AP_ALIVE IRQ_TYPE_LEVEL_HIGH 0
+                              GIC_SPI IRQ_AUR_WDOG_AP_IRQ_AUR IRQ_TYPE_LEVEL_HIGH 0>;
+		tpu-device = <&edgetpu>;
+		gxp-tpu-mbx-offset = <0x0 0x50000>;
+		iommus = <&sysmmu_aur>;
+		samsung,iommu-group = <&iommu_group_aur>;
+		gxp-fw-region = <&gxp_fw_reserved>;
+		gxp-scratchpad-region = <&gxp_scratchpad_reserved>;
+		gxp-secure-data-region = <&gxp_secure_data_reserved>;
+		gxp-mcu-fw-region = <&gxp_mcu_fw_reserved>;
+		gxp-memory-per-core = <0 512>;
+		gxp,shareability = <0x20a40700>; /* SYSREG_AUR0 */
+		gsa-device=<&gsa>;
+		gcip-dvfs-table-size = <7 2>; /*<row col>*/
+		gcip-dvfs-table = <
+			/*
+			 * when updating gcip-dvfs-table, update gcip-dvfs-table-size as well
+			 * freq   power(mW)
+			 * -------------------
+			 */
+			1065000   78
+			 861000   58
+			 713000   40
+			 560000   27
+			 355000   20
+			 256000   16
+			 178000   13
+		>;
+		iif-fence-wait-table-region = <&iif_wait_table_reserved>;
+		iif-fence-signal-table-region = <&iif_signal_table_reserved>;
+		pmu-aur-status = <0x15462304>;
+	};
+	gxp_cooling: gxp-cooling {
+		#cooling-cells = <2>;
+	};
+};
+

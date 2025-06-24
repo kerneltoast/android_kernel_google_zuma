@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to dual battery
+ *
+ * Copyright 2023 Google LLC
+ *
+ */
+
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/ {
+	fragment@battery {
+		target-path = "/";
+		__overlay__ {
+
+			google_battery: google,battery {
+				status = "okay";
+				compatible = "google,battery";
+				google,fg-psy-name = "dualbatt";
+				google,chg-battery-capacity = <4531>;
+
+				/* charge table */
+				google,chg-temp-limits = <0 100 200 420 460 480 550>;
+				google,chg-cv-limits = <4100000 4200000 4250000 4270000 4300000 4350000 4500000>;
+				google,chg-cc-limits = <
+					 30  30  10  10  10   0   0
+					 50  50  30  30  30  30  30
+					100 100 100 100  70  70  50
+					 80  80  80  50  50  50  50
+					 50  50  50   0   0   0   0
+					 30   0   0   0   0   0   0
+				>;
+			};
+
+			google_dual_batt_gauge: google,dual_batt_gauge {
+				status = "okay";
+				compatible = "google,dual_batt_gauge";
+				google,first-fg-psy-name = "maxfg_base";
+				google,second-fg-psy-name = "maxfg_secondary";
+				google,vfloat-offset-max-idx = <1>;
+				google,cc-balance-ratio = <80>; /* 80% */
+				google,psy-type-unknown;
+				google,chg-base-battery-capacity = <1183>;
+				google,chg-sec-battery-capacity = <3348>;
+
+				google,chg-pack-cc-limits = <
+					 30  30  10  10  10   0   0
+					 50  50  30  30  30  30  30
+					110 110 110 110  70  70  50
+					 80  80  80  50  50  50  50
+					 50  50  50   0   0   0   0
+					 30   0   0   0   0   0   0
+				>;
+			};
+
+		};
+	};
+};

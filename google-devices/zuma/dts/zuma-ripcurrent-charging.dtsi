@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to ripcurrent
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include "zuma-charging.dtsi"
+
+&pinctrl_0 {
+
+	dc_charger_irq: dc-charger-irq {
+		samsung,pins = "gpa7-4"; /* XEINT_18 (PLC_INT_L) */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+	};
+};
+
+&hsi2c_11 {
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	clock-frequency = <400000>;
+
+	#include "zuma-charge-pump-pca9468.dtsi"
+};
+
+&pca9468_dc {
+	status = "okay";
+	pinctrl-0 = <&dc_charger_irq>;
+
+	interrupt-parent = <&gpa7>;
+	pca9468,irq-gpio = <&gpa7 4 GPIO_ACTIVE_LOW>; /* PLC_INT_L */
+};

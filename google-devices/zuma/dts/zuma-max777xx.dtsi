@@ -1,0 +1,188 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Max777xx devicetree config.
+ * Intended to be included on the I2C busses for Max777 devices.
+ *
+ * Copyright 2023 Google LLC
+ *
+ */
+
+max77729_pmic:max77729pmic@66 {
+	status = "okay";
+	compatible = "maxim,max77729pmic";
+	reg = <0x66>;
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&if_pmic_irq>;
+	max777x9,irq-gpio = <&gpa8 0 GPIO_ACTIVE_LOW>;
+
+	max77759,max_m5 = <&max77759_fg>;
+
+	max777x9_gpio: max777x9_gpio {
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <6>;
+
+		interrupt-parent = <&gpa8>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		interrupts = <5 IRQ_TYPE_NONE>,
+			     <6 IRQ_TYPE_NONE>;
+	};
+};
+
+max77759_fg:max77759fg@36 {
+	status = "okay";
+	compatible = "maxim,max77759";
+	reg = <0x36>;
+
+	/* FG_INT_L -> XEINT_21 */
+	pinctrl-names = "default";
+	maxim,irq-gpio = <&gpa7 7 GPIO_ACTIVE_LOW>;
+
+	maxim,gauge-type = <2>;
+	maxim,rsense-default = <500>;
+	maxim,batt-id-range-pct = <0>;
+
+	maxim,rc-enable;
+	maxim,rc-soc = <20>;
+	maxim,rc-temp = <50>;
+
+	maxim,psy-type-unknown;
+	maxim,fg-data {
+		#include "zuma-ripcurrent-battery-data.dtsi"
+	};
+};
+
+max77759_chg:max77759chrg@69 {
+	status = "okay";
+	compatible = "maxim,max77759chrg";
+	reg = <0x69>;
+
+	interrupt-parent = <&gpa8>;
+	max77759,irq-gpio = <&gpa8 0 GPIO_ACTIVE_LOW>;
+
+	max77759,psy-name = "main-charger";
+	max77759,max_m5 = <&max77759_fg>;
+	max77759,pmic = <&max77729_pmic>;
+
+	max77759,chg-term-voltage = <4400>;
+
+	#thermal-sensor-cells = <1>;
+};
+
+	/* max77779 nodes */
+max77779_fg:max77779fg@36 {
+	status = "disabled";
+	compatible = "maxim,max77779fg-i2c";
+	reg = <0x36>;
+
+	interrupt-parent = <&max77779_pmic_irq>;
+	interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
+
+	max77779,pmic = <&max77779_pmic>;
+
+	max77779,psy-type-unknown;
+	maxim,fg-data {
+		#include "zuma-fake-battery-data.dtsi"
+	};
+};
+
+
+max77779_vimon:max77779vimon@28 {
+	status = "disabled";
+	compatible = "maxim,max77779vimon-i2c";
+	reg = <0x28>;
+
+	interrupt-parent = <&max77779_pmic_irq>;
+	interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+
+	max77779,pmic = <&max77779_pmic>;
+
+	max77779,psy-type-unknown;
+};
+
+
+max77779_chg:max77779chrg@69 {
+	status = "disabled";
+	compatible = "maxim,max77779chrg-i2c";
+	reg = <0x69>;
+
+	max77779,psy-name = "main-charger";
+	max77779,pmic = <&max77779_pmic>;
+
+	interrupt-parent = <&max77779_pmic_irq>;
+	interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+
+	interrupt-controller;
+	#interrupt-cells = <2>;
+
+	max77779,chg-term-voltage = <4400>;
+
+	max77779_gpio: max77779_gpio {
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <1>;
+	};
+};
+
+max77779_sp:max77779sp@60 {
+	status = "disabled";
+	compatible = "maxim,max77779sp-i2c";
+	reg = <0x60>;
+};
+
+max77779_pmic:max77779pmic@66 {
+	compatible = "maxim,max77779pmic-i2c";
+	reg = <0x66>;
+	status = "disabled";
+
+	max77779_pmic_irq:max77779pmicirq {
+		compatible = "max77779-pmic-irq";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&if_pmic_irq>;
+
+		interrupt-parent = <&gpa8>;
+		max777x9,irq-gpio = <&gpa8 0 GPIO_ACTIVE_LOW>;
+
+		interrupt-controller;
+		#interrupt-cells = <2>;
+	};
+
+	max77779_pinctrl:max77779pinctrl {
+		compatible = "max77779-pinctrl";
+	};
+
+	max77779_sgpio: max77779_sgpio {
+		gpio-controller;
+		compatible = "max77779-pmic-sgpio";
+		#gpio-cells = <2>;
+
+		pinctrl-names = "default";
+		gpio-ranges = <&max77779_pinctrl 0 0 8>;
+
+		interrupt-parent = <&max77779_pmic_irq>;
+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+		ngpios = <8>;
+
+		interrupt-controller;
+		#interrupt-cells = <2>;
+	};
+};
+
+max77779_i2cm:max77779i2cm@64 {
+	reg = <0x64>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	compatible = "maxim,max77779i2cm-i2c";
+	status = "disabled";
+
+	interrupt-parent = <&max77779_pmic_irq>;
+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+
+	max77779,timeout = <0xff>;
+	max77779,completion_timeout_ms = <0x200>;
+	max77779,speed = <0x00>;
+};
