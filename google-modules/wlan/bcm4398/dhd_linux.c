@@ -4869,8 +4869,9 @@ dhd_dpc_thread(void *data)
 	tsk_ctl_t *tsk = (tsk_ctl_t *)data;
 	dhd_info_t *dhd = (dhd_info_t *)tsk->parent;
 
-#ifdef CUSTOM_DPC_CPUCORE
-	set_cpus_allowed_ptr(current, cpumask_of(CUSTOM_DPC_CPUCORE));
+#ifdef CUSTOM_DPC_CPUMASK
+	set_cpus_allowed_ptr(current,
+		to_cpumask(&(unsigned long){ CUSTOM_DPC_CPUMASK }));
 #endif
 #ifdef CUSTOM_SET_CPUCORE
 	dhd->pub.current_dpc = current;
