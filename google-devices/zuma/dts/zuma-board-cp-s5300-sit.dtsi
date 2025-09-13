@@ -1,0 +1,154 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Samsung CP interface device tree source
+ *
+ * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+ *             http://www.samsung.com
+ */
+
+#include <dt-bindings/pinctrl/zuma.h>
+#include "zuma-cp-s5300-sit.dtsi"
+
+/ {
+	fragment@modemif {
+		target-path = "/";
+		__overlay__ {
+			spmi_bb: s5910_bb {
+				compatible = "google,bitbang-spmi-controller";
+				status = "okay";
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				clk-gpio = <&gpa3 0 GPIO_ACTIVE_HIGH>;
+				dat-gpio = <&gpa3 1 GPIO_ACTIVE_HIGH>;
+
+				delay_us = <10>;
+
+				s5910: s5910@5 {
+					reg = <0x05 0>;
+					compatible = "google,s5910-spmi";
+
+                                        /*         ms   reg  val */
+					s5910,seq =
+						<   0 0x215 0x0f>,
+						<1000 0x20e 0x04>,
+						<   0 0x240 0x10>;
+				};
+			};
+
+			cpif {
+				pinctrl-names = "default";
+				pinctrl-0 = <&s5100_ap2cp_cp_pwr_on>,
+					<&s5100_ap2cp_cp_nreset_n>,
+					<&s5100_cp2ap_cp_ps_hold>,
+					<&s5100_ap2cp_wakeup>,
+					<&s5100_cp2ap_wakeup>,
+					<&s5100_ap2cp_dump_noti>,
+					<&s5100_ap2cp_pda_active>,
+					<&s5100_cp2ap_phone_active>,
+					<&s5100_ap2cp_cp_wrst_n>,
+					<&s5100_cp2ap_cp_wrst_n>,
+					<&s5100_ap2cp_pm_wrst_n>;
+
+				/* Definition of GPIOs */
+				gpio_ap2cp_wake_up =	<&gph0 2 0x1>;
+				gpio_ap2cp_dump_noti =	<&gph0 3 0x1>;
+				gpio_ap2cp_cp_pwr_on =	<&gph1 2 0x1>;
+				gpio_ap2cp_pda_active =	<&gph1 0 0x1>;
+				gpio_ap2cp_nreset_n =	<&gph1 7 0x1>;
+				gpio_ap2cp_cp_wrst_n =	<&gph1 1 0x1>;
+				gpio_cp2ap_cp_wrst_n =  <&gpa0 1 0x1>;
+				gpio_ap2cp_pm_wrst_n =	<&gpa0 2 0x1>;
+
+				gpio_cp2ap_phone_active = <&gpa7 0 0x1>;
+				gpio_cp2ap_cp_ps_hold =	<&gpa6 4 0x1>;
+				gpio_cp2ap_wake_up =	<&gpa6 5 0x1>;
+
+				/*
+				* The pad assignment of CP2AP_ACTIVE is not in PAD_ALIVE
+				* to be registered wake-up source. (Bug 152900487)
+				* CP2AP_ACTIVE is assigned to XEINT_17 for factor designs.
+				*/
+				mif,cp2ap_active_not_alive = <0>;
+
+				/* phandle used for shutdown calls to s5910 clk-buffer*/
+				google,clk-buffer = <&s5910>;
+			};
+		};
+	};
+};
+
+&pinctrl_0 {
+	s5100_cp2ap_cp_wrst_n: s5100_cp2ap_cp_wrst_n {
+		samsung,pins = "gpa0-1";
+		samsung,pin-function = <0>;
+		samsung,pin-pud = <0>;
+	};
+
+	s5100_ap2cp_pm_wrst_n: s5100_ap2cp_pm_wrst_n {
+		samsung,pins = "gpa0-2";
+		samsung,pin-function = <1>;
+		samsung,pin-pud = <0>;
+	};
+
+	s5100_cp2ap_wakeup: s5100_cp2ap_wakeup {
+		samsung,pins = "gpa6-5";
+		samsung,pin-function = <0xf>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+	};
+
+	s5100_cp2ap_phone_active: s5100_cp2ap_phone_active {
+		samsung,pins = "gpa7-0";
+		samsung,pin-function = <0xf>;
+		samsung,pin-pud = <0>;
+	};
+
+	s5100_cp2ap_cp_ps_hold: s5100_cp2ap_cp_ps_hold {
+		samsung,pins = "gpa6-4";
+		samsung,pin-pud = <0>;
+	};
+};
+
+&pinctrl_8 {
+	s5100_ap2cp_cp_nreset_n: s5100_ap2cp_cp_nreset_n {
+		samsung,pins = "gph1-7";
+		samsung,pin-pud = <0>;
+		samsung,pin-con-pdn = <3>;
+		samsung,pin-pud-pdn = <0>;
+	};
+
+	s5100_ap2cp_cp_pwr_on: s5100_ap2cp_cp_pwr_on {
+		samsung,pins = "gph1-2";
+		samsung,pin-pud = <0>;
+		samsung,pin-con-pdn = <3>;
+		samsung,pin-pud-pdn = <0>;
+	};
+
+	s5100_ap2cp_pda_active: s5100_ap2cp_pda_active {
+		samsung,pins = "gph1-0";
+		samsung,pin-pud = <0>;
+		samsung,pin-con-pdn = <3>;
+		samsung,pin-pud-pdn = <0>;
+	};
+
+	s5100_ap2cp_wakeup: s5100_ap2cp_wakeup {
+		samsung,pins = "gph0-2";
+		samsung,pin-pud = <0>;
+		samsung,pin-con-pdn = <3>;
+		samsung,pin-pud-pdn = <0>;
+	};
+
+	s5100_ap2cp_dump_noti: s5100_ap2cp_dump_noti {
+		samsung,pins = "gph0-3";
+		samsung,pin-pud = <0>;
+		samsung,pin-con-pdn = <3>;
+		samsung,pin-pud-pdn = <0>;
+	};
+
+	s5100_ap2cp_cp_wrst_n: s5100_ap2cp_cp_wrst_n {
+		samsung,pins = "gph1-1";
+		samsung,pin-pud = <0>;
+		samsung,pin-con-pdn = <3>;
+		samsung,pin-pud-pdn = <0>;
+	};
+};

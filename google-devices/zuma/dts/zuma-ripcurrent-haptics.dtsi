@@ -1,0 +1,174 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google Zuma cs40l26 device tree source
+ *
+ * Copyright (c) 2022 Google, LLC
+ *		https://www.google.com
+ *
+*/
+
+#include <dt-bindings/gpio/gpio.h>
+#include <arm64/exynos/exynos-pinctrl.h>
+
+&dai_be_haptic_rx {
+	dai_be_haptic_rx_codec: codec {
+		sound-dai = <&cs40l26_codec 0>, <&cs40l26_codec_2 0>;
+	};
+};
+
+&aoc_snd_card {
+	clks {
+		sys {
+			sys@cs40l26_codec {
+				comp = <&cs40l26_codec>;
+				src = "BCLK";
+				/* clk id */
+				id = <0>;
+				/* clk source */
+				srcid = <0>;
+				/* in clk multiple */
+				in_mul = <1>;
+				/* out clk multiple */
+				out_mul = <1>;
+			};
+
+			sys@cs40l26_codec_2 {
+				comp = <&cs40l26_codec_2>;
+				src = "BCLK";
+				/* clk id */
+				id = <0>;
+				/* clk source */
+				srcid = <0>;
+				/* in clk multiple */
+				in_mul = <1>;
+				/* out clk multiple */
+				out_mul = <1>;
+			};
+
+		};
+	};
+};
+
+/* GPIO_ALIVE*/
+&pinctrl_0 {
+	hapt_amp1_irq: hapt-amp1-irq {
+		samsung,pins = "gpa6-3"; /* XEINT_11 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+/* GPIO_FAR_ALIVE */
+&pinctrl_2 {
+	hapt_amp2_irq: hapt-amp2-irq {
+		samsung,pins = "gpa5-0"; /* XEINT_0 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+/* GPIO_HSI1 */
+&pinctrl_8 {
+	hapt_amp1_rst: hapt-amp1-rst {
+		samsung,pins = "gph2-3"; /* XHSI1_GPIO13 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	hapt_amp_trig: hapt-amp-trig {
+		samsung,pins = "gph2-0"; /* XHSI1_GPIO10 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+/* GPIO_PERIC0 */
+&pinctrl_11 {
+	hapt_amp2_rst: hapt-amp2-rst {
+		samsung,pins = "gpp16-2"; /* XAPC_USI14_RTSn_DI */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+
+&hsi2c_0 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	clock-frequency = <400000>;
+
+	cs40l26a@42 {
+		compatible = "cirrus,cs40l26a";
+		reg = <0x42>;
+		input-device-name = "cs40l26_dual_input";    /* input device name */
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&hapt_amp1_irq &hapt_amp1_rst &hapt_amp_trig>;
+
+		interrupt-parent = <&gpa6>;
+		interrupts = <3 0 0>;
+
+		reset-gpios = <&gph2 3 GPIO_ACTIVE_LOW>;
+
+		cirrus,bst-dcm-en = <0>;
+		cirrus,pwle-zero-cross-en;
+		cirrus,vpbr-enable;
+		cirrus,vpbr-thld-uv = <2800000>;	/* 2.8V */
+		cirrus,bst-expl-mode-disable;
+		cirrus,bst-ipk-microamp = <3500000>;	/* 3.5A */
+		cirrus,bst-ctl-microvolt = <11000000>;	/* 11V */
+		cirrus,f0-default = <0x244000>;		/* 145 Hz */
+		cirrus,redc-default = <0x68000>;	/* 13 Ohm */
+		cirrus,pm-active-timeout-ms = <5>;
+
+		status = "okay";
+
+		cs40l26_codec: cs40l26_codec@snd {
+			#sound-dai-cells = <1>;
+			compatible = "cs40l26-codec";
+			status = "okay";
+		};
+	};
+
+	cs40l26a@43 {
+		compatible = "cirrus,cs40l26a";
+		reg = <0x43>;
+		input-device-name = "cs40l26_input";    /* input device name */
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&hapt_amp2_irq &hapt_amp2_rst>;
+
+		interrupt-parent = <&gpa5>;
+		interrupts = <0 0 0>;
+
+		reset-gpios = <&gpp16 2 GPIO_ACTIVE_LOW>;
+
+		cirrus,bst-dcm-en = <0>;
+		cirrus,pwle-zero-cross-en;
+		cirrus,vpbr-enable;
+		cirrus,vpbr-thld-uv = <2800000>;	/* 2.8V */
+		cirrus,bst-expl-mode-disable;
+		cirrus,bst-ipk-microamp = <3500000>;	/* 3.5A */
+		cirrus,bst-ctl-microvolt = <11000000>;	/* 11V */
+		cirrus,f0-default = <0x244000>;		/* 145 Hz */
+		cirrus,redc-default = <0x68000>;	/* 13 Ohm */
+		cirrus,pm-active-timeout-ms = <5>;
+
+		status = "okay";
+
+		cs40l26_codec_2: cs40l26_codec_2@snd {
+			#sound-dai-cells = <1>;
+			compatible = "cs40l26-codec";
+			sound-name-prefix = "HR";
+			status = "okay";
+		};
+	};
+};

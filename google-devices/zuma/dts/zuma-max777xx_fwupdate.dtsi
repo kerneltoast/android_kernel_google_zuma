@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Max777xx firmware update config.
+ *
+ * Copyright 2023 Google LLC
+ *
+ */
+
+/ {
+	fragment@battery {
+		target-path = "/";
+		__overlay__ {
+			max77779_fwupdate:maxim,max77779fwu {
+				status = "disabled";
+				compatible = "maxim,max77779fwu";
+				max77779,pmic = <&max77779_pmic>;
+				max77779,fg = <&max77779_fg>;
+				max77779,vimon = <&max77779_vimon>;
+				max77779,chg = <&max77779_chg>;
+				google,battery = <&google_battery>;
+
+				/* 0: disable, 1: enable */
+				fwu,enabled = <0>;
+			};
+
+		};
+	};
+};

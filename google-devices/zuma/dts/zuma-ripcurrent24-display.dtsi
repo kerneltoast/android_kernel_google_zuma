@@ -1,0 +1,108 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Display nodes for slider-related boards.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include "zuma-ripcurrent-display.dtsi"
+
+&dsim_modes {
+	dsim-modes {
+		960x2142 {
+			mode-name = "960x2142";
+			pmsk = <
+				0x1 0x6F 0x2 0x5400 /* p m s k */
+				>;
+			hs-clk = <1368>;
+			esc-clk = <20>;
+		};
+		1008x2244 {
+			mode-name = "1008x2244";
+			pmsk = <
+				0x1 0x6F 0x2 0x5400 /* p m s k */
+				>;
+			hs-clk = <1368>;
+			esc-clk = <20>;
+		};
+		1080x2400 {
+			mode-name = "1080x2400";
+			pmsk = <
+				0x2 0xf6 0x3 0x1800 /* p m s k */
+				>;
+			hs-clk = <756>;
+			esc-clk = <20>;
+		};
+		1080x2424 {
+			mode-name = "1080x2424";
+			pmsk = <
+				0x2 0xf6 0x3 0x1800 /* p m s k */
+				>;
+			hs-clk = <756>;
+			esc-clk = <20>;
+		};
+		1280x2856 {
+			mode-name = "1280x2856";
+			pmsk = <
+				0x1 0x6F 0x2 0x5400 /* p m s k */
+				>;
+			hs-clk = <1368>;
+			esc-clk = <20>;
+		};
+		1344x2992 {
+			mode-name = "1344x2992";
+			pmsk = <
+				0x1 0x6F 0x2 0x5400 /* p m s k */
+				>;
+			hs-clk = <1368>;
+			esc-clk = <20>;
+		};
+	};
+};
+
+&drmdsim1 {
+	status = "okay";
+	panel@5 {
+		compatible = "google,km4";
+		label = "google-km4";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_bucka_reg>;
+	};
+	panel@6 {
+		compatible = "google,cm4";
+		label = "google-cm4";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_bucka_reg>;
+	};
+	panel@7 {
+		compatible = "google,tk4b";
+		label = "google-tk4b";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_bucka_reg>;
+		vddd-supply = <&disp_vddd>;
+	};
+	panel@8 {
+		compatible = "google,tk4a";
+		label = "google-tk4a";
+		channel = <0>;
+
+		/* reset, power */
+		reset-gpios = <&gpp10 0 GPIO_ACTIVE_HIGH>;
+		vci-supply = <&s_ldo8_reg>;
+		vddi-supply = <&s_bucka_reg>;
+		vddd-supply = <&disp_vddd>;
+	};
+};

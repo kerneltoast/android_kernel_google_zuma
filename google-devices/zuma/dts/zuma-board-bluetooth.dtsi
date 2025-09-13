@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Common Bluetooth device tree for zuma.
+ *
+ * Copyright 2022 Google LLC
+ *
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <arm64/exynos/exynos-pinctrl.h>
+#include <dt-bindings/pinctrl/zuma.h>
+
+&pinctrl_1 {
+	bt_reg_on: bt-reg-on {
+		samsung,pins ="gpn8-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+	bt_dev_wake: bt-dev-wake {
+		samsung,pins ="gpn9-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_DOWN>;
+	};
+	bt_host_wake: bt-host-wake {
+		samsung,pins ="gpn6-0";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_F>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_DOWN>;
+	};
+};
+
+&pinctrl_12 {
+	bt_ble_dbo_le: bt-ble-dbo-le {
+		samsung,pins ="gpp24-3";
+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-drv = <ZUMA_PIN_DRV_X1>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_DOWN>;
+	};
+};
+
+&serial_18 {
+	status = "okay";
+};
+
+&odm {
+	btbcm: btbcm {
+		compatible = "goog,nitrous";
+		pinctrl-0 = <&bt_reg_on &bt_dev_wake &bt_host_wake &bt_ble_dbo_le>;
+		pinctrl-names = "default";
+		shutdown-gpios = <&gpn8 0 GPIO_ACTIVE_HIGH>;
+		host-wakeup-gpios = <&gpn6 0 GPIO_ACTIVE_HIGH>;
+		device-wakeup-gpios = <&gpn9 0 GPIO_ACTIVE_HIGH>;
+		bt-ble-dbo-le-gpios =<&gpp24 3 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};

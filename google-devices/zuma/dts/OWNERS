@@ -1,0 +1,6 @@
+# Do not inherit owners defined for carveout and dmaheap memory
+per-file gs101-dma-heap.dtsi, gs101-faceauth-dma-heap.dtsi = set noparent
+
+# Set owners for the carveout and dmaheap memory
+per-file gs101-dma-heap.dtsi, gs101-faceauth-dma-heap.dtsi = minchan@google.com, liumartin@google.com, wvw@google.com
+per-file gs101-dma-heap.dtsi, gs101-faceauth-dma-heap.dtsi = file:kernel/manifest:/OWNERS_pixel_codebase
