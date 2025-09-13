@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Shusky PCIe settings
+ *
+ * Copyright 2023 Google LLC.
+ *
+ */
+
+&pcie_0 {
+        support-msi64-addressing = "true";
+};
+
+&pcie_1 {
+        support-msi64-addressing = "true";
+};
+

@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * CPIF features for shusky
+ *
+ * Copyright 2024 Google, LLC.
+ */
+
+#include <dt-bindings/thermal/thermal.h>
+
+&cpif {
+	mif_off_during_volte = <1>;
+};

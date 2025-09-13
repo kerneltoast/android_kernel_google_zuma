@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to panther
+ *
+ * Copyright 2022 Google,LLC
+ *
+ */
+
+&google_battery {
+	google,chg-battery-capacity = <4485>;
+	google,chg-cc-limits = <
+		50   30    0   0
+                70   30   30  30
+               120  120  120  50
+               100  100  100  50
+                50   50    0   0
+                30    0    0   0
+	>;
+
+	google,aact-cv-limits = <4200000 4300000 4350000 4480000>;
+	google,aact-temp-limits = <0 100 200 420 460 480 550>;
+	google,chg-aact-ecc = <0 300 1000>;
+	google,aact-cc-limits = <
+		50   30    0   0
+                70   30   30  30
+               120  120  120  50
+               100  100  100  50
+                50   50    0   0
+                30    0    0   0
+		50   30    0   0
+                70   30   30  30
+               110  110  110  50
+               100  100  100  50
+                50   50    0   0
+                30    0    0   0
+		50   30    0   0
+                70   30   30  30
+               100  100  100  50
+               100  100  100  50
+                50   50    0   0
+                30    0    0   0
+	>;
+
+	/* 90% after 600 cycles, 80% after 1000 cycles */
+	google,aacr-algo = <3>;
+	google,aacr-cliff-capacity-rate = <80>;
+	google,aacr-cycle-max = <1000>;
+
+	google,batt-id-1-atl {
+		google,batt-id = <1>;
+		google,aacr-ref-cycles = <599 600 1000>;
+		google,aacr-ref-fade10 = <  0 100  100>;
+		google,aafv-ref-cycles = <200 400 600 800 1000 1001>;
+		google,aafv-ref-offset = <  0  20  40  60   80  100>;
+	};
+	google,batt-id-2-cos {
+		google,batt-id = <2>;
+		google,aacr-ref-cycles = <599 600 1000>;
+		google,aacr-ref-fade10 = <  0 100  100>;
+		google,aafv-ref-cycles = <200 400 600 800 1000 1001>;
+		google,aafv-ref-offset = <  0  20  40  60   80  100>;
+	};
+};
+
+&max77759_fg {
+	maxim,rc-enable;
+	maxim,rc-soc = <20>;
+	maxim,rc-temp = <50>;
+
+	maxim,filtercfg-temp = <100>;
+	maxim,filtercfg-temp-hysteresis = <30>;
+	maxim,filtercfg-default = /bits/ 16 <0x0613>;
+	maxim,filtercfg-adjust = /bits/ 16 <0x0616>;
+
+	maxim,fg-data {
+		#include "zuma-shiba-battery-data.dtsi"
+	};
+};

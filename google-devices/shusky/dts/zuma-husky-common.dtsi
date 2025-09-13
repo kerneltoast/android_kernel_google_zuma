@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Husky board device tree source
+ *
+ * Copyright 2022 Google LLC
+ */
+
+#include "zuma-shusky-board.dtsi"
+
+#include "zuma-husky-audio.dtsi"
+#include "zuma-husky-battery.dtsi"
+#include "zuma-husky-camera.dtsi"
+#include "zuma-husky-charging.dtsi"
+#include "zuma-husky-display.dtsi"
+#include "zuma-husky-touch.dtsi"
+#include "zuma-shusky-haptics.dtsi"
+#include "zuma-husky-uwb.dtsi"
+#include "zuma-shusky-thermal.dtsi"
+#include "zuma/zuma-ripcurrent-bluetooth.dtsi"
+#include "zuma-husky-pmic.dtsi"
+#include "zuma-shusky-pmic.dtsi"
+#include "zuma-shusky-bcl.dtsi"
+#include "zuma-husky-wcharger.dtsi"
+#include "zuma-shusky-cp-features.dtsi"

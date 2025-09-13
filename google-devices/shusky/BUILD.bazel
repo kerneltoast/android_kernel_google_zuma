@@ -1,0 +1,79 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+load("//private/devices/google/common/kleaf:device_build.bzl", "device_build")
+load("//private/devices/google/zuma:constants.bzl", "ZUMA_DPM_DTBOS", "ZUMA_DTBS", "ZUMA_MODULE_OUTS")
+load(":constants.bzl", "SHUSKY_DTBOS")
+
+device_build(
+    name = "shusky",
+    base_device = "//private/devices/google/zuma:zuma_base",
+    build_dtb = True,
+    build_dtbo = True,
+    build_system_dlkm = True,
+    build_vendor_dlkm = True,
+    build_vendor_kernel_boot = True,
+    defconfig_fragments = ["shusky_defconfig"],
+    dtb_outs = ZUMA_DTBS,
+    dtbo_additional_outs = ZUMA_DPM_DTBOS,
+    dtbo_outs = SHUSKY_DTBOS,
+    dts_makefile = "dts/Makefile",
+    dts_srcs = glob(["dts/**"]) + [
+        "//private/google-modules/soc/gs:gs.dt-bindings",
+    ],
+    ext_modules = [
+        # keep sorted
+        "//private/devices/google/shusky/display:drm_panel.google",
+        "//private/google-modules/amplifiers/cs35l41",
+        "//private/google-modules/amplifiers/cs40l26",
+        "//private/google-modules/amplifiers/snd_soc_wm_adsp:snd-soc-wm-adsp",
+        "//private/google-modules/bluetooth/broadcom:bluetooth.broadcom",
+        "//private/google-modules/gps/broadcom/bcm47765",
+        "//private/google-modules/nfc",
+        "//private/google-modules/radio/samsung/s5300:cpif",
+        "//private/google-modules/touch/common:touch.common",
+        "//private/google-modules/touch/fts/ftm5",
+        "//private/google-modules/touch/goodix",
+        "//private/google-modules/touch/sec",
+        "//private/google-modules/uwb/qorvo/qm35/qm35s:uwb.qm35",
+        "//private/google-modules/wlan/bcm4398:bcmdhd4398",
+        "//private/google-modules/wlan/wlan_ptracker",
+    ],
+    insmod_cfgs = glob(["insmod_cfg/*.cfg"]),
+    kconfig_exts = ["Kconfig.ext.shusky"],
+    kconfigs = [
+        # keep sorted
+        "//private/google-modules/radio/samsung/s5300:cpif.kconfig",
+        "//private/google-modules/touch/common:touch.common.kconfig",
+        "//private/google-modules/touch/fts/ftm5:ftm5.kconfig",
+        "//private/google-modules/touch/sec:sec.kconfig",
+    ],
+    module_outs = ZUMA_MODULE_OUTS,
+    vendor_dlkm_modules_blocklists = ["vendor_dlkm.blocklist.shusky"],
+    vendor_ramdisk_modules_lists = ["vendor_ramdisk.modules.shusky"],
+)
+
+# For compatibility
+alias(
+    name = "zuma_shusky_dist",
+    actual = ":shusky/dist",
+)
+
+alias(
+    name = "zuma_shusky_abi_update_symbol_list",
+    actual = ":shusky/kernel_abi_update_symbol_list",
+)
+
+alias(
+    name = "kernel",
+    actual = ":shusky/kernel",
+)
+
+alias(
+    name = "kernel_abi_update_symbol_list",
+    actual = ":shusky/kernel_abi_update_symbol_list",
+)
+
+alias(
+    name = "kernel_compile_commands",
+    actual = ":shusky/kernel_compile_commands",
+)
